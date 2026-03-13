@@ -6,6 +6,7 @@ import bg.schoolinventory.authservice.dto.RegisterRequestDTO;
 import bg.schoolinventory.authservice.model.Role;
 import bg.schoolinventory.authservice.model.User;
 import bg.schoolinventory.authservice.repository.UserRepository;
+import bg.schoolinventory.authservice.security.JwtUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ import java.time.LocalDate;
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -58,6 +61,8 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())){
             throw new RuntimeException("Error - Invalid password!");
         }
-        return new AuthResponseDTO("mock-token-123", user.getUsername(), user.getRole().name());
+        String token = jwtUtils.generateToken(user.getUsername(), user.getRole().name());
+
+        return new AuthResponseDTO(token, user.getUsername(), user.getRole().name());
     }
 }
