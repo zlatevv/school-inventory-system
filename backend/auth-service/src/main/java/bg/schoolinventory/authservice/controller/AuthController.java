@@ -32,4 +32,10 @@ public class AuthController {
         AuthResponseDTO response = authService.login(dto);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout () {
+        // The Front End is responsible for deleting the JWT token, this just gets a successful message
+        return ResponseEntity.ok("Successfully logged out!");
+    }
 }
