@@ -1,7 +1,7 @@
 package bg.schoolinventory.authservice.dto;
 
 public class AuthResponseDTO {
-    private String token; // Тук по-късно ще слагаме JWT токена
+    private String token;
     private String username;
     private String role;
 
