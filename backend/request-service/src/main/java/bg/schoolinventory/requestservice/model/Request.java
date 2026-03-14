@@ -1,7 +1,6 @@
 package bg.schoolinventory.requestservice.model;
 
-import bg.schoolinventory.inventoryservice.enums.RequestStatus;
-import bg.schoolinventory.inventoryservice.model.Equipment;
+import bg.schoolinventory.requestservice.enums.RequestStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,9 +15,11 @@ public class Request {
     @Column(nullable = false)
     private String usernameRequesting;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "equipment_id", nullable = false)
-    private Equipment equipment;
+    @Column(name = "equipment_id", nullable = false)
+    private Long equipmentID;
+
+    @Column(name = "return_condition")
+    private String returnCondition;
 
     @Column(nullable = false)
     private LocalDateTime requestDate;
@@ -50,12 +51,20 @@ public class Request {
         this.usernameRequesting = usernameRequesting;
     }
 
-    public Equipment getEquipment() {
-        return equipment;
+    public Long getEquipmentID() {
+        return equipmentID;
     }
 
-    public void setEquipment(Equipment equipment) {
-        this.equipment = equipment;
+    public void setEquipmentID(Long equipmentID) {
+        this.equipmentID = equipmentID;
+    }
+
+    public String getReturnCondition() {
+        return returnCondition;
+    }
+
+    public void setReturnCondition(String returnCondition) {
+        this.returnCondition = returnCondition;
     }
 
     public LocalDateTime getRequestDate() {
