@@ -23,7 +23,7 @@ public class RequestController {
     public ResponseEntity<Request> createRequest(
             @Valid @RequestBody RequestCreateDTO dto,
             JwtAuthenticationToken token) {
-        String username = token.getName(); // hardcoded for now, later we will get it from the logged profile
+        String username = token.getName();
 
         Request request = requestService.createRequest(dto, username);
 
@@ -32,7 +32,7 @@ public class RequestController {
 
     @GetMapping("/requests")
     public ResponseEntity<List<Request>> getMyRequests(JwtAuthenticationToken token) {
-        String username = token.getName(); // hardcoded for now, later we will get it from the logged profile
+        String username = token.getName();
 
         List<Request> request = requestService.getMyRequests(username);
 
