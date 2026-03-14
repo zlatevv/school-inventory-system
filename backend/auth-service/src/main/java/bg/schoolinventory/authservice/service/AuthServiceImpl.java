@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
         } else {
             user.setRole(Role.USER);
         }
-        // The first user is going to be the user for now
+        // The first user is going to be the admin for now
 
         user.setRegisteredOn(LocalDate.now());
 
