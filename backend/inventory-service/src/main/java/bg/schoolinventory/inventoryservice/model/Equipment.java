@@ -22,7 +22,7 @@ public class Equipment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Condition condition;
+    private Condition equipmentCondition;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class Equipment {
         this.name = name;
         this.type = type;
         this.serialNumber = serialNumber;
-        this.condition = condition;
+        this.equipmentCondition = condition;
         this.equipmentStatus = equipmentStatus;
     }
 
@@ -72,12 +72,12 @@ public class Equipment {
         this.serialNumber = serialNumber;
     }
 
-    public Condition getCondition() {
-        return condition;
+    public Condition getEquipmentCondition() {
+        return equipmentCondition;
     }
 
-    public void setCondition(Condition condition) {
-        this.condition = condition;
+    public void setEquipmentCondition(Condition equipmentCondition) {
+        this.equipmentCondition = equipmentCondition;
     }
 
     public EquipmentStatus getEquipmentStatus() {
