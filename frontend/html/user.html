@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-book-open"></i>
+                <i class="fa-solid fa-check" style="position:absolute; bottom: 4px; right: -4px; color: #10B981; font-size: 14px;"></i>
+            </div>
+            <div class="logo-text">
+                School<br><span>Inventory Management System</span>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-item active"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests <span class="badge-count">2</span></a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+        </ul>
+
+        <div class="logout-btn">
+            <a href="#" class="nav-item" onclick="logout()"><i class="fa-solid fa-power-off"></i> Logout</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+       <!-- Header -->
+        <header>
+            <!-- 1. Бутон за мобилно меню (Показва се само на телефон) -->
+            <div class="mobile-menu-btn" id="menuBtn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            
+            <!-- 2. Търсачка (Скрива се на телефон) -->
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <!-- 3. Потребителски профил -->
+            <div class="user-profile">
+                <i class="fa-regular fa-bell"></i>
+                <div class="user-info">
+                    <span>Jason Lee</span>
+                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=JL" alt="User">
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: #64748B;"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-padding">
+            
+            <!-- Welcome Banner -->
+            <section class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>Welcome to School Inventory System</h1>
+                    <p>A digital platform for requesting and tracking school equipment usage. You can browse available equipment, make requests, and view your history.</p>
+                </div>
+                <img src="https://placehold.co/240x120/E2E8F0/94A3B8?text=Illustration" alt="Illustration" class="welcome-img">
+            </section>
+
+            <!-- Stats Row -->
+            <section class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-print" style="color: var(--primary-color);"></i> Available Equipment</div>
+                    <div class="stat-number">113 <span>Items</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-box" style="color: #F59E0B;"></i> Checked Out</div>
+                    <div class="stat-number">9 <span>Items</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-wrench" style="color: #EF4444;"></i> Under Repair</div>
+                    <div class="stat-number">4 <span>Items</span></div>
+                </div>
+            </section>
+
+            <!-- Actions Row -->
+            <div class="actions-row">
+                <button class="btn btn-primary">Browse Equipment</button>
+                <button class="btn btn-primary">Browse All <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; margin-left: 4px;"></i></button>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                
+                <!-- Left Column -->
+                <div class="card-container">
+                    <div class="section-header">
+                        <h2>Browse Equipment</h2>
+                        <a href="#" class="link-more"><i class="fa-solid fa-angles-right"></i></a>
+                    </div>
+                    
+                    <div class="search-group">
+                        <div class="search-input-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="equipSearch" placeholder="Search equipment...">
+                        </div>
+                        <button class="btn btn-primary">Browse All</button>
+                    </div>
+
+                    <div class="equipment-list" id="equipList">
+                        <!-- Item 1 -->
+                        <div class="equipment-item">
+                            <div class="eq-img"><img src="https://placehold.co/80x60/FFFFFF/94A3B8?text=Projector" alt="Projector"></div>
+                            <div class="equipment-details">
+                                <h4>Epson Projector</h4>
+                                <div class="eq-meta">
+                                    <p>Room 101</p>
+                                    <div style="display:flex; justify-content: space-between; max-width: 150px;">
+                                        <p>Condition</p>
+                                        <p>Good</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-available"><i class="fa-solid fa-leaf"></i> Available</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="requestItem(this)">Request</button>
+                        </div>
+                        
+                        <!-- Item 2 -->
+                        <div class="equipment-item eq-yellow-bg">
+                            <div class="eq-img"><img src="https://placehold.co/80x60/FFFFFF/94A3B8?text=Laptop" alt="Laptop"></div>
+                            <div class="equipment-details">
+                                <h4>Lenovo Laptop</h4>
+                                <div class="eq-meta">
+                                    <p>Sarah Miller</p>
+                                    <div style="display:flex; justify-content: space-between; max-width: 150px;">
+                                        <p>Computer Lab</p>
+                                        <p>Good</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-light-yellow"><i class="fa-solid fa-hand-holding"></i> Checked Out</span>
+                            </div>
+                            <button class="btn btn-warning">Checked Out</button>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="equipment-item eq-gray-bg">
+                            <div class="eq-img"><img src="https://placehold.co/80x60/FFFFFF/94A3B8?text=iPads" alt="iPads"></div>
+                            <div class="equipment-details">
+                                <h4>Set of 10 iPads</h4>
+                                <div class="eq-meta">
+                                    <p>Room 202</p>
+                                    <div style="display:flex; justify-content: space-between; max-width: 180px;">
+                                        <p>Issue: Broken screen</p>
+                                        <p>Room 202</p>
+                                    </div>
+                                </div>
+                                <span class="status-badge status-light-yellow"><i class="fa-solid fa-user-pen"></i> Aaadmir</span>
+                            </div>
+                            <button class="btn btn-danger">Under Repair</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column-grid">
+                    <!-- Table Widget -->
+                    <div class="card-container">
+                        <div class="section-header">
+                            <h2>My Recent Requests</h2>
+                            <a href="#" class="link-more"><i class="fa-solid fa-angles-right"></i></a>
+                        </div>
+
+                        <div class="cancel-request">
+                            <div class="cancel-info"><i class="fa-solid fa-usb" style="color: var(--text-gray);"></i> USB Drive</div>
+                            <button class="btn btn-outline"><i class="fa-solid fa-folder-minus"></i> Cancel</button>
+                        </div>
+
+                        <table class="requests-table">
+                            <thead>
+                                <tr>
+                                    <th>Request</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th style="text-align: right;"><i class="fa-solid fa-rotate-right" style="cursor:pointer;"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><div class="td-title">USB Drive</div><div class="td-date">May 3, 2024</div></td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="td-title">Projector Epson</div><div class="td-date">May 1, 2024</div></td>
+                                    <td><span class="status-badge status-approved">Approved</span></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><div class="td-title">Digital Camera</div><div class="td-date">April 29, 2024</div></td>
+                                    <td><span class="status-badge status-rejected">Rejected</span></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <a href="#" class="view-all">View all requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; margin-left:4px;"></i></a>
+                    </div>
+
+                    <!-- List Widget -->
+                    <div class="card-container">
+                        <div class="section-header">
+                            <h2>My Recent Requests</h2>
+                            <a href="#" class="link-more"><i class="fa-solid fa-angles-right"></i></a>
+                        </div>
+
+                        <div class="simple-list">
+                            <div class="simple-list-item">
+                                <div class="item-left"><i class="fa-solid fa-usb"></i> USB Drive</div>
+                                <span class="status-badge status-pending"><i class="fa-regular fa-clock" style="margin-right:4px;"></i> Pending</span>
+                            </div>
+                            <div class="simple-list-item">
+                                <div class="item-left"><i class="fa-solid fa-video"></i> Projector Epson</div>
+                                <span class="status-badge status-approved">Approved</span>
+                            </div>
+                            <div class="simple-list-item">
+                                <div class="item-left"><i class="fa-solid fa-camera"></i> Digital Camera</div>
+                                <span class="status-badge status-rejected">Rejected</span>
+                            </div>
+                        </div>
+
+                        <a href="#" class="view-all">View all requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; margin-left:4px;"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <script src="user.js"></script>
+</body>
+</html>
