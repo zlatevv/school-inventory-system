@@ -1,0 +1,68 @@
+body { 
+    font-family: 'Segoe UI', 
+    sans-serif; 
+    background: #2c3e50; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    margin: 0; 
+}
+.form-card { 
+    background: white; 
+    padding: 30px; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+    width: 320px; 
+    text-align: center; 
+}
+input { 
+    width: 100%; 
+    padding: 12px; 
+    margin: 8px 0; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+}
+button { 
+    width: 100%; 
+    padding: 12px; 
+    background: #3498db; 
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+button:hover { 
+    background: #2980b9; 
+
+}
+a { 
+    color: #3498db; 
+    text-decoration: none; 
+    font-size: 14px; 
+}
+
+#strength-meter {
+    height: 5px;
+    background-color: #ddd;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#strength-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+#strength-text {
+    font-size: 12px;
+    text-align: left;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
