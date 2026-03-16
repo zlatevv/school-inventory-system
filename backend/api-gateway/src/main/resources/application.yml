@@ -1,33 +1,19 @@
 server:
-  port: 9000 # ??????, ?? ????? ?????? ?????? Gateway
+  port: 9000
 
 spring:
   application:
     name: api-gateway
+
   cloud:
     gateway:
-      global cors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins:
-              - "http://127.0.0.1:5500" # Live Server Port
-              - "http://localhost:5500"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
       routes:
-        # 1. ????????? ??? Auth Service
         - id: auth-service
           uri: http://localhost:8080
           predicates:
             - Path=/api/auth/**
 
-        # 2. ????????? ??? Request Service
         - id: request-service
           uri: http://localhost:8082
           predicates:
-            - Path=/api/request/**, /api/requests/**, /api/manager/requests/**
+            - Path=/api/request/**,/api/requests/**,/api/manager/requests/**
