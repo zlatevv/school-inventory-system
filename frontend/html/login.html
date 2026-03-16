@@ -20,11 +20,12 @@
             <input type="text" id="reg-username" placeholder="Username">
             <input type="email" id="reg-email" placeholder="Email">
             <input type="password" id="reg-password" placeholder="Password" oninput="checkStrength(this.value)">
+            <span id="passwordFeedback" style="font-weight: bold; margin-left: 10px;"></span>
             <div id="strength-meter">
                 <div id="strength-bar"></div>
             </div>
             <p id="strength-text"></p>
-            <button onclick="handleRegister()">Create an account</button>
+            <button onclick="handleRegister(event)">Create an account</button>
             <p>You already have an account? <a href="#" onclick="toggleForm()">Log in</a></p>
         </div>
     </div>
