@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter system</title>
+    <link rel="stylesheet" href="/frontend/css/login.css">
+</head>
+<body>
+    <div class="container">
+        <div id="login-box" class="form-card">
+            <h2>Sign In</h2>
+            <input type="text" id="login-username" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
+            <button onclick="handleLogin()">Log In</button>
+            <p>You don't have an account? <a href="#" onclick="toggleForm()">Sign up</a></p>
+        </div>
+
+        <div id="register-box" class="form-card" style="display: none;">
+            <h2>Sign up</h2>
+            <input type="text" id="reg-username" placeholder="Username">
+            <input type="email" id="reg-email" placeholder="Email">
+            <input type="password" id="reg-password" placeholder="Password" oninput="checkStrength(this.value)">
+            <div id="strength-meter">
+                <div id="strength-bar"></div>
+            </div>
+            <p id="strength-text"></p>
+            <button onclick="handleRegister()">Create an account</button>
+            <p>You already have an account? <a href="#" onclick="toggleForm()">Log in</a></p>
+        </div>
+    </div>
+    <script src="/frontend/js/login.js"></script>
+</body>
+</html>
