@@ -7,7 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
 </head>
 <body>
 
@@ -27,7 +28,8 @@
         </ul>
 
         <div class="logout-btn">
-            <i class="fa-solid fa-power-off"></i> Logout
+            <i class="fa-solid fa-power-off"></i> 
+            <button id="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </aside>
 
@@ -39,8 +41,8 @@
             </div>
             <div class="user-profile">
                 <div class="user-info">
-                    <span style="color: var(--text-gray);">Welcome, </span> <strong>Admin</strong>
-                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                    <span style="color: var(--text-gray);">Welcome, </span> <strong id="display-username"></strong>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=" alt="User">
                 </div>
             </div>
         </header>
@@ -231,6 +233,9 @@
         </div>
     </main>
 
-    <script src="admin.js"></script>
+    <script src="/frontend/js/admin.js"></script>
+    <script src="/frontend/js/script.js"></script>
+    <script src="/frontend/js/login.js"></script>
+    <script src="/frontend/js/displayInfo.js"></script>
 </body>
 </html>

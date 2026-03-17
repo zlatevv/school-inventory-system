@@ -7,7 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/status.css">
 </head>
 <body>
 
@@ -25,7 +26,8 @@
         </ul>
 
         <div class="logout-btn">
-            <i class="fa-solid fa-power-off"></i> Logout
+            <i class="fa-solid fa-power-off"></i> 
+            <button id="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </aside>
 
@@ -38,8 +40,8 @@
             <div class="user-profile">
                 <i class="fa-regular fa-bell"></i>
                 <div class="user-info">
-                    <span>Jason Lee</span>
-                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=JL" alt="User">
+                    <span style="color: var(--text-gray);">Welcome, </span> <strong id="display-username"></strong>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=" alt="User">
                 </div>
             </div>
         </header>
@@ -83,27 +85,7 @@
                     </div>
 
                     <div class="equipment-list" id="equipList">
-                        <div class="equipment-item">
-                            <img src="https://placehold.co/100x80?text=Projector" alt="Projector">
-                            <div class="equipment-details">
-                                <h4>Epson Projector</h4>
-                                <p>Room 101</p>
-                                <p>Condition: Good</p>
-                                <span class="status-badge status-available"><i class="fa-solid fa-check"></i> Available</span>
-                            </div>
-                            <button class="btn btn-primary" onclick="requestItem(this)">Request</button>
-                        </div>
                         
-                        <div class="equipment-item" style="background-color: #FFFDE7;">
-                            <img src="https://placehold.co/100x80?text=Laptop" alt="Laptop">
-                            <div class="equipment-details">
-                                <h4>Lenovo Laptop</h4>
-                                <p>Sarah Miller</p>
-                                <p>Computer Lab | Good</p>
-                                <span class="status-badge status-checkedout"><i class="fa-solid fa-hand"></i> Checked Out</span>
-                            </div>
-                            <button class="btn" style="background-color: #F1C40F; border:none; border-radius:6px; padding: 8px 16px;">Checked Out</button>
-                        </div>
                     </div>
                 </div>
 
@@ -127,16 +109,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>USB Drive<br><small style="color: var(--text-gray);">May 3, 2024</small></td>
-                                <td><span class="status-badge status-checkedout">Pending</span></td>
-                                <td style="text-align: right;"><i class="fa-solid fa-rotate-right" style="color: var(--text-gray); cursor:pointer;"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Projector Epson<br><small style="color: var(--text-gray);">May 1, 2024</small></td>
-                                <td><span class="status-badge status-available">Approved</span></td>
-                                <td></td>
-                            </tr>
                         </tbody>
                     </table>
                     
@@ -149,6 +121,9 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="/frontend/js/script.js"></script>
+    <script src="/frontend/js/login.js"></script>
+    <script src="/frontend/js/displayInfo.js"></script>
+    <script src="/frontend/js/requests.js"></script>
 </body>
 </html>

@@ -1,0 +1,39 @@
+/* 1. Основен стил за формата на всички статуси */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 50px; 
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+/* 2. Цвят за върнати (RETURNED) - Неутрално сиво/синьо */
+.status-returned {
+    background-color: #f1f5f9; 
+    color: #475569; 
+    border: 1px solid #e2e8f0;
+}
+
+/* 3. Цвят за чакащи (PENDING) - Предупредително жълто/оранжево */
+.status-pending {
+    background-color: #fffbeb; 
+    color: #d97706; 
+    border: 1px solid #fef3c7;
+}
+
+/* 4. Цвят за одобрени (APPROVED) - Успешно зелено */
+.status-available {
+    background-color: #f0fdf4; 
+    color: #16a34a; 
+    border: 1px solid #dcfce7;
+}
+
+/* 5. Цвят за отказани (REJECTED) - Червено */
+.status-unavailable {
+    background-color: #fef2f2; 
+    color: #dc2626; 
+    border: 1px solid #fee2e2;
+}

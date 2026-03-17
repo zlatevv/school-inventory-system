@@ -12,7 +12,7 @@ public class RegisterRequestDTO {
 
     @NotBlank(message = "Email is required")
     @Pattern(
-            regexp = "^[a-zA-Z0-9]+([.\\-_][a-zA-Z0-9]+)*@[a-zA-Z]+(\\.[a-zA-Z]+)+$",
+            regexp = "^[a-zA-Z0-9]+([.\\-_][a-zA-Z0-9]+)*@[a-zA-Z0-9\\-]+(\\.[a-zA-Z]+)+$",
             message = "Invalid email!")
     private String email;
 
