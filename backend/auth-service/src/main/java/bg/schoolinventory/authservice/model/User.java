@@ -19,7 +19,7 @@ public class User {
 
     @Column(unique = true, nullable = false)
     @Pattern(
-            regexp = "^[a-zA-Z0-9]+([.\\-_][a-zA-Z0-9]+)*@[a-zA-Z]+(\\.[a-zA-Z]+)+$",
+            regexp = "^[a-zA-Z0-9]+([.\\-_][a-zA-Z0-9]+)*@[a-zA-Z0-9\\-]+(\\.[a-zA-Z]+)+$",
             message = "Invalid email!"
     )
     private String email;

@@ -10,21 +10,29 @@
         <div id="login-box" class="form-card">
             <h2>Sign In</h2>
             <input type="text" id="login-username" placeholder="Username">
+            <div id="log-username-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
             <input type="password" id="login-password" placeholder="Password">
+            <div id="log-password-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
+            <div id="general-log-error" class="error-message" style="color: red; font-weight: bold; margin-bottom: 10px;"></div>
             <button onclick="handleLogin()">Log In</button>
             <p>You don't have an account? <a href="#" onclick="toggleForm()">Sign up</a></p>
+            
         </div>
 
         <div id="register-box" class="form-card" style="display: none;">
             <h2>Sign up</h2>
             <input type="text" id="reg-username" placeholder="Username">
+            <div id="reg-username-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
             <input type="email" id="reg-email" placeholder="Email">
+            <div id="reg-email-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
             <input type="password" id="reg-password" placeholder="Password" oninput="checkStrength(this.value)">
+            <div id="reg-password-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
             <span id="passwordFeedback" style="font-weight: bold; margin-left: 10px;"></span>
             <div id="strength-meter">
                 <div id="strength-bar"></div>
             </div>
             <p id="strength-text"></p>
+            <div id="general-reg-error" class="error-message" style="color: red; font-weight: bold; margin-bottom: 10px;"></div>
             <button onclick="handleRegister(event)">Create an account</button>
             <p>You already have an account? <a href="#" onclick="toggleForm()">Log in</a></p>
         </div>

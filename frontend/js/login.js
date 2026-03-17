@@ -55,27 +55,64 @@ function checkStrength(password) {
     }
 }
 
-function handleLogin() {
-    const u = document.getElementById('login-username').value;
-    const p = document.getElementById('login-password').value;
+async function handleLogin() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
 
-    console.log("Опит за вход с:", u, p);
+    // 1. Изчистваме старите съобщения за грешка при нов опит
+    const errorMessages = document.querySelectorAll('#login-box .error-message');
+    errorMessages.forEach(el => el.innerText = '');
 
-    // ТЕСТОВИ ДАННИ (понеже нямаме бекенд още)
-    if (u === "admin" && p === "1234") {
-        localStorage.setItem('username', 'Админ Георгиев');
-        localStorage.setItem('role', 'ADMIN');
-        alert("Успешен вход като Админ!");
-        window.location.href = 'admin.html'; 
-    } 
-    else if (u === "user" && p === "1234") {
-        localStorage.setItem('username', 'Иван Иванов');
-        localStorage.setItem('role', 'USER');
-        alert("Успешен вход като Потребител!");
-        window.location.href = 'user.html';
-    } 
-    else {
-        alert("Грешно име или парола! Опитай admin / 1234");
+    const response = await fetch("http://localhost:9000/api/auth/login", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: username, password: password })
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+
+        localStorage.setItem("jwtToken", data.token);
+        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("username", username);
+
+        if (data.role == "ADMIN") {
+            window.location.href = '/frontend/html/admin.html';
+        } else {
+            window.location.href = '/frontend/html/index.html';
+        }
+    } else {
+        if (response.status === 400 || response.status === 401 || response.status === 403) {
+            try {
+                const rawText = await response.text();
+                console.log("Отговор от сървъра:", rawText);
+
+                const errors = JSON.parse(rawText);
+
+                if (errors.message) {
+                    document.getElementById('general-log-error').innerText = errors.message;
+                } 
+                else if (typeof errors === 'object' && errors !== null && !errors.timestamp) {
+                    for (const field in errors) {
+                        const errorElement = document.getElementById(`log-${field}-error`);
+                        if (errorElement) {
+                            errorElement.innerText = errors[field];
+                        }
+                    }
+                } else {
+                    document.getElementById('general-log-error').innerText = "Грешни данни за вход.";
+                }
+
+            } catch (e) {
+                console.error("Грешка при парсване:", e);
+                document.getElementById('general-log-error').innerText = "Грешно потребителско име или парола.";
+            }
+        } else {
+            document.getElementById('general-log-error').innerText = "Възникна неочаквана грешка със сървъра!";
+        }
     }
 }
 
@@ -86,6 +123,9 @@ async function handleRegister(event) {
     const username = document.getElementById("reg-username").value;
     const email = document.getElementById("reg-email").value;
     const password = document.getElementById("reg-password").value
+
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(el => el.innerText = '');
 
     const response = await fetch ("http://localhost:9000/api/auth/register", {
         method: 'POST',
@@ -102,8 +142,39 @@ async function handleRegister(event) {
 
         window.location.href = '/frontend/html/login.html'
     } else {
-        const message = await response.text();
+            if (response.status === 400) {
+                try {
+                    const rawText = await response.text();
+                    console.log("Отговор от сървъра:", rawText); 
 
-        alert(message);
+                    const errors = JSON.parse(rawText);
+                    
+                    // Проверяваме дали грешките са във формата, който очакваме (ключ-стойност)
+                    if (typeof errors === 'object' && errors !== null && !errors.timestamp) {
+                        for (const field in errors) {
+                            const errorElement = document.getElementById(`reg-${field}-error`);
+                            if (errorElement) {
+                                errorElement.innerText = errors[field];
+                            }
+                        }
+                    } else {
+                        document.getElementById('general-reg-error').innerText = errors.message || "Грешка при валидацията.";
+                    }
+
+                } catch (e) {
+                    console.error("Грешка при парсване:", e);
+                    document.getElementById('general-reg-error').innerText = "Невалидни данни за регистрация (Bad Request).";
+                }
+            } else {
+                document.getElementById('general-reg-error').innerText = "Възникна неочаквана грешка със сървъра!";
+            }
     }
+}
+
+async function handleLogout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userRole");
+
+    await fetch("http://localhost:9000/api/auth/logout", { method: 'POST' })
+    window.location.href = '/frontend/html/login.html';
 }

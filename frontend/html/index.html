@@ -25,7 +25,8 @@
         </ul>
 
         <div class="logout-btn">
-            <i class="fa-solid fa-power-off"></i> Logout
+            <i class="fa-solid fa-power-off"></i> 
+            <button id="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
     </aside>
 
@@ -38,8 +39,8 @@
             <div class="user-profile">
                 <i class="fa-regular fa-bell"></i>
                 <div class="user-info">
-                    <span>Jason Lee</span>
-                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=JL" alt="User">
+                    <span style="color: var(--text-gray);">Welcome, </span> <strong id="display-username"></strong>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=" alt="User">
                 </div>
             </div>
         </header>
@@ -150,5 +151,7 @@
     </main>
 
     <script src="/frontend/js/script.js"></script>
+    <script src="/frontend/js/login.js"></script>
+    <script src="/frontend/js/displayInfo.js"></script>
 </body>
 </html>

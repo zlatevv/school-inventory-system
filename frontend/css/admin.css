@@ -69,3 +69,14 @@ header {
     background: var(--white); padding: 20px; border-radius: 12px;
     box-shadow: 0 2px 1; 
 }
+
+#logout-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer; 
+    padding: 0;   
+    outline: none; 
+}
