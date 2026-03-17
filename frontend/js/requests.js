@@ -21,8 +21,6 @@ async function loadMyData(token) {
         return;
     }
 
-   // ... (горната част с fetch заявката остава същата) ...
-
     const data = await result.json();
     console.log("Данни от сървъра:", data);
     
@@ -30,7 +28,6 @@ async function loadMyData(token) {
     tbodyElement.innerHTML = ""; 
 
     data.forEach(req => {
-        // 1. Форматираме датата да изглежда добре (напр. "Mar 14, 2026")
         const dateObj = new Date(req.requestDate);
         const formattedDate = dateObj.toLocaleDateString('en-US', { 
             month: 'short', 
@@ -38,7 +35,6 @@ async function loadMyData(token) {
             year: 'numeric' 
         });
 
-        // 2. Логика за цветовете на статусите според твоя бекенд
         let badgeClass = "status-checkedout"; // По подразбиране (напр. за PENDING)
         if (req.status === "APPROVED") {
             badgeClass = "status-available"; // Зелено

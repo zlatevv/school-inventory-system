@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
-    private final EquipmentClient equipmentClient; // <-- Инжектираш клиента
+    private final EquipmentClient equipmentClient;
 
     public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient) {
         this.requestRepository = requestRepository;
@@ -47,7 +47,7 @@ public class RequestServiceImpl implements RequestService {
         request.setBorrowStartTime(borrowStartTime);
         request.setBorrowEndTime(borrowEndTime);
         request.setStatus(RequestStatus.PENDING);
-
+        equipmentClient.updateEquipmentStatus(equipmentId, "CHECKED_OUT");
         return requestRepository.save(request);
     }
 

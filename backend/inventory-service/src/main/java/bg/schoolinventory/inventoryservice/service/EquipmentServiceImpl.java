@@ -30,10 +30,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public Equipment createEquipment(EquipmentDTO createDTO) {
-        // 1. Създаваме нов празен обект
         Equipment equipment = new Equipment();
 
-        // 2. Прехвърляме данните от DTO-то
         equipment.setName(createDTO.getName());
         equipment.setType(createDTO.getType());
         equipment.setSerialNumber(createDTO.getSerialNumber());
@@ -51,7 +49,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         Equipment existingEquipment = equipmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error - equipment with id " + id + " not found!"));
 
-        // 2. Обновяваме полетата с новите данни
         existingEquipment.setName(updateDTO.getName());
         existingEquipment.setType(updateDTO.getType());
         existingEquipment.setSerialNumber(updateDTO.getSerialNumber());
@@ -59,7 +56,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         existingEquipment.setLocation(updateDTO.getLocation());
         existingEquipment.setPhotoURL(updateDTO.getPhotoUrl());
 
-        // 3. Запазваме промените
         return equipmentRepository.save(existingEquipment);
     }
 

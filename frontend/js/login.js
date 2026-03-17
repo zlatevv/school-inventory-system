@@ -59,7 +59,6 @@ async function handleLogin() {
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
 
-    // 1. Изчистваме старите съобщения за грешка при нов опит
     const errorMessages = document.querySelectorAll('#login-box .error-message');
     errorMessages.forEach(el => el.innerText = '');
 
