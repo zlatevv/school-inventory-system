@@ -1,6 +1,9 @@
 package bg.schoolinventory.requestservice.service;
 
+import bg.schoolinventory.requestservice.client.EquipmentClient;
+import bg.schoolinventory.requestservice.dto.EquipmentDTO;
 import bg.schoolinventory.requestservice.dto.RequestCreateDTO;
+import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.enums.RequestStatus;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.repository.RequestRepository;
@@ -8,13 +11,23 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RequestServiceImpl implements RequestService {
-    public final RequestRepository requestRepository;
+    private final RequestRepository requestRepository;
+    private final EquipmentClient equipmentClient; // <-- Инжектираш клиента
 
-    public RequestServiceImpl(RequestRepository requestRepository) {
+    public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient) {
         this.requestRepository = requestRepository;
+        this.equipmentClient = equipmentClient;
+    }
+
+    @Override
+    public List<RequestResponseDTO> getAllRequests() {
+        return requestRepository.findAll().stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -39,13 +52,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getMyRequests(String username) {
-        return requestRepository.findAllByUsernameRequesting(username);
-    }
+    public List<RequestResponseDTO> getMyRequests(String username) {
+        List<Request> requests = requestRepository.findAllByUsernameRequesting(username);
 
-    @Override
-    public List<Request> getAllRequests() {
-        return requestRepository.findAll();
+        return requests.stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -79,5 +91,18 @@ public class RequestServiceImpl implements RequestService {
         request.setReturnCondition(condition);
 
         return requestRepository.save(request);
+    }
+
+    private RequestResponseDTO mapToResponseDTO(Request req) {
+        EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
+
+        RequestResponseDTO dto = new RequestResponseDTO();
+        dto.setId(req.getId());
+        dto.setStatus(req.getStatus());
+        dto.setRequestDate(req.getRequestDate());
+        dto.setEquipmentID(req.getEquipmentID());
+        dto.setEquipmentName(equipment.getName());
+
+        return dto;
     }
 }

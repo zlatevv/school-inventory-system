@@ -28,16 +28,40 @@ public class Equipment {
     @Column(nullable = false)
     private EquipmentStatus equipmentStatus;
 
+    @Column(nullable = false)
+    private String location;
+
+    @Column(nullable = false)
+    private String photoURL;
+
     public Equipment() {}
 
-    public Equipment(Long id, String name, String type, String serialNumber,
-                     Condition condition, EquipmentStatus equipmentStatus) {
+    public Equipment(Long id, String name, String type, String serialNumber, Condition equipmentCondition,
+                     EquipmentStatus equipmentStatus, String location, String photoURL) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.serialNumber = serialNumber;
-        this.equipmentCondition = condition;
+        this.equipmentCondition = equipmentCondition;
         this.equipmentStatus = equipmentStatus;
+        this.location = location;
+        this.photoURL = photoURL;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public Long getId() {
