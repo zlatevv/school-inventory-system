@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("display-username").innerText = savedUsername;
         
         fetchAndDisplayEquipment();
+        loadAvailableEquipmentNumber();
     } else {
         window.location.href = "/frontend/html/login.html";
     }
@@ -12,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchAndDisplayEquipment() {
     const equipListContainer = document.getElementById('equipList');
+
+    const statNumberDivAvailable = document.getElementById("all-items-count");
+    const statNumberDivCheckedOut = document.getElementById("checked_out");
+    const statNumberDivUnderRepair = document.getElementById("under-repair-equipment");
     
     equipListContainer.innerHTML = '<p>Loading equipment...</p>';
 
@@ -23,25 +28,45 @@ async function fetchAndDisplayEquipment() {
         }
         
         const equipmentData = await response.json();
+        const available_equipment = equipmentData.filter(equipment => equipment.equipmentStatus == "AVAILABLE");
+        const checked_out_equipment = equipmentData.filter(equipment => equipment.equipmentStatus == "CHECKED_OUT");
+        const under_repair_equipment = equipmentData.filter(equipment => equipment.equipmentStatus == "UNDER_REPAIR");
+        
+        statNumberDivAvailable.innerHTML = available_equipment.length;
+        statNumberDivCheckedOut.innerHTML = checked_out_equipment.length;
+        statNumberDivUnderRepair.innerHTML = under_repair_equipment.length;
 
-        console.log("Equipment: ", equipmentData);
-        
-        
         equipListContainer.innerHTML = '';
 
         equipmentData.forEach(item => {
-            
-            const isAvailable = item.equipmentStatus === 'AVAILABLE';
+            let bgStyle, badgeClass, badgeIcon, badgeText, buttonHtml;
 
-            const bgStyle = isAvailable ? '' : 'style="background-color: #FFFDE7;"';
-            const badgeClass = isAvailable ? 'status-available' : 'status-checkedout';
-            const badgeIcon = isAvailable ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-hand"></i>';
-            const badgeText = isAvailable ? 'Available' : 'Checked Out';
-
-            let buttonHtml = '';
-            if (isAvailable) {
+            if (item.equipmentStatus === 'AVAILABLE') {
+                bgStyle = '';
+                badgeClass = 'status-available';
+                badgeIcon = '<i class="fa-solid fa-check"></i>';
+                badgeText = 'Available';
                 buttonHtml = `<button class="btn btn-primary" onclick="requestItem(${item.id})">Request</button>`;
-            } else {
+            
+            } else if (item.equipmentStatus === 'RETIRED') {
+                bgStyle = 'style="background-color: #F8ECEC;"';
+                badgeClass = 'status-rejected';
+                badgeIcon = '<i class="fa-solid fa-ban"></i>';
+                badgeText = 'Retired';
+                buttonHtml = `<button class="btn" style="background-color: #E74C3C; color: white; border:none; border-radius:6px; padding: 8px 16px;" disabled>Retired</button>`;
+            
+            } else if (item.equipmentStatus === 'UNDER_REPAIR') {
+                bgStyle = 'style="background-color: #F9E79F;"'; 
+                badgeClass = 'status-pending'; 
+                badgeIcon = '<i class="fa-solid fa-wrench"></i>';
+                badgeText = 'In Repair';
+                buttonHtml = `<button class="btn" style="background-color: #E67E22; color: white; border:none; border-radius:6px; padding: 8px 16px;" disabled>In Repair</button>`;
+            
+            } else { 
+                bgStyle = 'style="background-color: #FFFDE7;"';
+                badgeClass = 'status-checkedout';
+                badgeIcon = '<i class="fa-solid fa-hand"></i>';
+                badgeText = 'Checked Out';
                 buttonHtml = `<button class="btn" style="background-color: #F1C40F; border:none; border-radius:6px; padding: 8px 16px;" disabled>Checked Out</button>`;
             }
 
@@ -79,7 +104,7 @@ async function requestItem(itemId) {
         return;
     }
     const now = new Date();
-    now.setMinutes(now.getSeconds() + 10); 
+    now.setSeconds(now.getSeconds() + 30); 
     
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 5);

@@ -119,49 +119,75 @@ function updateAvatarWithInitials(fullName) {
     }
 }
 
-//BROWSE EQUIPMENT
-// --- ЛОГИКА ЗА BROWSE EQUIPMENT PAGE ---
-// Проверяваме дали сме на правилната страница, за да не дава грешки на другите страници
 if (window.location.pathname.includes('browse_equipment.html')) {
     
-    const inventory = [
-        { id: 1, name: "Epson EB-2250U", category: "Electronics", room: "Room 101", status: "Available", icon: "fa-video", brand: "Epson" },
-        { id: 2, name: "Lenovo ThinkPad X1", category: "Computers", room: "Lab 2", status: "Checked Out", icon: "fa-laptop", brand: "Lenovo" },
-        { id: 3, name: "Logitech MX Master 3", category: "Accessories", room: "Office", status: "Available", icon: "fa-mouse", brand: "Logitech" },
-        { id: 4, name: "Canon EOS R5", category: "Electronics", room: "Studio", status: "Available", icon: "fa-camera", brand: "Canon" },
-        { id: 5, name: "Dell UltraSharp 27", category: "Computers", room: "Library", status: "Under Repair", icon: "fa-desktop", brand: "Dell" },
-        { id: 6, name: "Blue Yeti Mic", category: "Accessories", room: "Studio", status: "Available", icon: "fa-microphone", brand: "Blue" }
-    ];
+    let inventory = []; 
 
     const grid = document.getElementById('equipmentGrid');
     const bSearchInput = document.getElementById('equipmentSearch');
     const categorySelect = document.getElementById('categorySelect');
 
-    function renderCards(data) {
-        if(!grid) return; // Защита, ако елементът липсва
-        grid.innerHTML = '';
-        data.forEach((item, index) => {
-            const statusClass = item.status === 'Available' ? 'status-available' : 
-                               (item.status === 'Checked Out' ? 'status-light-yellow' : 'status-rejected');
+    async function fetchBrowseEquipment() {
+        try {
+            const response = await fetch('http://localhost:9000/api/equipment');
+            if (!response.ok) throw new Error('Грешка при зареждане на оборудването');
             
+            inventory = await response.json();
+            renderCards(inventory); 
+        } catch (error) {
+            console.error("Грешка:", error);
+            if (grid) grid.innerHTML = '<p style="color:red;">Грешка при зареждане на базата данни.</p>';
+        }
+    }
+
+    function renderCards(data) {
+        if (!grid) return; 
+        grid.innerHTML = '';
+        
+        data.forEach((item, index) => {
+            let statusClass, statusText, buttonHtml;
+            
+            let iconClass = "fa-box"; 
+            if (item.type && item.type.toLowerCase().includes('computer')) iconClass = "fa-laptop";
+            else if (item.type && item.type.toLowerCase().includes('camera')) iconClass = "fa-camera";
+            else if (item.type && item.type.toLowerCase().includes('accessory')) iconClass = "fa-mouse";
+
+            if (item.equipmentStatus === 'AVAILABLE') {
+                statusClass = 'status-available';
+                statusText = 'Available';
+                buttonHtml = `<button class="btn btn-primary" onclick="requestItem(${item.id})">Reserve Now</button>`;
+            
+            } else if (item.equipmentStatus === 'CHECKED_OUT') {
+                statusClass = 'status-light-yellow'; 
+                statusText = 'Checked Out';
+                buttonHtml = `<button class="btn" disabled style="filter: grayscale(1); opacity: 0.5; cursor: not-allowed;">Unavailable</button>`;
+            
+            } else if (item.equipmentStatus === 'UNDER_REPAIR') {
+                statusClass = 'status-pending'; 
+                statusText = 'Under Repair';
+                buttonHtml = `<button class="btn" disabled style="filter: grayscale(1); opacity: 0.5; cursor: not-allowed;">Unavailable</button>`;
+            
+            } else if (item.equipmentStatus === 'RETIRED') {
+                statusClass = 'status-rejected'; 
+                statusText = 'Retired';
+                buttonHtml = `<button class="btn" disabled style="filter: grayscale(1); opacity: 0.5; cursor: not-allowed;">Unavailable</button>`;
+            }
+
             const card = document.createElement('div');
             card.className = 'eq-card';
             card.style.animationDelay = `${index * 0.1}s`;
 
             card.innerHTML = `
                 <div class="eq-card-image">
-                    <span class="eq-status-tag ${statusClass}">${item.status}</span>
-                    <i class="fa-solid ${item.icon}"></i>
+                    <span class="eq-status-tag ${statusClass}">${statusText}</span>
+                    <i class="fa-solid ${iconClass}"></i>
                 </div>
                 <div class="eq-card-content">
-                    <span class="eq-category">${item.category}</span>
+                    <span class="eq-category">${item.type || 'General'}</span>
                     <h3>${item.name}</h3>
                     <div class="eq-details">
-                        <span class="eq-location"><i class="fa-solid fa-location-dot"></i> ${item.room}</span>
-                        <button class="btn btn-primary" onclick="handleRequest(${item.id})" 
-                            ${item.status !== 'Available' ? 'disabled style="filter: grayscale(1); opacity: 0.5;"' : ''}>
-                            ${item.status === 'Available' ? 'Reserve Now' : 'Unavailable'}
-                        </button>
+                        <span class="eq-location"><i class="fa-solid fa-location-dot"></i> ${item.location || 'Storage'}</span>
+                        ${buttonHtml}
                     </div>
                 </div>
             `;
@@ -170,22 +196,27 @@ if (window.location.pathname.includes('browse_equipment.html')) {
     }
 
     function filterData() {
+        if (!bSearchInput || !categorySelect) return;
+        
         const searchTerm = bSearchInput.value.toLowerCase();
-        const category = categorySelect.value;
+        const selectedStatus = categorySelect.value.toLowerCase(); // Това вече взима статуса (напр. 'available')
 
         const filtered = inventory.filter(item => {
             const matchesSearch = item.name.toLowerCase().includes(searchTerm);
-            const matchesCategory = category === 'all' || item.category === category;
-            return matchesSearch && matchesCategory;
+            
+            const itemStatus = item.equipmentStatus ? item.equipmentStatus.toLowerCase() : '';
+            const matchesStatus = selectedStatus === 'all' || itemStatus === selectedStatus;
+            
+            return matchesSearch && matchesStatus;
         });
+        
         renderCards(filtered);
     }
 
     if (bSearchInput) bSearchInput.addEventListener('input', filterData);
     if (categorySelect) categorySelect.addEventListener('change', filterData);
 
-    // Стартираме рендирането
-    renderCards(inventory);
+    fetchBrowseEquipment();
 }
 
 // Глобална функция за Alert (извън IF-а, за да е достъпна от HTML-а)
@@ -253,4 +284,122 @@ if (inboxSearch && inboxContainer) {
             }
         });
     });
+}
+
+if (window.location.pathname.includes('my_requests.html')) {
+    const requestsContainer = document.getElementById('requestsContainer');
+
+    async function fetchMyRequests() {
+        const jwtToken = localStorage.getItem("jwtToken");
+        if (!jwtToken) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:9000/api/requests', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error('Грешка при зареждане на заявките');
+
+            const requestsData = await response.json();
+            renderRequests(requestsData);
+
+        } catch (error) {
+            console.error("Грешка:", error);
+            if (requestsContainer) requestsContainer.innerHTML = '<p style="color:red;">Грешка при връзката със сървъра.</p>';
+        }
+    }
+
+    function renderRequests(data) {
+        if (!requestsContainer) return;
+        requestsContainer.innerHTML = '';
+
+        if (data.length === 0) {
+            requestsContainer.innerHTML = '<p style="color: var(--text-gray);">You have no active requests at the moment.</p>';
+            return;
+        }
+        data.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+        
+        data.forEach(req => {
+            const eqName = req.equipmentName;
+            const eqType = req.equipment ? req.equipment.type : '';
+            const eqLocation = req.equipment ? req.equipment.location : 'IT Desk';
+            
+            const dateObj = new Date(req.borrowStartTime || req.createdAt || new Date());
+            const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            let iconClass = "fa-box"; 
+            if (eqType.toLowerCase().includes('computer') || eqType.toLowerCase().includes('laptop')) iconClass = "fa-laptop";
+            else if (eqType.toLowerCase().includes('camera') || eqType.toLowerCase().includes('video')) iconClass = "fa-video";
+
+            let badgeHtml, stepperHtml, footerBtnHtml;
+            const status = req.status ? req.status.toUpperCase() : 'PENDING';
+
+            if (status === 'PENDING') {
+                badgeHtml = `<div class="status-badge status-pending">Pending Approval</div>`;
+                stepperHtml = `
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Requested</p></div>
+                    <div class="step active"><i class="fa-solid fa-clock"></i><p>Admin Review</p></div>
+                    <div class="step"><i class="fa-solid fa-box-open"></i><p>Ready</p></div>
+                    <div class="step"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
+                `;
+                footerBtnHtml = `<button class="btn btn-danger-outline" onclick="cancelRequest(${req.id})">Cancel Request</button>`;
+            
+            } else if (status === 'APPROVED') {
+                badgeHtml = `<div class="status-badge status-approved">Ready for Pickup</div>`;
+                stepperHtml = `
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Requested</p></div>
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Approved</p></div>
+                    <div class="step active"><i class="fa-solid fa-location-dot"></i><p>${eqLocation}</p></div>
+                    <div class="step"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
+                `;
+                footerBtnHtml = `<button class="btn btn-primary" onclick="viewDetails(${req.id})">Get QR Code</button>`;
+            
+            } else if (status === 'REJECTED') {
+                badgeHtml = `<div class="status-badge status-rejected">Rejected</div>`;
+                stepperHtml = `
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Requested</p></div>
+                    <div class="step" style="color: #E74C3C; border-color: #E74C3C;"><i class="fa-solid fa-xmark"></i><p>Declined</p></div>
+                `;
+                footerBtnHtml = `<button class="btn" disabled style="cursor: not-allowed; opacity: 0.5;">Cannot Proceed</button>`;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'request-card';
+            card.innerHTML = `
+                <div class="req-header">
+                    <div class="req-title">
+                        <i class="fa-solid ${iconClass}"></i>
+                        <div>
+                            <h3>${eqName}</h3>
+                            <span>Request ID: #${req.id}</span>
+                        </div>
+                    </div>
+                    ${badgeHtml}
+                </div>
+                
+                <div class="req-body">
+                    <div class="status-stepper">
+                        ${stepperHtml}
+                    </div>
+                </div>
+
+                <div class="req-footer">
+                    <div class="req-info">
+                        <p><i class="fa-regular fa-calendar"></i> Date: <strong>${formattedDate}</strong></p>
+                    </div>
+                    ${footerBtnHtml}
+                </div>
+            `;
+            
+            requestsContainer.appendChild(card);
+        });
+    }
+    fetchMyRequests();
 }

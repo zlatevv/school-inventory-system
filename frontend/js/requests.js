@@ -38,7 +38,7 @@ async function loadMyData(token) {
 
             const cancelBtn = cancelContainer.querySelector(".btn-outline");
             cancelBtn.onclick = () => {
-                returnEquipment(latestPending.id);
+                cancelEquipment(latestPending.id);
             };
 
             cancelContainer.style.display = "flex"; 
@@ -81,7 +81,7 @@ async function loadMyData(token) {
     });
 }
 
-async function returnEquipment(equipmentId) {
+async function cancelEquipment(equipmentId) {
 
     const token = localStorage.getItem("jwtToken");
     console.log("Опитвам се да върна/отменя ID:", equipmentId);
@@ -102,12 +102,10 @@ async function returnEquipment(equipmentId) {
         });
 
         if (result.ok) {
-            alert("Успешно върнахте оборудването!");
             loadMyData(token); 
             window.location.reload();
         } else {
             console.error("Грешка при връщане:", result.status);
-            alert("Възникна грешка при връщането.");
         }
     } catch (error) {
         console.error("Мрежова грешка:", error);
