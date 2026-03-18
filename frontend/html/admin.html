@@ -1,241 +1,142 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Inventory Management System - Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Admin Dashboard - School Inventory</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="/frontend/css/admin.css">
-    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <aside class="sidebar">
-        <div class="logo-area">
-            <i class="fa-solid fa-book-open fa-2x"></i>
-            <div>School<br><small style="font-size: 0.7rem; font-weight: 400;">Inventory Management System</small></div>
+        <div class="sidebar-header">
+            <h2><i class="fa-solid fa-school"></i> School Inventory</h2>
         </div>
         
         <ul class="nav-menu">
-            <li><a href="#" class="nav-item active"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
+            <li><a href="#" id="nav-dashboard" class="nav-item active"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
             <li><a href="#" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
             <li><a href="#" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests <span class="badge-count">5</span></a></li>
             <li><a href="#" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
-            <li><a href="#" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
-            <li><a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:0.8rem;"></i></a></li>
+            <li><a href="#" id="nav-reports" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="#" id="nav-settings" class="nav-item"><i class="fa-solid fa-gear"></i> Settings <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:0.8rem;"></i></a></li>
         </ul>
 
-        <div class="logout-btn">
-            <i class="fa-solid fa-power-off"></i> 
-            <button id="logout-btn" onclick="handleLogout()">Logout</button>
+        <div class="sidebar-footer" style="margin-top: auto; padding: 20px;">
+            <button class="btn" style="width: 100%; background: transparent; color: inherit; border: 1px solid currentColor;" onclick="handleLogout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
         </div>
     </aside>
 
     <main class="main-content">
-        <header>
+        
+        <header class="top-header">
             <div class="search-bar">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search...">
+                <input type="text" id="equipSearch" placeholder="Search equipment...">
             </div>
-            <div class="user-profile">
-                <div class="user-info">
-                    <span style="color: var(--text-gray);">Welcome, </span> <strong id="display-username"></strong>
-                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=" alt="User">
+            
+            <div class="header-actions">
+                <button class="icon-btn" style="border: none; background: transparent; font-size: 1.2rem;"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
+                    <img id="user-avatar" src="https://placehold.co/40x40/ccc/fff" alt="User Avatar" style="border-radius: 50%; width: 40px; height: 40px;">
+                    <span id="display-username">Loading...</span>
                 </div>
             </div>
         </header>
 
         <div class="content-padding">
             
-            <section class="welcome-banner">
-                <div class="welcome-text">
-                    <h1>Welcome to School Inventory<br>Management System</h1>
-                    <p>A digital platform for managing and tracking school equipment inventory efficiently. Users can request equipment, and admins can manage inventory and approvals.</p>
-                </div>
-                <img src="https://placehold.co/300x150/e0e0e0/888?text=Admin+Illustration" alt="Illustration">
-            </section>
-
-            <section class="stats-row">
-                <div class="stat-card">
-                    <div class="stat-header"><i class="fa-solid fa-print" style="color: var(--primary-color);"></i> Total Equipment</div>
-                    <div class="stat-number">128 <span>items</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-header"><i class="fa-regular fa-folder" style="color: #E74C3C;"></i> Pending Requests</div>
-                    <div class="stat-number">5 <span>items</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-header"><i class="fa-solid fa-box-open" style="color: #F57F17;"></i> Checked Out</div>
-                    <div class="stat-number">17 <span>items</span></div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-header"><i class="fa-solid fa-wrench" style="color: #E67E22;"></i> Under Repair</div>
-                    <div class="stat-number">4 <span>items</span></div>
-                </div>
-            </section>
-
-            <div class="action-row">
-                <button class="btn btn-primary btn-large">Manage Inventory</button>
-                <button class="btn btn-primary btn-large">View Reports &gt;</button>
-            </div>
-
-            <div class="dashboard-grid">
+            <div id="section-dashboard" class="content-section">
                 
-                <div class="left-column">
-                    <div class="card-container">
-                        <div class="section-header">
-                            <h2>Latest Equipment Requests</h2>
-                            <a href="#" class="link-icon">&gt;&gt;</a>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Equipment</th>
-                                    <th>Request Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Alice Brown</strong></td>
-                                    <td>Projector</td>
-                                    <td>May 1, 2024 <span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Mark Johnson</strong></td>
-                                    <td>USB Drive</td>
-                                    <td>April 30, 2024 <span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Sarah Miller</strong></td>
-                                    <td>Laptop</td>
-                                    <td>April 29, 2024 <span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Emily White</strong></td>
-                                    <td>Tablets</td>
-                                    <td>April 28, 2024 <span class="status-badge status-rejected">Rejected</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>John Smith</strong></td>
-                                    <td>Camera</td>
-                                    <td>April 28, 2024 <span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div style="text-align: right; margin-top: 20px;">
-                            <button class="btn btn-primary">Manage Inventory</button>
-                        </div>
+                <section class="welcome-banner">
+                    <div class="welcome-text">
+                        <h1>Welcome to School Inventory<br>Management System</h1>
+                        <p>A digital platform for managing and tracking school equipment inventory efficiently. Users can request equipment, and admins can manage inventory and approvals.</p>
                     </div>
+                </section>
 
-                    <div class="card-container">
-                        <div class="section-header">
-                            <h2>Latest Equipment Requests</h2>
-                        </div>
-                        <table class="data-table">
+                <section class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-header"><i class="fa-solid fa-print" style="color: #2B8EAD;"></i> Total Equipment</div>
+                        <div class="stat-number">128 <span style="font-size: 1rem; color: #888;">items</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><i class="fa-regular fa-folder" style="color: #E74C3C;"></i> Pending Requests</div>
+                        <div class="stat-number">5 <span style="font-size: 1rem; color: #888;">items</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><i class="fa-solid fa-box-open" style="color: #F57F17;"></i> Checked Out</div>
+                        <div class="stat-number">17 <span style="font-size: 1rem; color: #888;">items</span></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header"><i class="fa-solid fa-wrench" style="color: #E67E22;"></i> Under Repair</div>
+                        <div class="stat-number">4 <span style="font-size: 1rem; color: #888;">items</span></div>
+                    </div>
+                </section>
+
+                <div class="action-row" style="margin: 20px 0; display: flex; gap: 15px;">
+                    <button class="btn btn-primary" style="padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;">Manage Inventory</button>
+                    <button class="btn btn-primary" style="padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;">View Reports &gt;</button>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                        <h3>Latest Requests</h3>
+                        <table class="requests-table" style="width: 100%; text-align: left; margin-top: 15px;">
                             <thead>
                                 <tr>
-                                    <th>User</th>
-                                    <th>Equipment</th>
-                                    <th>Request Date</th>
+                                    <th>Item & Date</th>
                                     <th>Status</th>
+                                    <th style="text-align: right;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><strong>Alice Brown</strong></td>
-                                    <td>Projector</td>
-                                    <td>May 1, 2024</td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Mark Johnson</strong></td>
-                                    <td>USB Drive</td>
-                                    <td>April 30, 2024</td>
-                                    <td><span class="status-badge status-approved">Approved</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Emily White</strong></td>
-                                    <td>Tablets</td>
-                                    <td>April 28, 2024</td>
-                                    <td><span class="status-badge status-rejected">Rejected</span></td>
-                                </tr>
+                                <tr><td colspan="3">Loading requests...</td></tr>
                             </tbody>
                         </table>
-                        <div style="text-align: right; margin-top: 20px;">
-                            <button class="btn btn-primary">View All Requests</button>
-                        </div>
                     </div>
                 </div>
 
-                <div class="right-column">
-                    <div class="card-container">
-                        <div class="section-header">
-                            <h2>Inventory Status Overview</h2>
-                            <a href="#" class="link-icon">&gt;&gt;</a>
-                        </div>
-                        
-                        <div class="chart-layout">
-                            <div class="pie-chart"></div>
-                            <div class="chart-legend">
-                                <div class="legend-item"><span class="dot dot-blue"></span> Available <strong>64%</strong></div>
-                                <div class="legend-item"><span class="dot dot-yellow"></span> Checked Out <strong>20%</strong></div>
-                                <div class="legend-item"><span class="dot dot-green"></span> Under Repair <strong>11%</strong></div>
-                                <div class="legend-item"><span class="dot dot-red"></span> Retired <strong>5%</strong></div>
-                            </div>
-                        </div>
-
-                        <div class="section-header" style="margin-top: 30px;">
-                            <h2>Recent Activity Reports</h2>
-                        </div>
-                        <ul class="activity-list">
-                            <li><span class="dot dot-green"></span> <strong>John Smith</strong> returned a Camera - <small>May 2, 2024</small></li>
-                            <li><span class="dot dot-green"></span> <strong>Mark Johnson</strong> submitted a request to borrow USB Drive - <small>May 1, 2024</small></li>
-                            <li><span class="dot dot-yellow"></span> <strong>Admin</strong> marked Projector (Epson) as Under Repair - <small>Apr 30, 2024</small></li>
-                        </ul>
-                        <div style="text-align: right; margin-top: 15px;">
-                            <a href="#" class="view-link">View All Reports</a>
-                        </div>
-                    </div>
-
-                    <div class="card-container">
-                        <div class="section-header">
-                            <h2>Inventory Status Overview</h2>
-                            <a href="#" class="link-icon">&gt;&gt;</a>
-                        </div>
-                        
-                        <div class="chart-layout">
-                            <div class="donut-chart"></div>
-                            <div class="chart-legend">
-                                <div class="legend-item"><span class="dot dot-blue"></span> Available <strong>63%</strong></div>
-                                <div class="legend-item"><span class="dot dot-yellow"></span> Checked Out <strong>20%</strong></div>
-                                <div class="legend-item"><span class="dot dot-green"></span> Under Repair <strong>12%</strong></div>
-                                <div class="legend-item"><span class="dot dot-red"></span> Retired <strong>5%</strong></div>
-                            </div>
-                        </div>
-
-                        <div class="section-header" style="margin-top: 30px;">
-                            <h2>Recent Activity Reports</h2>
-                        </div>
-                        <ul class="activity-list">
-                            <li><span class="dot dot-green"></span> <strong>John Smith</strong> returned a Camera - <small>May 2, 2024</small></li>
-                            <li><span class="dot dot-green"></span> <strong>Mark Johnson</strong> submitted a request... <small>May 1, 2024</small></li>
-                        </ul>
-                        <div style="text-align: right; margin-top: 15px;">
-                            <a href="#" class="view-link">View All Reports</a>
-                        </div>
-                    </div>
+                <h3 style="margin-top: 30px;">Equipment Catalog</h3>
+                <div id="equipList" class="equipment-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
                 </div>
 
             </div>
+
+            <div id="section-reports" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>System Reports</h2>
+                </div>
+                <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <p>Тук ще се зареждат всички детайлни справки, графики за използването на инвентара и истории на заявките.</p>
+                    <br>
+                    <button class="btn btn-primary" style="padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;" onclick="alert('Генериране на PDF...')">
+                        <i class="fa-solid fa-file-pdf"></i> Generate PDF Report
+                    </button>
+                </div>
+            </div>
+
+            <div id="section-settings" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>System Settings</h2>
+                </div>
+                <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <p>Настройки на администраторския профил, добавяне на нови категории за инвентар и управление на нивата на достъп.</p>
+                    <br>
+                    <button class="btn" style="padding: 10px 20px; border-radius: 6px; border: 1px solid #ccc; background: transparent; cursor: pointer;">
+                        Промяна на парола
+                    </button>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <script src="/frontend/js/admin.js"></script>
-    <script src="/frontend/js/script.js"></script>
-    <script src="/frontend/js/login.js"></script>
-    <script src="/frontend/js/displayInfo.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
