@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedUsername = localStorage.getItem("username");
 
     if (savedUsername) {
-        document.getElementById("display-username").innerText = savedUsername;
+        const displayEl = document.getElementById("display-username");
+        if (displayEl) displayEl.innerText = savedUsername;
         
         updateAvatarWithInitials(savedUsername);
         fetchAndDisplayEquipment();
@@ -13,25 +14,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function getInitials(fullName) {
     const nameParts = fullName.trim().split(' ');
-    
     let initials = '';
-
     if (nameParts.length > 0) {
         initials += nameParts[0].charAt(0).toUpperCase();
-        
         if (nameParts.length > 1) {
             initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
         }
     }
-
     return initials;
 }
 
 function updateAvatarWithInitials(fullName) {
     const initials = getInitials(fullName);
-    
     const avatarImg = document.getElementById('user-avatar');
-
     const newUrl = `https://placehold.co/40x40/2B8EAD/FFFFFF?text=${initials}`;
     
     if (avatarImg) {
@@ -41,7 +36,8 @@ function updateAvatarWithInitials(fullName) {
 
 async function fetchAndDisplayEquipment() {
     const equipListContainer = document.getElementById('equipList');
-    
+    if (!equipListContainer) return; // Предпазител
+
     equipListContainer.innerHTML = '<p>Loading equipment...</p>';
 
     try {
@@ -52,14 +48,11 @@ async function fetchAndDisplayEquipment() {
         }
         
         const equipmentData = await response.json();
-
         console.log("Equipment: ", equipmentData);
-        
         
         equipListContainer.innerHTML = '';
 
         equipmentData.forEach(item => {
-            
             const isAvailable = item.equipmentStatus === 'AVAILABLE';
 
             const bgStyle = isAvailable ? '' : 'style="background-color: #FFFDE7;"';
@@ -69,7 +62,8 @@ async function fetchAndDisplayEquipment() {
 
             let buttonHtml = '';
             if (isAvailable) {
-                buttonHtml = `<button class="btn btn-primary" onclick="requestItem(${item.id})">Request</button>`;
+                // ТУК Е ПРОМЯНАТА НА ИМЕТО НА ФУНКЦИЯТА
+                buttonHtml = `<button class="btn btn-primary" onclick="requestItemAPI(${item.id})">Request</button>`;
             } else {
                 buttonHtml = `<button class="btn" style="background-color: #F1C40F; border:none; border-radius:6px; padding: 8px 16px;" disabled>Checked Out</button>`;
             }
@@ -99,12 +93,13 @@ async function fetchAndDisplayEquipment() {
     }
 }
 
-async function requestItem(itemId) {
-    const jwtToken = localStorage.getItem("jwtToken"); // или "accessToken", "jwt"
+// ПРЕИМЕНУВАНО НА requestItemAPI
+async function requestItemAPI(itemId) {
+    const jwtToken = localStorage.getItem("jwtToken"); 
 
     if (!jwtToken) {
         alert("Трябва да влезете в профила си, за да направите заявка!");
-        window.location.href = "/frontend/html/login.html"; // Смени с твоя път
+        window.location.href = "/frontend/html/login.html"; 
         return;
     }
     const now = new Date();
