@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History | Inventory System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="user.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="logo-text">
+                School <br> Inventory Management System
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
+            <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
+            <li><a href="my_requests.html" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests <span class="badge-count">2</span></a></li>
+            <li><a href="history_user.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+            <li><a href="inbox.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Inbox <span class="badge-count red-badge">3</span></a></li>
+        </ul>
+        <div class="logout-btn">
+            <a href="#" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="search-bar">
+                </div>
+
+            <div class="user-profile">
+    <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
+        <i class="fa-regular fa-bell"></i>
+        <span class="notification-dot"></span>
+    </a>
+
+    <div class="user-info">
+        <img src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
+        <span>Loading...</span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+</div>
+        </header>
+
+        <div class="content-padding">
+            <div class="page-header">
+                <h1>Usage History</h1>
+                <p>Track your past activity and equipment contributions.</p>
+            </div>
+
+            <div class="stats-row" style="margin-top: 25px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div class="stat-card" style="border-top: 4px solid var(--sidebar-bg); background: white; padding: 20px; border-radius: 15px;">
+                    <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;"><i class="fa-solid fa-layer-group"></i> Total Items</div>
+                    <div style="font-size: 24px; font-weight: 700;">12 <span style="font-size: 12px; font-weight: 400; color: var(--text-gray);">borrowed</span></div>
+                </div>
+                <div class="stat-card" style="border-top: 4px solid #10B981; background: white; padding: 20px; border-radius: 15px;">
+                    <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;"><i class="fa-solid fa-calendar-check"></i> On Time</div>
+                    <div style="font-size: 24px; font-weight: 700;">95% <span style="font-size: 12px; font-weight: 400; color: var(--text-gray);">return rate</span></div>
+                </div>
+                <div class="stat-card" style="border-top: 4px solid var(--primary-color); background: white; padding: 20px; border-radius: 15px;">
+                    <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;"><i class="fa-solid fa-award"></i> Reliability</div>
+                    <div style="font-size: 24px; font-weight: 700;">Elite <span style="font-size: 12px; font-weight: 400; color: var(--text-gray);">Level</span></div>
+                </div>
+            </div>
+
+            <div class="card-container" style="margin-top: 30px; background: white; border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color);">
+                <div style="padding: 20px; border-bottom: 1px solid var(--border-color);">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="historySearch" placeholder="Search history..." style="width: 300px; padding: 10px 40px; border-radius: 10px; border: 1px solid #ddd;">
+                    </div>
+                </div>
+
+                <table class="history-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #F8FAFC; text-align: left; color: var(--text-gray); font-size: 12px;">
+                            <th style="padding: 15px;">ITEM</th>
+                            <th style="padding: 15px;">PERIOD</th>
+                            <th style="padding: 15px;">CONDITION</th>
+                            <th style="padding: 15px;">STATUS</th>
+                        </tr>
+                    </thead>
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Item Details</th>
+                                <th>Period</th>
+                                <th>Condition</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody">
+                            <tr>
+                                <td>
+                                    <div class="td-item">
+                                        <div class="item-icon-small"><i class="fa-solid fa-laptop"></i></div>
+                                        <div>
+                                            <p class="item-name">MacBook Pro 14"</p>
+                                            <p class="item-sub">Serial: #MB-9921</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Mar 01 - Mar 05</td>
+                                <td><span class="condition-tag">Perfect</span></td>
+                                <td><span class="status-badge status-approved">Returned</span></td>
+                                <td><button class="btn-icon"><i class="fa-solid fa-download"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="td-item">
+                                        <div class="item-icon-small"><i class="fa-solid fa-camera"></i></div>
+                                        <div>
+                                            <p class="item-name">Canon EOS R5</p>
+                                            <p class="item-sub">Serial: #CN-1022</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Feb 10 - Feb 15</td>
+                                <td><span class="condition-tag">Good</span></td>
+                                <td><span class="status-badge status-approved">Returned</span></td>
+                                <td><button class="btn-icon"><i class="fa-solid fa-download"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="logoutModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to log out?</p>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
+                <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="user.js"></script>
+</body>
+</html>
