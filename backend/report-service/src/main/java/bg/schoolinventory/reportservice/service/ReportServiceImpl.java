@@ -1,7 +1,11 @@
 package bg.schoolinventory.reportservice.service;
 
+import bg.schoolinventory.reportservice.client.EquipmentClient;
+import bg.schoolinventory.reportservice.client.RequestClient;
 import bg.schoolinventory.reportservice.dto.HistoryReportDTO;
 import bg.schoolinventory.reportservice.dto.UsageReportDTO;
+import bg.schoolinventory.reportservice.dto.EquipmentDTO;
+import bg.schoolinventory.reportservice.dto.RequestDTO;
 import bg.schoolinventory.reportservice.repository.ReportRepository;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -17,14 +21,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
+    private final EquipmentClient equipmentClient;
+    private final RequestClient requestClient;
 
-    public ReportServiceImpl(ReportRepository reportRepository) {
+    public ReportServiceImpl(ReportRepository reportRepository,
+                             EquipmentClient equipmentClient,
+                             RequestClient requestClient) {
         this.reportRepository = reportRepository;
+        this.equipmentClient = equipmentClient;
+        this.requestClient = requestClient;
     }
 
     @Override
@@ -77,21 +89,21 @@ public class ReportServiceImpl implements ReportService {
 
         // Header
         csvWriter.writeNext(new String[]{
-            "Equipment Name", "Type", "Total Requests", "Approved Requests",
-            "Returned Requests", "Avg Borrow Duration (hours)", "Last Used"
+                "Equipment Name", "Type", "Total Requests", "Approved Requests",
+                "Returned Requests", "Avg Borrow Duration (hours)", "Last Used"
         });
 
         // Data
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for (UsageReportDTO report : reports) {
             csvWriter.writeNext(new String[]{
-                report.getEquipmentName(),
-                report.getEquipmentType(),
-                String.valueOf(report.getTotalRequests()),
-                String.valueOf(report.getApprovedRequests()),
-                String.valueOf(report.getReturnedRequests()),
-                String.format("%.2f", report.getAverageBorrowDuration()),
-                report.getLastUsed() != null ? report.getLastUsed().format(formatter) : ""
+                    report.getEquipmentName(),
+                    report.getEquipmentType(),
+                    String.valueOf(report.getTotalRequests()),
+                    String.valueOf(report.getApprovedRequests()),
+                    String.valueOf(report.getReturnedRequests()),
+                    String.format("%.2f", report.getAverageBorrowDuration()),
+                    report.getLastUsed() != null ? report.getLastUsed().format(formatter) : ""
             });
         }
 
@@ -146,22 +158,22 @@ public class ReportServiceImpl implements ReportService {
 
         // Header
         csvWriter.writeNext(new String[]{
-            "Username", "Equipment Name", "Request Date", "Borrow Start", "Borrow End",
-            "Status", "Return Date", "Return Condition"
+                "Username", "Equipment Name", "Request Date", "Borrow Start", "Borrow End",
+                "Status", "Return Date", "Return Condition"
         });
 
         // Data
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for (HistoryReportDTO report : reports) {
             csvWriter.writeNext(new String[]{
-                report.getUsername(),
-                report.getEquipmentName(),
-                report.getRequestDate().format(formatter),
-                report.getBorrowStartTime().format(formatter),
-                report.getBorrowEndTime().format(formatter),
-                report.getStatus(),
-                report.getReturnDate() != null ? report.getReturnDate().format(formatter) : "",
-                report.getReturnCondition() != null ? report.getReturnCondition() : ""
+                    report.getUsername(),
+                    report.getEquipmentName(),
+                    report.getRequestDate().format(formatter),
+                    report.getBorrowStartTime().format(formatter),
+                    report.getBorrowEndTime().format(formatter),
+                    report.getStatus(),
+                    report.getReturnDate() != null ? report.getReturnDate().format(formatter) : "",
+                    report.getReturnCondition() != null ? report.getReturnCondition() : ""
             });
         }
 
@@ -207,5 +219,21 @@ public class ReportServiceImpl implements ReportService {
         document.close();
 
         return outputStream.toByteArray();
+    }
+
+    /**
+     * Example method showing how to use Feign clients to get additional data
+     * This could be used for enriched reports with more detailed equipment information
+     */
+    public List<EquipmentDTO> getAllEquipmentDetails() {
+        return equipmentClient.getAllEquipment();
+    }
+
+    /**
+     * Example method showing how to use Feign clients for request data
+     * This could be used for cross-service data validation
+     */
+    public List<RequestDTO> getAllRequestDetails() {
+        return requestClient.getAllRequests();
     }
 }
