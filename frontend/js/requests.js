@@ -24,48 +24,92 @@ async function loadMyData(token) {
     const data = await result.json();
     console.log("Данни от сървъра:", data);
     
-    const tbodyElement = document.querySelector(".requests-table tbody");
-    tbodyElement.innerHTML = ""; 
+    const cancelContainer = document.querySelector(".cancel-request");
+    
+    if (cancelContainer) {
+        const pendingRequests = data.filter(req => req.status === "PENDING");
+
+        if (pendingRequests.length > 0) {
+            pendingRequests.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+            const latestPending = pendingRequests[0];
+
+            const cancelInfo = cancelContainer.querySelector(".cancel-info");
+            cancelInfo.innerHTML = `<i class="fa-solid fa-box" style="color: var(--text-gray);"></i> ${latestPending.equipmentName}`;
+
+            const cancelBtn = cancelContainer.querySelector(".btn-outline");
+            cancelBtn.onclick = () => {
+                returnEquipment(latestPending.id);
+            };
+
+            cancelContainer.style.display = "flex"; 
+        } else {
+            cancelContainer.style.display = "none";
+        }
+    }
+
+    const listContainer = document.querySelector(".simple-list");
+
+    listContainer.innerHTML = ""; 
+    data.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
 
     data.forEach(req => {
-        const dateObj = new Date(req.requestDate);
-        const formattedDate = dateObj.toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            year: 'numeric' 
-        });
+        let badgeClass = "status-pending"; 
+        let badgeIcon = '<i class="fa-regular fa-clock" style="margin-right:4px;"></i>';
 
-        let badgeClass = "status-checkedout"; // По подразбиране (напр. за PENDING)
         if (req.status === "APPROVED") {
-            badgeClass = "status-available"; // Зелено
-        } else if (req.status === "RETURNED") {
-            badgeClass = "status-returned"; 
+            badgeClass = "status-approved"; 
+            badgeIcon = '';
         } else if (req.status === "REJECTED") {
-            badgeClass = "status-unavailable"; // Червено
+            badgeClass = "status-rejected"; 
+            badgeIcon = '';
+        } else if (req.status === "RETURNED") {
+            badgeClass = "status-available"; 
+            badgeIcon = '';
         }
 
-        let actionIcon = "";
-        if (req.status === "PENDING") {
-            actionIcon = `<i class="fa-solid fa-rotate-right" style="color: var(--text-gray); cursor:pointer;"></i>`;
-        }
+        const listItem = document.createElement("div");
+        listItem.className = "simple-list-item";
 
-        // 4. Създаваме реда
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>
-                ${req.equipmentName} 
-                <br>
-                <small style="color: var(--text-gray);">${formattedDate}</small>
-            </td>
-            <td>
-                <span class="status-badge ${badgeClass}">${req.status}</span>
-            </td>
-            <td style="text-align: right;">
-                ${actionIcon}
-            </td>
+        listItem.innerHTML = `
+            <div class="item-left">
+                <i class="fa-solid fa-box"></i> ${req.equipmentName}
+            </div>
+            <span class="status-badge ${badgeClass}">${badgeIcon} ${req.status}</span>
         `;
 
-        tbodyElement.appendChild(tr);
+        listContainer.appendChild(listItem);
     });
+}
+
+async function returnEquipment(equipmentId) {
+
+    const token = localStorage.getItem("jwtToken");
+    console.log("Опитвам се да върна/отменя ID:", equipmentId);
+
+    if (!token) {
+        alert("Нямате достъп. Моля, влезте отново.");
+        window.location.href = "/login.html";
+        return;
+    }
+
+    try {
+        const result = await fetch(`http://localhost:9000/api/request/${equipmentId}/cancel`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            }
+        });
+
+        if (result.ok) {
+            alert("Успешно върнахте оборудването!");
+            loadMyData(token); 
+            window.location.reload();
+        } else {
+            console.error("Грешка при връщане:", result.status);
+            alert("Възникна грешка при връщането.");
+        }
+    } catch (error) {
+        console.error("Мрежова грешка:", error);
+    }
 }

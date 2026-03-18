@@ -6,7 +6,7 @@
     <title>School Inventory System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="user.css">
+    <link rel="stylesheet" href="/frontend/css/user.css">
 </head>
 <body>
 
@@ -52,8 +52,8 @@
     </a>
 
     <div class="user-info">
-        <img src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
-        <span>Loading...</span>
+        <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
+        <span id="display-username">Loading...</span>
         <i class="fa-solid fa-chevron-down"></i>
     </div>
 </div>
@@ -105,56 +105,7 @@
                     </div>
 
                     <div class="equipment-list" id="equipList">
-                        <!-- Item 1 -->
-                        <div class="equipment-item">
-                            <div class="eq-img"><img src="https://placehold.co/80x60/FFFFFF/94A3B8?text=Projector" alt="Projector"></div>
-                            <div class="equipment-details">
-                                <h4>Epson Projector</h4>
-                                <div class="eq-meta">
-                                    <p>Room 101</p>
-                                    <div style="display:flex; justify-content: space-between; max-width: 150px;">
-                                        <p>Condition</p>
-                                        <p>Good</p>
-                                    </div>
-                                </div>
-                                <span class="status-badge status-available"><i class="fa-solid fa-leaf"></i> Available</span>
-                            </div>
-                            <button class="btn btn-primary" onclick="requestItem(this)">Request</button>
-                        </div>
                         
-                        <!-- Item 2 -->
-                        <div class="equipment-item eq-yellow-bg">
-                            <div class="eq-img"><img src="https://placehold.co/80x60/FFFFFF/94A3B8?text=Laptop" alt="Laptop"></div>
-                            <div class="equipment-details">
-                                <h4>Lenovo Laptop</h4>
-                                <div class="eq-meta">
-                                    <p>Sarah Miller</p>
-                                    <div style="display:flex; justify-content: space-between; max-width: 150px;">
-                                        <p>Computer Lab</p>
-                                        <p>Good</p>
-                                    </div>
-                                </div>
-                                <span class="status-badge status-light-yellow"><i class="fa-solid fa-hand-holding"></i> Checked Out</span>
-                            </div>
-                            <button class="btn btn-warning">Checked Out</button>
-                        </div>
-
-                        <!-- Item 3 -->
-                        <div class="equipment-item eq-gray-bg">
-                            <div class="eq-img"><img src="https://placehold.co/80x60/FFFFFF/94A3B8?text=iPads" alt="iPads"></div>
-                            <div class="equipment-details">
-                                <h4>Set of 10 iPads</h4>
-                                <div class="eq-meta">
-                                    <p>Room 202</p>
-                                    <div style="display:flex; justify-content: space-between; max-width: 180px;">
-                                        <p>Issue: Broken screen</p>
-                                        <p>Room 202</p>
-                                    </div>
-                                </div>
-                                <span class="status-badge status-light-yellow"><i class="fa-solid fa-user-pen"></i> Aaadmir</span>
-                            </div>
-                            <button class="btn btn-danger">Under Repair</button>
-                        </div>
                     </div>
                 </div>
 
@@ -171,18 +122,6 @@
                         </div>
 
                         <div class="simple-list">
-                            <div class="simple-list-item">
-                                <div class="item-left"><i class="fa-solid fa-usb"></i> USB Drive</div>
-                                <span class="status-badge status-pending"><i class="fa-regular fa-clock" style="margin-right:4px;"></i> Pending</span>
-                            </div>
-                            <div class="simple-list-item">
-                                <div class="item-left"><i class="fa-solid fa-video"></i> Projector Epson</div>
-                                <span class="status-badge status-approved">Approved</span>
-                            </div>
-                            <div class="simple-list-item">
-                                <div class="item-left"><i class="fa-solid fa-camera"></i> Digital Camera</div>
-                                <span class="status-badge status-rejected">Rejected</span>
-                            </div>
                         </div>
 
                         <a href="my_requests.html" class="view-all">View all requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; margin-left:4px;"></i></a>
@@ -205,6 +144,8 @@
         </div>
     </div>
 </div>
-    <script src="user.js"></script>
+    <script src="/frontend/js/user.js"></script>
+    <script src="/frontend/js/displayInfo.js"></script>
+    <script src="/frontend/js/requests.js"></script>
 </body>
 </html>

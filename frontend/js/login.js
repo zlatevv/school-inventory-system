@@ -81,7 +81,7 @@ async function handleLogin() {
         if (data.role == "ADMIN") {
             window.location.href = '/frontend/html/admin.html';
         } else {
-            window.location.href = '/frontend/html/index.html';
+            window.location.href = '/frontend/html/user.html';
         }
     } else {
         if (response.status === 400 || response.status === 401 || response.status === 403) {

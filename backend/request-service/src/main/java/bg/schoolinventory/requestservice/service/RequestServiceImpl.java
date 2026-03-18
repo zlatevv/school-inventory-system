@@ -93,6 +93,21 @@ public class RequestServiceImpl implements RequestService {
         return requestRepository.save(request);
     }
 
+    @Override
+    public Request cancelRequest(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
+
+        if (request.getStatus() != RequestStatus.PENDING){
+            throw new RuntimeException("Error - can only cancel pending requests!");
+        }
+
+        request.setStatus(RequestStatus.REJECTED);
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "AVAILABLE");
+
+        return requestRepository.save(request);
+    }
+
     private RequestResponseDTO mapToResponseDTO(Request req) {
         EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
 

@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (welcomeH1) welcomeH1.innerText = `Welcome back, ${username}!`;
     if (welcomeMsg) welcomeMsg.innerText = "Hello, " + username;
 
+    updateAvatarWithInitials(username);
+
     // 3. АКТИВЕН ТАБ (АВТОМАТИЧНО)
     const currentPage = window.location.pathname.split("/").pop() || "user.html";
     const navLinks = document.querySelectorAll('.nav-item');
@@ -59,7 +61,7 @@ if (logoutTrigger && logoutModal) {
 // Слушатели за бутоните вътре в самия прозорец
 document.getElementById('confirmLogout')?.addEventListener('click', () => {
     localStorage.clear();
-    window.location.href = '../index.html';
+    window.location.href = '/frontend/html/index.html';
 });
 
 document.getElementById('cancelLogout')?.addEventListener('click', () => {
@@ -87,6 +89,34 @@ function requestItem(button) {
     button.disabled = true;
     button.style.cursor = "default";
     alert("Заявката е изпратена успешно!");
+}
+
+function getInitials(fullName) {
+    const nameParts = fullName.trim().split(' ');
+    
+    let initials = '';
+
+    if (nameParts.length > 0) {
+        initials += nameParts[0].charAt(0).toUpperCase();
+        
+        if (nameParts.length > 1) {
+            initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+        }
+    }
+
+    return initials;
+}
+
+function updateAvatarWithInitials(fullName) {
+    const initials = getInitials(fullName);
+    
+    const avatarImg = document.getElementById('user-avatar');
+
+    const newUrl = `https://placehold.co/40x40/2B8EAD/FFFFFF?text=${initials}`;
+    
+    if (avatarImg) {
+        avatarImg.src = newUrl;
+    }
 }
 
 //BROWSE EQUIPMENT
