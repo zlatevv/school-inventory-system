@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Equipment | Inventory System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/frontend/css/user.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="logo-text">
+                School <br> Inventory Management System
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
+            <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
+            <li><a href="my_requests.html" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests <span class="badge-count">2</span></a></li>
+            <li><a href="history_user.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+            <li><a href="inbox.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Inbox <span class="badge-count red-badge">3</span></a></li>
+        </ul>
+
+        <div class="logout-btn">
+            <a href="#" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="search-bar">
+                </div>
+
+            <div class="user-profile">
+    <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
+        <i class="fa-regular fa-bell"></i>
+        <span class="notification-dot"></span>
+    </a>
+
+    <div class="user-info">
+        <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
+        <span id="display-username">Loading...</span>
+        <i class="fa-solid fa-chevron-down"></i>
+    </div>
+</div>
+        </header>
+
+        <div class="content-padding">
+            <div class="browse-header">
+                <div class="title-section">
+                    <h1>Equipment Gallery</h1>
+                    <p>Discover and reserve technology for your academic needs.</p>
+                </div>
+                
+                <div class="search-filters">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="equipmentSearch" placeholder="Search equipment...">
+                    </div>
+                    <select id="categorySelect" class="form-select"> <option value="all">All Statuses</option>
+                        <option value="available">Available</option>
+                        <option value="checked_out">Checked Out</option>
+                        <option value="under_repair">Under Repair</option>
+                        <option value="retired">Retired</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="equipment-grid" id="equipmentGrid">
+                </div>
+        </div>
+    </main>
+<div id="logoutModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-icon">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+        <h2>Sign Out</h2>
+        <p>Are you sure you want to log out of your profile?</p>
+        <div class="modal-buttons">
+            <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
+            <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+        </div>
+    </div>
+</div>
+    <script src="/frontend/js/user.js"></script>
+    <script src="/frontend/js/displayInfo.js"></script>
+</body>
+</html>

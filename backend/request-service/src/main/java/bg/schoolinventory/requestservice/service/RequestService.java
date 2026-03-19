@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface RequestService {
     Request createRequest(RequestCreateDTO dto, String username);
+    Request cancelRequest(Long requestId);
     List<RequestResponseDTO> getMyRequests(String username);
     List<RequestResponseDTO> getAllRequests();
     Request approveRequest(Long requestId);

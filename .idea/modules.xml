@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/backend/auth-service/auth-service.iml" filepath="$PROJECT_DIR$/backend/auth-service/auth-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/pennywise-team-aibest.iml" filepath="$PROJECT_DIR$/.idea/pennywise-team-aibest.iml" />
     </modules>
   </component>
 </project>

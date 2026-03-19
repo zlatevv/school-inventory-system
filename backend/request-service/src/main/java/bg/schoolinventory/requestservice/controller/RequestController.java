@@ -67,4 +67,10 @@ public class RequestController {
 
         return ResponseEntity.ok(request);
     }
+
+    @PutMapping("/request/{id}/cancel")
+    public ResponseEntity<Request> cancelRequest(@PathVariable Long id) {
+        Request request = requestService.cancelRequest(id);
+        return ResponseEntity.ok(request);
+    }
 }
