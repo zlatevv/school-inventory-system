@@ -61,7 +61,7 @@ if (logoutTrigger && logoutModal) {
 // Слушатели за бутоните вътре в самия прозорец
 document.getElementById('confirmLogout')?.addEventListener('click', () => {
     localStorage.clear();
-    window.location.href = '/frontend/html/index.html';
+    window.location.href = '/frontend/html/login.html';
 });
 
 document.getElementById('cancelLogout')?.addEventListener('click', () => {
