@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/backend/request-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/report-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/api-gateway/pom.xml" />
       </list>
     </option>
   </component>
