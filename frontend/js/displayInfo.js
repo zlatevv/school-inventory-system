@@ -2,22 +2,55 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedUsername = localStorage.getItem("username");
 
     if (savedUsername) {
-        document.getElementById("display-username").innerText = savedUsername;
+        const displayEl = document.getElementById("display-username");
+        if (displayEl) displayEl.innerText = savedUsername;
         
+        updateAvatarWithInitials(savedUsername);
+        
+        // Зареждаме данните
         fetchAndDisplayEquipment();
-        loadAvailableEquipmentNumber();
+        
+        if (typeof loadAvailableEquipmentNumber === 'function') {
+            loadAvailableEquipmentNumber();
+        }
     } else {
         window.location.href = "/frontend/html/login.html";
     }
 });
 
+// Функции за аватара (извадени на правилното място)
+function getInitials(fullName) {
+    const nameParts = fullName.trim().split(' ');
+    let initials = '';
+    if (nameParts.length > 0) {
+        initials += nameParts[0].charAt(0).toUpperCase();
+        if (nameParts.length > 1) {
+            initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
+        }
+    }
+    return initials;
+}
+
+function updateAvatarWithInitials(fullName) {
+    const initials = getInitials(fullName);
+    const avatarImg = document.getElementById('user-avatar');
+    const newUrl = `https://placehold.co/40x40/2B8EAD/FFFFFF?text=${initials}`;
+    
+    if (avatarImg) {
+        avatarImg.src = newUrl;
+    }
+}
+
+// Зареждане на оборудването
 async function fetchAndDisplayEquipment() {
     const equipListContainer = document.getElementById('equipList');
+    if (!equipListContainer) return; // Предпазител
 
+    // Елементи за статистика
     const statNumberDivAvailable = document.getElementById("all-items-count");
     const statNumberDivCheckedOut = document.getElementById("checked_out");
     const statNumberDivUnderRepair = document.getElementById("under-repair-equipment");
-    
+
     equipListContainer.innerHTML = '<p>Loading equipment...</p>';
 
     try {
@@ -28,45 +61,28 @@ async function fetchAndDisplayEquipment() {
         }
         
         const equipmentData = await response.json();
-        const available_equipment = equipmentData.filter(equipment => equipment.equipmentStatus == "AVAILABLE");
-        const checked_out_equipment = equipmentData.filter(equipment => equipment.equipmentStatus == "CHECKED_OUT");
-        const under_repair_equipment = equipmentData.filter(equipment => equipment.equipmentStatus == "UNDER_REPAIR");
+        console.log("Equipment: ", equipmentData);
         
-        statNumberDivAvailable.innerHTML = available_equipment.length;
-        statNumberDivCheckedOut.innerHTML = checked_out_equipment.length;
-        statNumberDivUnderRepair.innerHTML = under_repair_equipment.length;
-
+        if (statNumberDivAvailable) statNumberDivAvailable.innerText = equipmentData.length;
+        if (statNumberDivCheckedOut) {
+            const checkedOutCount = equipmentData.filter(item => item.equipmentStatus !== 'AVAILABLE').length;
+            statNumberDivCheckedOut.innerText = checkedOutCount;
+        }
+        
         equipListContainer.innerHTML = '';
 
         equipmentData.forEach(item => {
-            let bgStyle, badgeClass, badgeIcon, badgeText, buttonHtml;
+            const isAvailable = item.equipmentStatus === 'AVAILABLE';
 
-            if (item.equipmentStatus === 'AVAILABLE') {
-                bgStyle = '';
-                badgeClass = 'status-available';
-                badgeIcon = '<i class="fa-solid fa-check"></i>';
-                badgeText = 'Available';
-                buttonHtml = `<button class="btn btn-primary" onclick="requestItem(${item.id})">Request</button>`;
-            
-            } else if (item.equipmentStatus === 'RETIRED') {
-                bgStyle = 'style="background-color: #F8ECEC;"';
-                badgeClass = 'status-rejected';
-                badgeIcon = '<i class="fa-solid fa-ban"></i>';
-                badgeText = 'Retired';
-                buttonHtml = `<button class="btn" style="background-color: #E74C3C; color: white; border:none; border-radius:6px; padding: 8px 16px;" disabled>Retired</button>`;
-            
-            } else if (item.equipmentStatus === 'UNDER_REPAIR') {
-                bgStyle = 'style="background-color: #F9E79F;"'; 
-                badgeClass = 'status-pending'; 
-                badgeIcon = '<i class="fa-solid fa-wrench"></i>';
-                badgeText = 'In Repair';
-                buttonHtml = `<button class="btn" style="background-color: #E67E22; color: white; border:none; border-radius:6px; padding: 8px 16px;" disabled>In Repair</button>`;
-            
-            } else { 
-                bgStyle = 'style="background-color: #FFFDE7;"';
-                badgeClass = 'status-checkedout';
-                badgeIcon = '<i class="fa-solid fa-hand"></i>';
-                badgeText = 'Checked Out';
+            const bgStyle = isAvailable ? '' : 'style="background-color: #FFFDE7;"';
+            const badgeClass = isAvailable ? 'status-available' : 'status-checkedout';
+            const badgeIcon = isAvailable ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-hand"></i>';
+            const badgeText = isAvailable ? 'Available' : 'Checked Out';
+
+            let buttonHtml = '';
+            if (isAvailable) {
+                buttonHtml = `<button class="btn btn-primary" onclick="requestItemAPI(${item.id})">Request</button>`;
+            } else {
                 buttonHtml = `<button class="btn" style="background-color: #F1C40F; border:none; border-radius:6px; padding: 8px 16px;" disabled>Checked Out</button>`;
             }
 
@@ -95,12 +111,13 @@ async function fetchAndDisplayEquipment() {
     }
 }
 
-async function requestItem(itemId) {
-    const jwtToken = localStorage.getItem("jwtToken"); // или "accessToken", "jwt"
+// Функция за заявка на оборудване
+async function requestItemAPI(itemId) {
+    const jwtToken = localStorage.getItem("jwtToken"); 
 
     if (!jwtToken) {
         alert("Трябва да влезете в профила си, за да направите заявка!");
-        window.location.href = "/frontend/html/login.html"; // Смени с твоя път
+        window.location.href = "/frontend/html/login.html"; 
         return;
     }
     const now = new Date();
