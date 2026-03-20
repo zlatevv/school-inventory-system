@@ -125,7 +125,6 @@ async function loadMyData(token) {
 
 async function cancelEquipment(equipmentId) {
     const token = localStorage.getItem("jwtToken");
-    console.log("Опитвам се да върна/отменя ID:", equipmentId);
 
     if (!token) {
         alert("Нямате достъп. Моля, влезте отново.");
@@ -141,7 +140,7 @@ async function cancelEquipment(equipmentId) {
                 'Authorization': `Bearer ${token}` 
             }
         });
-
+        
         if (result.ok) {
             loadMyData(token); 
             window.location.reload();
