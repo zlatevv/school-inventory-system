@@ -16,7 +16,7 @@ public class NotificationListener {
 
     @RabbitListener(queuesToDeclare = @Queue("notification_queue"))
     public void handleNotificationEvent(NotificationEvent event) {
-        System.out.println("🔔 Получено ново съобщение от RabbitMQ за потребител ID: " + event.getUserId());
+        System.out.println("🔔 Получено ново съобщение от RabbitMQ за потребител ID: " + event.getUsername());
 
         notificationService.createNotification(event);
     }

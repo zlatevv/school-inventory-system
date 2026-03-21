@@ -16,9 +16,9 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
-        List<Notification> notifications = notificationService.getUserNotifications(userId);
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable String username) {
+        List<Notification> notifications = notificationService.getUserNotifications(username);
         return ResponseEntity.ok(notifications);
     }
 
