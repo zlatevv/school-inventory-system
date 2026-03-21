@@ -1,7 +1,7 @@
 const amqp = require('amqplib');
 const nodemailer = require('nodemailer');
 
-// 1. Настройки за твоя личен Gmail
+// 1. Настройки за личен Gmail
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
