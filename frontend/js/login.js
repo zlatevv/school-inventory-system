@@ -176,5 +176,5 @@ async function handleLogout() {
     sessionStorage.removeItem("userRole");
 
     await fetch("http://localhost:9000/api/auth/logout", { method: 'POST' })
-    window.location.href = '/frontend/html/login.html';
+    window.location.href = 'login.html';
 }

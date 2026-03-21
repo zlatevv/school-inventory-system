@@ -1,110 +1,259 @@
-if (window.location.pathname.includes('equipment_admin.html')) {
-    
-    const inventory = [
-        { id: 1, name: "Epson EB-2250U", category: "Electronics", room: "Room 101", status: "Available", icon: "fa-video" },
-        { id: 2, name: "Lenovo ThinkPad X1", category: "Computers", room: "Lab 2", status: "Checked Out", icon: "fa-laptop" },
-        { id: 3, name: "Logitech MX Master 3", category: "Accessories", room: "Office", status: "Available", icon: "fa-mouse" },
-        { id: 4, name: "Canon EOS R5", category: "Electronics", room: "Studio", status: "Available", icon: "fa-camera" },
-        { id: 5, name: "Dell UltraSharp 27", category: "Computers", room: "Library", status: "Under Repair", icon: "fa-desktop" }
-    ];
+let inventoryData = [];
 
-    const grid = document.getElementById('adminEquipmentGrid');
-    const bSearchInput = document.getElementById('equipmentSearch');
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Закачаме слушатели за търсачката и филтъра
+    const searchInput = document.getElementById('equipmentSearch');
     const categorySelect = document.getElementById('categorySelect');
 
-    function renderAdminCards(data) {
-        if(!grid) return;
-        grid.innerHTML = '';
-        data.forEach((item, index) => {
-            const statusClass = item.status === 'Available' ? 'status-available' : 
-                               (item.status === 'Checked Out' ? 'status-light-yellow' : 'status-rejected');
-            
-            const card = document.createElement('div');
-            card.className = 'eq-card';
-            card.style.animationDelay = `${index * 0.05}s`;
+    if (searchInput) searchInput.addEventListener('input', filterCatalog);
+    if (categorySelect) categorySelect.addEventListener('change', filterCatalog);
 
-            card.innerHTML = `
-    <div class="eq-card-image">
-        <span class="eq-status-tag ${statusClass}">${item.status}</span>
-        <i class="fa-solid ${item.icon}"></i>
-    </div>
-    <div class="eq-card-content">
-        <span class="eq-category">${item.category}</span>
-        <h3>${item.name}</h3>
-        <div class="eq-location"><i class="fa-solid fa-location-dot"></i> ${item.room}</div>
+    // 2. Изтегляме данните от бекенда
+    loadEquipmentCatalog();
+    
+    // 3. Закачаме логиката за Logout прозореца
+    initLogoutModal();
+
+    // 4. ИНИЦИАЛИЗИРАМЕ МОДАЛА ЗА РЕДАКЦИЯ (Това оправя проблема със Save бутона!)
+    initEditModal();
+});
+
+// --- ИЗТЕГЛЯНЕ И ОБЕДИНЯВАНЕ НА ДАННИТЕ ---
+async function loadEquipmentCatalog() {
+    const grid = document.getElementById('adminEquipmentGrid');
+    if (!grid) return;
+    grid.innerHTML = '<p>Зареждане на инвентара...</p>';
+
+    try {
+        // Взимаме инвентара
+        const eqRes = await fetch("http://localhost:9000/api/equipment");
+        const equipment = await eqRes.json();
         
-        <div class="assignment-info">
-            <div class="user-assigned">
-                <i class="fa-solid fa-user-tag"></i>
-                <span>${item.assignedTo || 'Available'}</span>
-            </div>
-            <div class="assignment-dates">
-                <i class="fa-solid fa-calendar-days"></i>
-                <span>${item.dateFrom || '-'} to ${item.dateTo || '-'}</span>
-            </div>
-        </div>
+        // Взимаме заявките (за да намерим кой е взел предмета и кога)
+        let token = localStorage.getItem('token');
+        if (token === "null" || token === "undefined") token = null;
 
-        <div class="admin-actions">
-            <button class="btn-edit" onclick="editItem(${item.id})">
-                <i class="fa-solid fa-pen"></i> Edit
-            </button>
-            <button class="btn-delete" onclick="deleteItem(${item.id})">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    </div>
-`;
-            grid.appendChild(card);
+        let requests = [];
+        if (token) {
+            const reqRes = await fetch("http://localhost:9000/api/manager/requests", {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (reqRes.ok) requests = await reqRes.json();
+        }
+
+        // Обединяваме двете неща
+        inventoryData = equipment.map(item => {
+            const activeRequest = requests.find(req => 
+                req.equipmentId === item.id && 
+                (req.status === 'APPROVED' || req.status === 'CHECKED_OUT') 
+            );
+
+            return {
+                ...item,
+                assignedTo: activeRequest ? activeRequest.username : null,
+                dateFrom: activeRequest ? activeRequest.startDate : null,
+                dateTo: activeRequest ? activeRequest.endDate : null
+            };
         });
+
+        // Показваме ги на екрана
+        renderCards(inventoryData);
+    } catch (error) {
+        console.error("Грешка при зареждане на данните:", error);
+        grid.innerHTML = '<p style="color:red;">Грешка при връзката със сървъра.</p>';
     }
-
-    // Търсене и Филтър
-    function filterAdminData() {
-        const searchTerm = bSearchInput.value.toLowerCase();
-        const category = categorySelect.value;
-        const filtered = inventory.filter(item => {
-            return (category === 'all' || item.category === category) && 
-                   item.name.toLowerCase().includes(searchTerm);
-        });
-        renderAdminCards(filtered);
-    }
-
-    if (bSearchInput) bSearchInput.addEventListener('input', filterAdminData);
-    if (categorySelect) categorySelect.addEventListener('change', filterAdminData);
-
-    renderAdminCards(inventory);
 }
 
-// Админ функции
-function editItem(id) { alert("Opening edit modal for item ID: " + id); }
-function deleteItem(id) { if(confirm("Are you sure you want to delete this asset?")) alert("Deleted!"); }
-function addNewItem() { alert("Redirecting to 'Add New Asset' form..."); }
+// --- РЕНДЕРИРАНЕ НА КАРТИТЕ ---
+function renderCards(data) {
+    const grid = document.getElementById('adminEquipmentGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
 
-// Logout Modal Logic
-const modal = document.getElementById('logoutModal');
-const openBtn = document.getElementById('openLogout');
-const closeBtn = document.getElementById('cancelLogout');
+    data.forEach((item, index) => {
+        // Определяне на цвят спрямо статуса
+        let statusClass = 'status-available';
+        if (item.equipmentStatus === 'CHECKED_OUT') statusClass = 'status-light-yellow';
+        if (item.equipmentStatus === 'RETIRED' || item.equipmentStatus === 'UNDER_REPAIR') statusClass = 'status-rejected';
 
-if(openBtn) openBtn.onclick = () => modal.style.display = 'flex';
-if(closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+        const card = document.createElement('div');
+        card.className = 'eq-card';
+        card.style.animationDelay = `${index * 0.05}s`;
 
-    // LOG OUT WINDOW
-const logoutTrigger = document.querySelector('.logout-btn a');
-const logoutModal = document.getElementById('logoutModal');
+        card.innerHTML = `
+            <div class="eq-card-image">
+                <span class="eq-status-tag ${statusClass}">${item.equipmentStatus || 'AVAILABLE'}</span>
+                <i class="fa-solid ${item.icon || 'fa-box'}"></i>
+            </div>
+            <div class="eq-card-content">
+                <span class="eq-category">${item.category || item.type || ''}</span>
+                <h3>${item.name || item.type || 'Неизвестен предмет'}</h3>
+                <div class="eq-location"><i class="fa-solid fa-location-dot"></i> ${item.location || 'Склад'}</div>
+                
+                <div class="assignment-info">
+                    <div class="user-assigned">
+                        <i class="fa-solid fa-user-tag"></i>
+                        <span>${item.assignedTo || 'Available'}</span>
+                    </div>
+                    <div class="assignment-dates">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>${item.dateFrom || '-'} to ${item.dateTo || '-'}</span>
+                    </div>
+                </div>
 
-if (logoutTrigger && logoutModal) {
-    logoutTrigger.addEventListener('click', function(e) {
-        e.preventDefault(); 
-        logoutModal.style.display = 'flex'; 
+                <div class="admin-actions">
+                    <button class="btn-edit" onclick="editItem(${item.id})">
+                        <i class="fa-solid fa-pen"></i> Edit
+                    </button>
+                    <button class="btn-delete" onclick="deleteItem(${item.id})">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
     });
 }
-// Слушатели за бутоните вътре в самия прозорец
-document.getElementById('confirmLogout')?.addEventListener('click', () => {
-    localStorage.clear();
-    window.location.href = '../index.html';
-});
 
-document.getElementById('cancelLogout')?.addEventListener('click', () => {
-    logoutModal.style.display = 'none'; // Просто затваряме прозореца
-});
+// --- ТЪРСЕНЕ И ФИЛТРИРАНЕ ---
+function filterCatalog() {
+    const searchInput = document.getElementById('equipmentSearch');
+    const categorySelect = document.getElementById('categorySelect');
 
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    const selectedStatus = categorySelect ? categorySelect.value.toLowerCase() : 'all';
+
+    const filtered = inventoryData.filter(item => {
+        const itemName = (item.name || item.type || '').toLowerCase();
+        const matchesSearch = itemName.includes(searchTerm);
+        
+        const itemStatus = (item.equipmentStatus || '').toLowerCase();
+        const matchesStatus = (selectedStatus === 'all') || (itemStatus === selectedStatus);
+
+        return matchesSearch && matchesStatus;
+    });
+
+    renderCards(filtered);
+}
+
+// --- АДМИН БУТОНИ И РЕДАКЦИЯ ---
+function editItem(id) {
+    const item = inventoryData.find(eq => eq.id === id);
+    if (!item) {
+        alert("Предметът не е намерен!");
+        return;
+    }
+
+    document.getElementById('editId').value = item.id;
+    document.getElementById('editName').value = item.name || '';
+    document.getElementById('editType').value = item.type || '';
+    document.getElementById('editSerial').value = item.serialNumber || '';
+    document.getElementById('editCondition').value = item.equipmentCondition || 'GOOD';
+    document.getElementById('editLocation').value = item.location || '';
+    document.getElementById('editPhoto').value = item.photoURL || ''; 
+
+    document.getElementById('editModal').style.display = 'flex';
+}
+
+function initEditModal() {
+    document.getElementById('cancelEdit')?.addEventListener('click', () => {
+        document.getElementById('editModal').style.display = 'none';
+    });
+
+    document.getElementById('editEquipmentForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+
+        const id = document.getElementById('editId').value;
+        
+        const updatedData = {
+            name: document.getElementById('editName').value,
+            type: document.getElementById('editType').value,
+            serialNumber: document.getElementById('editSerial').value,
+            condition: document.getElementById('editCondition').value,
+            location: document.getElementById('editLocation').value,
+            photoUrl: document.getElementById('editPhoto').value
+        };
+
+        let token = localStorage.getItem('token');
+        if (token === "null" || token === "undefined") token = null;
+
+        try {
+            const response = await fetch(`http://localhost:9000/api/equipment/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (response.ok) {
+                document.getElementById('editModal').style.display = 'none';
+                loadEquipmentCatalog(); 
+            } else {
+                alert("Грешка при запазване! Сървърът върна код: " + response.status);
+            }
+        } catch (error) {
+            console.error("Грешка при изпращане:", error);
+            alert("Грешка при връзката със сървъра!");
+        }
+    });
+}
+
+// --- ТРИЕНЕ НА ПРЕДМЕТ ---
+async function deleteItem(id) {
+    if (confirm("Сигурни ли сте, че искате да изтриете този предмет?")) {
+        let token = localStorage.getItem('token');
+        if (token === "null" || token === "undefined") token = null;
+
+        try {
+            const response = await fetch(`http://localhost:9000/api/equipment/${id}`, {
+                method: "DELETE",
+                headers: {
+                    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                }
+            });
+            
+            if (response.ok) {
+                window.location.reload(); 
+            } else {
+                alert("Грешка при изтриване! Код: " + response.status);
+            }
+        } catch (error) {
+            console.error("Мрежова грешка:", error);
+            alert("Грешка при връзката със сървъра!");
+        }
+    }
+}
+
+function addNewItem() { 
+    alert("Пренасочване към форма за добавяне..."); 
+}
+
+// --- LOGOUT ПРОЗОРЕЦ ---
+function initLogoutModal() {
+    const modal = document.getElementById('logoutModal');
+    const openBtn = document.getElementById('openLogout');
+    const confirmBtn = document.getElementById('confirmLogout');
+    const cancelBtn = document.getElementById('cancelLogout');
+
+    if(openBtn) {
+        openBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.style.display = 'flex';
+        });
+    }
+    
+    if(cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
+
+    if(confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+    }
+}
