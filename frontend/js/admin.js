@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const savedUsername = localStorage.getItem("username");
+    const savedUsername = sessionStorage.getItem("username");
 
     if (savedUsername) {
         const displayEl = document.getElementById("display-username");
@@ -123,7 +123,7 @@ async function fetchAndDisplayEquipment() {
 }
 
 async function requestItemAPI(itemId) {
-    const jwtToken = localStorage.getItem("jwtToken"); 
+    const jwtToken = sessionStorage.getItem("jwtToken"); 
 
     if (!jwtToken) {
         alert("Трябва да влезете в профила си, за да направите заявка!");
@@ -247,7 +247,7 @@ function initActionButtons() {
 }
 
 async function loadAdminRequests() {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     
     if (!token) {
         console.error("Липсва токен! Администраторът не е логнат.");
@@ -341,7 +341,7 @@ async function loadAdminRequests() {
 async function handleRequestAction(requestId, actionType) {
     if(!confirm(`Are you sure you want to ${actionType} request #${requestId}?`)) return;
     
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     
     switch (actionType) {
         case "APPROVE":
@@ -386,7 +386,7 @@ if (logoutTrigger && logoutModal) {
 
     // Изход при потвърждение
     confirmBtn.addEventListener('click', () => {
-        localStorage.clear(); // Трием всичко (токени, роли)
+        sessionStorage.clear(); // Трием всичко (токени, роли)
         window.location.href = '/frontend/html/login.html'; 
     });
 

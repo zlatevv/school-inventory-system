@@ -10,7 +10,7 @@ const CONFIG = {
 
 // Универсална функция за API заявки (автоматично добавя токена)
 async function apiFetch(endpoint, options = {}) {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     const headers = {
         'Content-Type': 'application/json',
         ...(token && { 'Authorization': `Bearer ${token}` }),
@@ -21,7 +21,7 @@ async function apiFetch(endpoint, options = {}) {
     if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
             alert("Нямате права или сесията е изтекла. Влезте отново.");
-            localStorage.clear();
+            sessionStorage.clear();
             window.location.href = "/frontend/html/login.html";
         }
         throw new Error(`API Error: ${response.status}`);
@@ -55,8 +55,8 @@ function updateAvatar(fullName) {
  * ==========================================
  */
 function initGlobalUI() {
-    const username = localStorage.getItem('username');
-    if (!username || !localStorage.getItem('jwtToken')) {
+    const username = sessionStorage.getItem('username');
+    if (!username || !sessionStorage.getItem('jwtToken')) {
         window.location.href = '../index.html';
         return;
     }
@@ -95,7 +95,7 @@ function initGlobalUI() {
         if (logoutModal) logoutModal.style.display = 'flex';
     });
     document.getElementById('confirmLogout')?.addEventListener('click', () => {
-        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = '/frontend/html/login.html';
     });
     document.getElementById('cancelLogout')?.addEventListener('click', () => {
@@ -264,16 +264,16 @@ async function initInbox() {
     container.innerHTML = '<p style="text-align: center; color: var(--text-gray);">Зареждане на съобщения...</p>';
 
     try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("jwtToken"); // Взимаме токена
+        const username = sessionStorage.getItem("username");
+        const token = sessionStorage.getItem("jwtToken"); // Взимаме токена
         
-        if (!userId || userId === 'undefined' || userId === 'null') {
-            console.error("ГРЕШКА: Няма валидно userId в localStorage! Текуща стойност:", userId);
+        if (!username || username === 'undefined' || username === 'null') {
+            console.error("ГРЕШКА: Няма валидно username в localStorage! Текуща стойност:", username);
             container.innerHTML = '<p style="text-align: center; color: var(--text-gray);">Моля, излезте от профила си и влезте отново, за да заредите данните.</p>';
             return;
         }
         // 2. Правим директен fetch към бекенда през Gateway-я (порт 9000)
-        const response = await fetch(`http://localhost:9000/api/notifications/user/${userId}`, {
+        const response = await fetch(`http://localhost:9000/api/notifications/user/${username}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -477,8 +477,10 @@ document.addEventListener('DOMContentLoaded', () => {
         initBrowseEquipment();
     } else if (path.includes('my_requests.html')) {
         initMyRequests();
+        setInterval(initMyRequests, 10000);
     } else if (path.includes('inbox.html')) {
         initInbox();
+        setInterval(initMyRequests, 10000);
     } else if (path.includes('history_user.html')) {
         initHistory();
     } else {

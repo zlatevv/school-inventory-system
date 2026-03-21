@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     if (!token) {
         // window.location.href = "/login.html"; // Закоментирано, ако тестваш локално
         return;
@@ -124,7 +124,7 @@ async function loadMyData(token) {
 }
 
 async function cancelEquipment(equipmentId) {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
 
     if (!token) {
         alert("Нямате достъп. Моля, влезте отново.");
