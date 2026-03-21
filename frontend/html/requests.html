@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Requests - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="logo-text">
+                School <br> Inventory Management System
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
+            <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
+            <li><a href="requests.html" class="nav-item active"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests <span class="badge-count">2</span></a></li>
+            <li><a href="users.html" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+        <div class="logout-btn">
+            <a href="#" class="nav-item"><i class="fa-solid fa-power-off"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search requests by name or item...">
+            </div>
+            <div class="user-profile">
+                <div class="notification-container">
+                    <i class="fa-regular fa-bell" id="notificationBell"></i>
+                    <span class="bell-dot"></span> <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="dropdown-header">
+                            <h3>Notifications</h3>
+                            <button id="markAllRead">Mark all as read</button>
+                        </div>
+                        <ul class="notification-list">
+                            <li class="unread">
+                                <i class="fa-solid fa-circle-info"></i>
+                                <div>
+                                    <p><strong>New Request:</strong> Alice Brown requested a Projector.</p>
+                                    <small>2 minutes ago</small>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-check-circle" style="color: #10B981;"></i>
+                                <div>
+                                    <p><strong>System Update:</strong> Inventory sync complete.</p>
+                                    <small>1 hour ago</small>
+                                </div>
+                            </li>
+                        </ul>
+                        <a href="#" class="view-all">See all notifications</a>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <strong>Admin</strong>
+                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                </div>
+            </div>
+        </header>
+
+        <div class="content-padding">
+            <div class="section-header" style="margin-bottom: 30px;">
+                <h1>Pending Borrow Requests</h1>
+                <p style="color: var(--text-gray);">Review and manage equipment loan applications.</p>
+            </div>
+
+            <div class="card-container" style="padding: 0; overflow: hidden; background: white; border-radius: 12px; border: 1px solid var(--border-color);">
+                <table class="requests-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #F8FAFC; text-align: left; border-bottom: 2px solid #E2E8F0;">
+                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">User Details</th>
+                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Equipment & Schedule</th>
+                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Status</th>
+                            <th style="padding: 20px; text-align: right; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #EDF2F7;">
+                            <td style="padding: 30px 20px;">
+                                <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">Alice Brown</div>
+                                <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">Mathematics Teacher</div>
+                            </td>
+                            <td style="padding: 30px 20px;">
+                                <div style="font-weight: 700; color: #2488A6; font-size: 1rem; margin-bottom: 10px;">Canon Camera EOS R5</div>
+                                <div style="display: flex; gap: 25px; align-items: center;">
+                                    <div style="color: #475569; font-size: 0.9rem;">
+                                        <i class="fa-regular fa-calendar-days" style="color: #94A3B8; margin-right: 8px;"></i>May 2, 2024
+                                    </div>
+                                    <div style="background: #E0F2FE; color: #0369A1; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">
+                                        <i class="fa-solid fa-stopwatch" style="margin-right: 5px;"></i>1 Day
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 30px 20px;">
+                                <span class="status-badge status-pending">Pending Review</span>
+                            </td>
+                            <td style="padding: 30px 20px; text-align: right;">
+                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                    <button class="btn btn-primary approve-btn" style="background: #10B981; border: none;">Approve</button>
+                                    <button class="btn btn-outline reject-btn" style="color: #EF4444; border-color: #FCA5A5;">Reject</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr style="border-bottom: 1px solid #EDF2F7;">
+                            <td style="padding: 30px 20px;">
+                                <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">Mark Johnson</div>
+                                <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">Science Dept. Head</div>
+                            </td>
+                            <td style="padding: 30px 20px;">
+                                <div style="font-weight: 700; color: #2488A6; font-size: 1rem; margin-bottom: 10px;">Microscope Zeiss #04</div>
+                                <div style="display: flex; gap: 25px; align-items: center;">
+                                    <div style="color: #475569; font-size: 0.9rem;">
+                                        <i class="fa-regular fa-calendar-days" style="color: #94A3B8; margin-right: 8px;"></i>May 5, 2024
+                                    </div>
+                                    <div style="background: #E0F2FE; color: #0369A1; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">
+                                        <i class="fa-solid fa-stopwatch" style="margin-right: 5px;"></i>3 Days
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="padding: 30px 20px;">
+                                <span class="status-badge status-pending">Pending Review</span>
+                            </td>
+                            <td style="padding: 30px 20px; text-align: right;">
+                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                                    <button class="btn btn-primary approve-btn" style="background: #10B981; border: none;">Approve</button>
+                                    <button class="btn btn-outline reject-btn" style="color: #EF4444; border-color: #FCA5A5;">Reject</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div id="logoutModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to log out of the system?</p>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="modal-btn" style="background: #EF4444; color: white;">Yes, Logout</button>
+                <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
