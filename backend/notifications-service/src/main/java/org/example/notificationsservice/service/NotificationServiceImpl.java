@@ -1,7 +1,6 @@
 package org.example.notificationsservice.service;
 
 import jakarta.transaction.Transactional;
-import org.example.notificationsservice.dto.NotificationDTO;
 import org.example.notificationsservice.dto.NotificationEvent;
 import org.example.notificationsservice.model.Notification;
 import org.example.notificationsservice.repository.NotificationRepository;
@@ -29,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationDTO> getUserNotifications(Long userId) {
+    public List<Notification> getUserNotifications(Long userId) {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 

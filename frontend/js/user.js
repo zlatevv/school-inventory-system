@@ -254,35 +254,162 @@ async function initMyRequests() {
 }
 
 // --- INBOX ---
-function initInbox() {
-    const search = document.getElementById('inboxSearch');
+async function initInbox() {
     const container = document.getElementById('inboxContainer');
+    const search = document.getElementById('inboxSearch');
     
-    if (search && container) {
-        const cards = container.getElementsByClassName('notification-card');
+    if (!container) return;
+
+    // 1. Показваме, че зарежда
+    container.innerHTML = '<p style="text-align: center; color: var(--text-gray);">Зареждане на съобщения...</p>';
+
+    try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("jwtToken"); // Взимаме токена
         
-        search.addEventListener('input', e => {
-            const filter = e.target.value.toLowerCase();
-            Array.from(cards).forEach(card => {
-                const text = card.innerText.toLowerCase();
-                card.style.display = text.includes(filter) ? "flex" : "none";
-            });
+        if (!userId || userId === 'undefined' || userId === 'null') {
+            console.error("ГРЕШКА: Няма валидно userId в localStorage! Текуща стойност:", userId);
+            container.innerHTML = '<p style="text-align: center; color: var(--text-gray);">Моля, излезте от профила си и влезте отново, за да заредите данните.</p>';
+            return;
+        }
+        // 2. Правим директен fetch към бекенда през Gateway-я (порт 9000)
+        const response = await fetch(`http://localhost:9000/api/notifications/user/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         });
 
-        Array.from(cards).forEach(card => {
-            card.addEventListener('click', function() {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const notifications = await response.json(); // Парсваме JSON отговора
+
+        if (!notifications || notifications.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-gray); margin-top: 20px;">Нямате нови нотификации.</p>';
+            updateBadges(0);
+            return;
+        }
+
+        container.innerHTML = ''; // Изчистваме "Зареждане..."
+        let unreadCount = 0;
+
+        // 3. Обхождаме всяка нотификация и я рисуваме
+        notifications.forEach(notif => {
+            // Определяме иконата на базата на заглавието
+            let iconClass = 'system';
+            let iconHtml = '<i class="fa-solid fa-info-circle"></i>';
+            
+            const titleLower = (notif.title || '').toLowerCase();
+            
+            if (titleLower.includes('approve') || titleLower.includes('одобрен') || titleLower.includes('approved')) {
+                iconClass = 'approved';
+                iconHtml = '<i class="fa-solid fa-circle-check"></i>';
+            } else if (titleLower.includes('reject') || titleLower.includes('отказан') || titleLower.includes('rejected')) {
+                iconClass = 'warning'; 
+                iconHtml = '<i class="fa-solid fa-circle-xmark" style="color: #e74c3c;"></i>';
+            } else if (titleLower.includes('reminder') || titleLower.includes('напомняне')) {
+                iconClass = 'warning';
+                iconHtml = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+
+            // Форматираме датата (ако бекендът връща дата, напр. createdAt)
+            let dateStr = 'Скоро';
+            if (notif.createdAt) {
+                const dateObj = new Date(notif.createdAt);
+                dateStr = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            }
+
+            // Проверяваме дали е прочетено (ако имаш такова поле в базата, напр. isRead)
+            const isUnread = notif.isRead === false || notif.read === false ? 'unread' : '';
+            if (isUnread) unreadCount++;
+
+            // Сглобяваме HTML-а за конкретната карта
+            const cardHtml = `
+                <div class="notification-card ${isUnread}" data-id="${notif.id}">
+                    <div class="notif-icon ${iconClass}">${iconHtml}</div>
+                    <div class="notif-content">
+                        <div class="notif-header">
+                            <h3>${notif.title}</h3>
+                            <span>${dateStr}</span>
+                        </div>
+                        <p>${notif.message}</p>
+                    </div>
+                </div>
+            `;
+            container.innerHTML += cardHtml;
+        });
+
+        // 4. Обновяваме брояча в лявото меню
+        updateBadges(unreadCount || notifications.length);
+
+        // 5. Активираме търсачката
+        if (search) {
+            search.addEventListener('input', e => {
+                const filter = e.target.value.toLowerCase();
+                const cards = container.getElementsByClassName('notification-card');
+                Array.from(cards).forEach(card => {
+                    const text = card.innerText.toLowerCase();
+                    card.style.display = text.includes(filter) ? "flex" : "none";
+                });
+            });
+        }
+
+        // 6. Активираме кликането върху карта (за маркиране като прочетено)
+        const drawnCards = container.getElementsByClassName('notification-card');
+        Array.from(drawnCards).forEach(card => {
+            card.addEventListener('click', async function() {
                 if (this.classList.contains('unread')) {
                     this.classList.remove('unread');
-                    const badges = document.querySelectorAll('.nav-item .red-badge');
-                    badges.forEach(b => {
-                        let count = parseInt(b.textContent) - 1;
-                        if (count <= 0) b.style.display = 'none';
-                        else b.textContent = count;
-                    });
+                    const notifId = this.getAttribute('data-id');
+                    
+                    decrementBadge();
+
+                    try {
+                         await fetch(`http://localhost:9000/api/notifications/${notifId}/read`, { 
+                             method: 'PUT',
+                             headers: {
+                                 'Authorization': `Bearer ${token}`
+                             }
+                         });
+                    } catch (e) { 
+                        console.error("Не успя да се маркира като прочетено", e); 
+                    }
                 }
             });
         });
+
+    } catch (error) {
+        console.error("Грешка при зареждане на нотификациите:", error);
+        container.innerHTML = '<p style="color: red; text-align: center;">Възникна грешка при свързването със сървъра.</p>';
     }
+}
+
+function updateBadges(count) {
+    const badges = document.querySelectorAll('.nav-item .red-badge');
+    badges.forEach(b => {
+        if (count <= 0) {
+            b.style.display = 'none';
+        } else {
+            b.style.display = 'inline-block';
+            b.textContent = count;
+        }
+    });
+}
+
+function decrementBadge() {
+    const badges = document.querySelectorAll('.nav-item .red-badge');
+    badges.forEach(b => {
+        let currentCount = parseInt(b.textContent) || 0;
+        let newCount = currentCount - 1;
+        if (newCount <= 0) {
+            b.style.display = 'none';
+        } else {
+            b.textContent = newCount;
+        }
+    });
 }
 
 // --- HISTORY ---

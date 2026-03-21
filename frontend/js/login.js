@@ -77,6 +77,7 @@ async function handleLogin() {
         localStorage.setItem("jwtToken", data.token);
         localStorage.setItem("userRole", data.role);
         localStorage.setItem("username", username);
+        localStorage.setItem("userId", data.id);
 
         if (data.role == "ADMIN") {
             window.location.href = '/frontend/html/admin.html';

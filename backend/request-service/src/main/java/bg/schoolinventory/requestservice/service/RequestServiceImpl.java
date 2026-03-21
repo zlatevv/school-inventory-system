@@ -2,11 +2,13 @@ package bg.schoolinventory.requestservice.service;
 
 import bg.schoolinventory.requestservice.client.EquipmentClient;
 import bg.schoolinventory.requestservice.dto.EquipmentDTO;
+import bg.schoolinventory.requestservice.dto.NotificationEvent;
 import bg.schoolinventory.requestservice.dto.RequestCreateDTO;
 import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.enums.RequestStatus;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.repository.RequestRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,10 +19,12 @@ import java.util.stream.Collectors;
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final EquipmentClient equipmentClient;
+    private final RabbitTemplate rabbitTemplate;
 
-    public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient) {
+    public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient, RabbitTemplate rabbitTemplate) {
         this.requestRepository = requestRepository;
         this.equipmentClient = equipmentClient;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -66,6 +70,15 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.APPROVED);
+        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+
+        sendNotification(
+                request.getUsernameRequesting(),
+                "Request Approval",
+                "Your request for the " +
+                        equipmentName +
+                        " has been approved!"
+        );
         return requestRepository.save(request);
     }
 
@@ -75,6 +88,15 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.REJECTED);
+        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+
+        sendNotification(
+                request.getUsernameRequesting(),
+                "Request Rejection",
+                "Your request for the " +
+                        equipmentName +
+                        " has been rejected!"
+        );
         return requestRepository.save(request);
     }
 
@@ -119,5 +141,15 @@ public class RequestServiceImpl implements RequestService {
         dto.setEquipmentName(equipment.getName());
 
         return dto;
+    }
+
+    private void sendNotification(String username, String title, String message) {
+        try {
+            NotificationEvent event = new NotificationEvent(username, title, message);
+            rabbitTemplate.convertAndSend("notification_queue", event);
+            System.out.println("Нотификация пратена за потребител: " + username);
+        } catch (Exception e) {
+            System.err.println("Грешка при изпращане към RabbitMQ: " + e.getMessage());
+        }
     }
 }

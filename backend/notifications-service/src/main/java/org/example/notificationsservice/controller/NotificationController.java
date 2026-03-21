@@ -1,6 +1,6 @@
 package org.example.notificationsservice.controller;
 
-import org.example.notificationsservice.dto.NotificationDTO;
+import org.example.notificationsservice.model.Notification;
 import org.example.notificationsservice.service.NotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,8 @@ public class NotificationController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<NotificationDTO>> getUserNotifications(@PathVariable Long userId) {
-        List<NotificationDTO> notifications = notificationService.getUserNotifications(userId);
+    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable Long userId) {
+        List<Notification> notifications = notificationService.getUserNotifications(userId);
         return ResponseEntity.ok(notifications);
     }
 
