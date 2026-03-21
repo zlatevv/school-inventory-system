@@ -1,5 +1,6 @@
 package bg.schoolinventory.requestservice.service;
 
+import bg.schoolinventory.requestservice.client.AuthClient;
 import bg.schoolinventory.requestservice.client.EquipmentClient;
 import bg.schoolinventory.requestservice.dto.EquipmentDTO;
 import bg.schoolinventory.requestservice.dto.NotificationEvent;
@@ -19,11 +20,13 @@ import java.util.stream.Collectors;
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final EquipmentClient equipmentClient;
+    private final AuthClient authClient;
     private final RabbitTemplate rabbitTemplate;
 
-    public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient, RabbitTemplate rabbitTemplate) {
+    public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient, AuthClient authClient, RabbitTemplate rabbitTemplate) {
         this.requestRepository = requestRepository;
         this.equipmentClient = equipmentClient;
+        this.authClient = authClient;
         this.rabbitTemplate = rabbitTemplate;
     }
 
@@ -71,13 +74,15 @@ public class RequestServiceImpl implements RequestService {
 
         request.setStatus(RequestStatus.APPROVED);
         String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+        String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
 
         sendNotification(
                 request.getUsernameRequesting(),
                 "Request Approval",
                 "Your request for the " +
                         equipmentName +
-                        " has been approved!"
+                        " has been approved!",
+                email
         );
         return requestRepository.save(request);
     }
@@ -89,13 +94,15 @@ public class RequestServiceImpl implements RequestService {
 
         request.setStatus(RequestStatus.REJECTED);
         String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+        String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
 
         sendNotification(
                 request.getUsernameRequesting(),
                 "Request Rejection",
                 "Your request for the " +
                         equipmentName +
-                        " has been rejected!"
+                        " has been rejected!",
+                email
         );
         return requestRepository.save(request);
     }
@@ -143,9 +150,9 @@ public class RequestServiceImpl implements RequestService {
         return dto;
     }
 
-    private void sendNotification(String username, String title, String message) {
+    private void sendNotification(String username, String title, String message, String email) {
         try {
-            NotificationEvent event = new NotificationEvent(username, title, message);
+            NotificationEvent event = new NotificationEvent(username, title, message, email);
             rabbitTemplate.convertAndSend("notification_queue", event);
             System.out.println("Нотификация пратена за потребител: " + username);
         } catch (Exception e) {

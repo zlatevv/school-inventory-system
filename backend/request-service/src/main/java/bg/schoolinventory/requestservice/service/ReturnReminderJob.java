@@ -1,5 +1,6 @@
 package bg.schoolinventory.requestservice.service;
 
+import bg.schoolinventory.requestservice.client.AuthClient;
 import bg.schoolinventory.requestservice.client.EquipmentClient;
 import bg.schoolinventory.requestservice.dto.EquipmentDTO;
 import bg.schoolinventory.requestservice.dto.NotificationEvent;
@@ -19,17 +20,19 @@ public class ReturnReminderJob {
 
     private final RequestRepository requestRepository;
     private final EquipmentClient equipmentClient;
+    private final AuthClient authClient;
     private final RabbitTemplate rabbitTemplate;
 
     public ReturnReminderJob(RequestRepository requestRepository,
-                             EquipmentClient equipmentClient,
+                             EquipmentClient equipmentClient, AuthClient authClient,
                              RabbitTemplate rabbitTemplate) {
         this.requestRepository = requestRepository;
         this.equipmentClient = equipmentClient;
+        this.authClient = authClient;
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = "0 30 11 * * ?")
     public void sendRemindersForTomorrow() {
         // 1. Изчисляваме кога започва и кога свършва утрешният ден
         LocalDateTime startOfTomorrow = LocalDateTime.now().plusDays(1).withHour(0).withMinute(0).withSecond(0);
@@ -57,8 +60,9 @@ public class ReturnReminderJob {
                 String title = "Return Reminder";
                 String message = String.format("Friendly reminder: The %s is due for return tomorrow at %s.",
                         equipmentName, returnTime);
+                String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
 
-                NotificationEvent event = new NotificationEvent(request.getUsernameRequesting(), title, message);
+                NotificationEvent event = new NotificationEvent(request.getUsernameRequesting(), title, message, email);
                 rabbitTemplate.convertAndSend("notification_queue", event);
 
                 System.out.println("✅ Изпратено напомняне на: " + request.getUsernameRequesting());
