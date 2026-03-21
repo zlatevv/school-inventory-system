@@ -1,0 +1,304 @@
+:root {
+    --sidebar-bg: #244163;
+    --primary-color: #2488A6;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --border-color: #e2e8f0;
+    --white: #ffffff;
+    --bg-light: #f8fafc;
+}
+
+/* 1. Фиксираме основата, за да не "плува" наляво-надясно */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Спира мърдането на целия браузър */
+}
+
+/* 2. Sidebar - фиксиран вляво */
+.sidebar {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+/* 3. Main Content - само тук има скрол */
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Профилът вдясно (Header) */
+header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px 40px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    background: #2488A6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+/* Филтрите и бутона в една линия */
+.controls-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.search-box {
+    position: relative;
+    flex-grow: 1; /* Разпъва търсачката */
+    max-width: 400px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+}
+
+/* Филтър падащо меню */
+.filter-dropdown {
+    padding: 12px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: #1e293b;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Бутонът Add Asset (Стилът от Dashboard) */
+.btn-add-new {
+    background-color: #2488A6;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.btn-add-new:hover {
+    background-color: #1e718a;
+}
+
+/* Центриране на съдържанието, за да не е "сгучкано" */
+.content-padding {
+    padding: 32px 40px;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* 4. Оправяме застъпването в хедъра на секцията */
+.browse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Центрира бутона "Add Asset" спрямо заглавието */
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.search-filters {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Карти - подредени професионално */
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.eq-card {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.eq-card-image {
+    height: 160px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: var(--sidebar-bg);
+    position: relative;
+}
+
+.eq-card-content {
+    padding: 20px;
+}
+
+/* Админ бутони - да не излизат от картата */
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.btn-edit {
+    flex: 1;
+    background: #f1f5f9;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Sidebar елементи от твоя код */
+.nav-menu { list-style: none; padding-top: 20px; flex-grow: 1; }
+.nav-item { padding: 14px 24px; display: flex; align-items: center; gap: 14px; color: #CBD5E1; text-decoration: none; font-size: 14px; }
+.nav-item.active { background: rgba(255,255,255,0.1); color: white; border-left: 4px solid var(--primary-color); }
+.badge-count { background: #EF4444; color: white; padding: 2px 6px; border-radius: 6px; font-size: 11px; margin-left: auto; }
+.sidebar-footer { border-top: 1px solid rgba(255,255,255,0.1); padding: 20px; }
+.logout-link { color: #CBD5E1; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+
+/* Status Tags */
+.eq-status-tag { position: absolute; top: 12px; right: 12px; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+.status-available { background: #dcfce7; color: #166534; }
+.status-light-yellow { background: #fef9c3; color: #a16207; }
+.status-rejected { background: #fee2e2; color: #991b1b; }
+
+/* Скриваме Logout прозореца по подразбиране */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Тъмен фон отзад */
+    display: none; /* ТОВА ГО СКРИВА */
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Да е над абсолютно всичко */
+}
+
+/* Стилизиране на самия прозорец, за да не изглежда като обикновен текст */
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    color: #1e293b;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* Sidebar */
+.sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--white); display: flex; flex-direction: column; flex-shrink: 0; }
+.logo-area { padding: 30px 24px; display: flex; align-items: center; gap: 14px; }
+.logo-icon { position: relative; font-size: 26px; }
+.logo-text { font-size: 16px; font-weight: 600; line-height: 1.2; }
+.logo-text span { font-size: 11px; font-weight: 400; color: #94A3B8; }
+.nav-menu { flex-grow: 1; list-style: none; padding-top: 10px; }
+
+.nav-item { 
+    padding: 14px 24px; 
+    display: flex; 
+    align-items: center; 
+    gap: 14px; 
+    color: #CBD5E1; 
+    text-decoration: none; 
+    transition: 0.2s; 
+    font-size: 14px; 
+    font-weight: 500;
+    position: relative; 
+}
+
+/* info */
+.assignment-info {
+    margin: 15px 0;
+    padding-top: 12px;
+    border-top: 1px dashed #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.user-assigned, .assignment-dates {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #64748b; 
+}
+
+.user-assigned i, .assignment-dates i {
+    color: #2488A6; 
+    width: 14px;
+}
+
+.user-assigned span {
+    font-weight: 600;
+    color: #334155;
+}
