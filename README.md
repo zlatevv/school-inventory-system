@@ -165,13 +165,3 @@ Open:
 - `frontend/html/login.html`
 
 The frontend is already configured to call the API gateway at `http://localhost:9000`.
-
-## Suggested Future Improvements
-- Add Docker Compose for one-command startup.
-- Centralize configuration via `.env` or Spring profiles.
-- Add OpenAPI/Swagger docs for all services.
-- Add integration tests for cross-service workflows.
-- Add CI pipeline for automated builds and tests.
-
-## License
-Add your preferred license (e.g., MIT) in a `LICENSE` file.
