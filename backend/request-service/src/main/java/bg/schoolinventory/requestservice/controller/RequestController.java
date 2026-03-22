@@ -1,6 +1,7 @@
 package bg.schoolinventory.requestservice.controller;
 
 import bg.schoolinventory.requestservice.dto.RequestCreateDTO;
+import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.service.RequestService;
 import jakarta.validation.Valid;
@@ -31,17 +32,15 @@ public class RequestController {
     }
 
     @GetMapping("/requests")
-    public ResponseEntity<List<Request>> getMyRequests(JwtAuthenticationToken token) {
+    public ResponseEntity<List<RequestResponseDTO>> getMyRequests(JwtAuthenticationToken token) {
         String username = token.getName();
-
-        List<Request> request = requestService.getMyRequests(username);
-
-        return ResponseEntity.ok(request);
+        List<RequestResponseDTO> requests = requestService.getMyRequests(username);
+        return ResponseEntity.ok(requests);
     }
 
     @GetMapping("/manager/requests")
-    public ResponseEntity<List<Request>> getAllRequests() {
-        List<Request> request = requestService.getAllRequests();
+    public ResponseEntity<List<RequestResponseDTO>> getAllRequests() {
+        List<RequestResponseDTO> request = requestService.getAllRequests();
         return ResponseEntity.ok(request);
     }
 
@@ -66,6 +65,12 @@ public class RequestController {
     {
         Request request = requestService.returnEquipment(id, condition);
 
+        return ResponseEntity.ok(request);
+    }
+
+    @PutMapping("/request/{id}/cancel")
+    public ResponseEntity<Request> cancelRequest(@PathVariable Long id) {
+        Request request = requestService.cancelRequest(id);
         return ResponseEntity.ok(request);
     }
 }

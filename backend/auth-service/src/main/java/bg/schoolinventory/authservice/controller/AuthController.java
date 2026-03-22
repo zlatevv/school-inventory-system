@@ -3,13 +3,11 @@ package bg.schoolinventory.authservice.controller;
 import bg.schoolinventory.authservice.dto.AuthResponseDTO;
 import bg.schoolinventory.authservice.dto.LoginRequestDTO;
 import bg.schoolinventory.authservice.dto.RegisterRequestDTO;
+import bg.schoolinventory.authservice.dto.UserDTO;
 import bg.schoolinventory.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,5 +35,11 @@ public class AuthController {
     public ResponseEntity<String> logout () {
         // The Front End is responsible for deleting the JWT token, this just gets a successful message
         return ResponseEntity.ok("Successfully logged out!");
+    }
+
+    @GetMapping("/users/{username}")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+        UserDTO response = authService.getUserByUsername(username);
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,20 +1,40 @@
 package bg.schoolinventory.requestservice.service;
 
+import bg.schoolinventory.requestservice.client.AuthClient;
+import bg.schoolinventory.requestservice.client.EquipmentClient;
+import bg.schoolinventory.requestservice.dto.EquipmentDTO;
+import bg.schoolinventory.requestservice.dto.NotificationEvent;
 import bg.schoolinventory.requestservice.dto.RequestCreateDTO;
+import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.enums.RequestStatus;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.repository.RequestRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RequestServiceImpl implements RequestService {
-    public final RequestRepository requestRepository;
+    private final RequestRepository requestRepository;
+    private final EquipmentClient equipmentClient;
+    private final AuthClient authClient;
+    private final RabbitTemplate rabbitTemplate;
 
-    public RequestServiceImpl(RequestRepository requestRepository) {
+    public RequestServiceImpl(RequestRepository requestRepository, EquipmentClient equipmentClient, AuthClient authClient, RabbitTemplate rabbitTemplate) {
         this.requestRepository = requestRepository;
+        this.equipmentClient = equipmentClient;
+        this.authClient = authClient;
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
+    @Override
+    public List<RequestResponseDTO> getAllRequests() {
+        return requestRepository.findAll().stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -34,18 +54,17 @@ public class RequestServiceImpl implements RequestService {
         request.setBorrowStartTime(borrowStartTime);
         request.setBorrowEndTime(borrowEndTime);
         request.setStatus(RequestStatus.PENDING);
-
+        equipmentClient.updateEquipmentStatus(equipmentId, "CHECKED_OUT");
         return requestRepository.save(request);
     }
 
     @Override
-    public List<Request> getMyRequests(String username) {
-        return requestRepository.findAllByUsernameRequesting(username);
-    }
+    public List<RequestResponseDTO> getMyRequests(String username) {
+        List<Request> requests = requestRepository.findAllByUsernameRequesting(username);
 
-    @Override
-    public List<Request> getAllRequests() {
-        return requestRepository.findAll();
+        return requests.stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -54,6 +73,17 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.APPROVED);
+        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+        String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
+        sendNotification(
+                request.getUsernameRequesting(),
+                "Request Approval",
+                "Your request for the " +
+                        equipmentName +
+                        " has been approved!",
+                email
+        );
         return requestRepository.save(request);
     }
 
@@ -63,6 +93,17 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.REJECTED);
+        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+        String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
+        sendNotification(
+                request.getUsernameRequesting(),
+                "Request Rejection",
+                "Your request for the " +
+                        equipmentName +
+                        " has been rejected!",
+                email
+        );
         return requestRepository.save(request);
     }
 
@@ -79,5 +120,43 @@ public class RequestServiceImpl implements RequestService {
         request.setReturnCondition(condition);
 
         return requestRepository.save(request);
+    }
+
+    @Override
+    public Request cancelRequest(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
+
+        if (request.getStatus() != RequestStatus.PENDING){
+            throw new RuntimeException("Error - can only cancel pending requests!");
+        }
+
+        request.setStatus(RequestStatus.REJECTED);
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "AVAILABLE");
+
+        return requestRepository.save(request);
+    }
+
+    private RequestResponseDTO mapToResponseDTO(Request req) {
+        EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
+
+        RequestResponseDTO dto = new RequestResponseDTO();
+        dto.setId(req.getId());
+        dto.setStatus(req.getStatus());
+        dto.setRequestDate(req.getRequestDate());
+        dto.setEquipmentID(req.getEquipmentID());
+        dto.setEquipmentName(equipment.getName());
+
+        return dto;
+    }
+
+    private void sendNotification(String username, String title, String message, String email) {
+        try {
+            NotificationEvent event = new NotificationEvent(username, title, message, email);
+            rabbitTemplate.convertAndSend("notification_queue", event);
+            System.out.println("Нотификация пратена за потребител: " + username);
+        } catch (Exception e) {
+            System.err.println("Грешка при изпращане към RabbitMQ: " + e.getMessage());
+        }
     }
 }

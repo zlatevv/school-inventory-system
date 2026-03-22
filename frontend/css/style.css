@@ -151,3 +151,14 @@ header {
 .requests-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem;}
 .requests-table th { text-align: left; padding: 10px 0; color: var(--text-gray); font-weight: 500; border-bottom: 1px solid var(--border-color);}
 .requests-table td { padding: 12px 0; border-bottom: 1px solid #eee; }
+
+#logout-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer; 
+    padding: 0;   
+    outline: none; 
+}

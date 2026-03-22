@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>School Inventory Management System - Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="admin.css">
+=======
+    <title>Admin Dashboard - School Inventory</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="/frontend/css/user.css">
+    <link rel="stylesheet" href="/frontend/css/admin.css">
+>>>>>>> origin/main
 </head>
 <body>
 
@@ -21,6 +30,7 @@
         </div>
     
         <ul class="nav-menu">
+<<<<<<< HEAD
             <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
             <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
             <li><a href="requests.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests <span class="badge-count">5</span></a></li>
@@ -32,6 +42,19 @@
         <div class="logout-btn">
             <a href="#" class="nav-item" style="text-decoration: none; color: inherit;">
                 <i class="fa-solid fa-power-off"></i> Logout
+=======
+            <li><a href="#" id="nav-dashboard" class="nav-item active"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
+            <li><a href="#" id="nav-catalog" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
+            <li><a href="#" id="nav-pending" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests <span class="badge-count">5</span></a></li>
+            <li><a href="#" id="nav-users" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="#" id="nav-reports" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="#" id="nav-settings" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+
+        <div class="sidebar-footer logout-btn" style="margin-top: auto; padding: 20px;">
+            <a href="#" class="btn" style="width: 100%; display: block; text-align: center; background: transparent; color: inherit; border: 1px solid currentColor; text-decoration: none;">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+>>>>>>> origin/main
             </a>
         </div>
     </aside>
@@ -43,7 +66,7 @@
             </div>
             <div class="search-bar">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search...">
+                <input type="text" id="equipSearch" placeholder="Search equipment...">
             </div>
             <div class="user-profile">
                 <div class="notification-container">
@@ -128,13 +151,70 @@
                                 <tr><td>Mark Johnson</td><td>USB Drive</td><td><span class="status-badge status-available">Approved</span></td></tr>
                             </tbody>
                         </table>
-                        <div style="text-align: right; margin-top: 20px;">
-                            <button class="btn btn-primary">View All Requests</button>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div id="section-catalog" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>Equipment Catalog</h2>
+                    <p style="color: gray; margin-top: 5px;">Manage and browse all school inventory.</p>
+                </div>
+                
+                <div id="equipList" class="equipment-grid" style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                </div>
+            </div>
+
+            <div id="section-reports" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>System Reports</h2>
+                </div>
+                <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <p>Тук ще се зареждат всички детайлни справки, графики за използването на инвентара и истории на заявките.</p>
+                    <br>
+                    <button class="btn btn-primary" style="padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;" onclick="alert('Генериране на PDF...')">
+                        <i class="fa-solid fa-file-pdf"></i> Generate PDF Report
+                    </button>
+                </div>
+            </div>
+
+            <div id="section-settings" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>System Settings</h2>
+                </div>
+                <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <p>Настройки на администраторския профил, добавяне на нови категории за инвентар и управление на нивата на достъп.</p>
+                    <br>
+                    <button class="btn" style="padding: 10px 20px; border-radius: 6px; border: 1px solid #ccc; background: transparent; cursor: pointer;">
+                        Промяна на парола
+                    </button>
+                </div>
+            </div>
+            <div id="section-pending" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>Pending Requests</h2>
+                    <p style="color: gray;">Approve or reject equipment requests from teachers and staff.</p>
+                </div>
+                
+                <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div id="pendingRequestsList">
+                        <p>Loading requests...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-users" class="content-section" style="display: none;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>User Management</h2>
+                    <p style="color: gray;">View and manage registered system users.</p>
+                </div>
+                
+                <div class="card" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div id="adminUsersList" class="equipment-grid" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <p>Loading users...</p>
+                    </div>
+                </div>
+            </div>
     </main>
 
     <div id="logoutModal" class="modal-overlay">

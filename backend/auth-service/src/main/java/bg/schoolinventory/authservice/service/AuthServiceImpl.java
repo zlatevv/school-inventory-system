@@ -3,6 +3,7 @@ package bg.schoolinventory.authservice.service;
 import bg.schoolinventory.authservice.dto.AuthResponseDTO;
 import bg.schoolinventory.authservice.dto.LoginRequestDTO;
 import bg.schoolinventory.authservice.dto.RegisterRequestDTO;
+import bg.schoolinventory.authservice.dto.UserDTO;
 import bg.schoolinventory.authservice.model.Role;
 import bg.schoolinventory.authservice.model.User;
 import bg.schoolinventory.authservice.repository.UserRepository;
@@ -63,6 +64,16 @@ public class AuthServiceImpl implements AuthService {
         }
         String token = jwtUtils.generateToken(user.getUsername(), user.getRole().name());
 
-        return new AuthResponseDTO(token, user.getUsername(), user.getRole().name());
+        return new AuthResponseDTO(token, user.getUsername(), user.getRole().name(), user.getId());
+    }
+
+    @Override
+    public UserDTO getUserByUsername(String username) {
+        // Вземаме потребителя от базата
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Връщаме само имейла му
+        return new UserDTO(user.getEmail());
     }
 }
