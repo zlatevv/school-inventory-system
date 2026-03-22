@@ -9,6 +9,9 @@ public class RequestResponseDTO {
     private LocalDateTime requestDate;
     private String equipmentName;
     private Long equipmentID;
+    private String usernameRequesting;
+
+    public RequestResponseDTO() {}
 
     public Long getEquipmentID() {
         return equipmentID;
@@ -26,4 +29,12 @@ public class RequestResponseDTO {
     public void setRequestDate(LocalDateTime requestDate) { this.requestDate = requestDate; }
     public String getEquipmentName() { return equipmentName; }
     public void setEquipmentName(String equipmentName) { this.equipmentName = equipmentName; }
+
+    public String getUsernameRequesting() {
+        return usernameRequesting;
+    }
+
+    public void setUsernameRequesting(String usernameRequesting) {
+        this.usernameRequesting = usernameRequesting;
+    }
 }

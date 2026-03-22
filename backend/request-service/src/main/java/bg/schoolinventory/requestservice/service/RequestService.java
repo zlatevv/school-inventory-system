@@ -14,4 +14,5 @@ public interface RequestService {
     Request approveRequest(Long requestId);
     Request rejectRequest(Long requestId);
     Request returnEquipment(Long requestId, String condition);
+    Request checkoutEquipment(Long requestId);
 }

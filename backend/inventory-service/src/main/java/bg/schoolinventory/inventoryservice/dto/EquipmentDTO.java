@@ -1,6 +1,7 @@
 package bg.schoolinventory.inventoryservice.dto;
 
 import bg.schoolinventory.inventoryservice.enums.Condition;
+import bg.schoolinventory.inventoryservice.enums.EquipmentStatus;
 
 public class EquipmentDTO {
 
@@ -10,6 +11,7 @@ public class EquipmentDTO {
     private Condition condition;
     private String location;
     private String photoUrl;
+    private EquipmentStatus equipmentStatus;
 
     // --- Getters and Setters ---
     public String getName() { return name; }
@@ -34,4 +36,12 @@ public class EquipmentDTO {
 
     public String getPhotoUrl() { return photoUrl; }
     public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
+
+    public EquipmentStatus getEquipmentStatus() {
+        return equipmentStatus;
+    }
+
+    public void setEquipmentStatus(EquipmentStatus equipmentStatus) {
+        this.equipmentStatus = equipmentStatus;
+    }
 }

@@ -4,6 +4,7 @@ import bg.schoolinventory.requestservice.dto.RequestCreateDTO;
 import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.service.RequestService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -45,20 +46,29 @@ public class RequestController {
     }
 
     @PutMapping("/request/{id}/approve")
-    public ResponseEntity<Request> approveRequest(@PathVariable Long id) {
+    public ResponseEntity<Request> approveRequest(@PathVariable("id") Long id) {
         Request request = requestService.approveRequest(id);
 
         return ResponseEntity.ok(request);
     }
 
     @PutMapping("/request/{id}/reject")
-    public ResponseEntity<Request> rejectRequest(@PathVariable Long id) {
+    public ResponseEntity<Request> rejectRequest(@PathVariable("id") Long id) {
         Request request = requestService.rejectRequest(id);
 
         return ResponseEntity.ok(request);
     }
 
+    @PutMapping("/request/{id}/checkout")
+    public ResponseEntity<Request> checkoutEquipment(@PathVariable("id") Long id) {
+        Request request = requestService.checkoutEquipment(id);
+
+        return ResponseEntity.ok(request);
+    }
+
+
     @PutMapping("/request/{id}/return")
+    @Transactional
     public ResponseEntity<Request> returnEquipment(
             @PathVariable Long id,
             @RequestParam(defaultValue = "Върнато без забележки") String condition)

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const savedUsername = localStorage.getItem("username");
+    const savedUsername = sessionStorage.getItem("username");
 
     if (savedUsername) {
         const displayEl = document.getElementById("display-username");
@@ -65,8 +65,10 @@ async function fetchAndDisplayEquipment() {
         
         if (statNumberDivAvailable) statNumberDivAvailable.innerText = equipmentData.length;
         if (statNumberDivCheckedOut) {
-            const checkedOutCount = equipmentData.filter(item => item.equipmentStatus !== 'AVAILABLE').length;
+            const checkedOutCount = equipmentData.filter(item => item.equipmentStatus == 'CHECKED_OUT').length;
+            const underRepairCount = equipmentData.filter(item => item.equipmentStatus == "UNDER_REPAIR").length;
             statNumberDivCheckedOut.innerText = checkedOutCount;
+            statNumberDivUnderRepair.innerText = underRepairCount;
         }
         
         equipListContainer.innerHTML = '';
@@ -113,7 +115,7 @@ async function fetchAndDisplayEquipment() {
 
 // Функция за заявка на оборудване
 async function requestItemAPI(itemId) {
-    const jwtToken = localStorage.getItem("jwtToken"); 
+    const jwtToken = sessionStorage.getItem("jwtToken"); 
 
     if (!jwtToken) {
         alert("Трябва да влезете в профила си, за да направите заявка!");
