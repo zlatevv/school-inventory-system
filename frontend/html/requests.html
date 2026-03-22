@@ -6,7 +6,7 @@
     <title>Pending Requests - Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="/frontend/css/admin.css">
 </head>
 <body>
 
@@ -33,43 +33,23 @@
     </aside>
 
     <main class="main-content">
-        <header>
-            <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
-            <div class="search-bar">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search requests by name or item...">
-            </div>
-            <div class="user-profile">
-                <div class="notification-container">
-                    <i class="fa-regular fa-bell" id="notificationBell"></i>
-                    <span class="bell-dot"></span> <div class="notification-dropdown" id="notificationDropdown">
-                        <div class="dropdown-header">
-                            <h3>Notifications</h3>
-                            <button id="markAllRead">Mark all as read</button>
-                        </div>
-                        <ul class="notification-list">
-                            <li class="unread">
-                                <i class="fa-solid fa-circle-info"></i>
-                                <div>
-                                    <p><strong>New Request:</strong> Alice Brown requested a Projector.</p>
-                                    <small>2 minutes ago</small>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-check-circle" style="color: #10B981;"></i>
-                                <div>
-                                    <p><strong>System Update:</strong> Inventory sync complete.</p>
-                                    <small>1 hour ago</small>
-                                </div>
-                            </li>
-                        </ul>
-                        <a href="#" class="view-all">See all notifications</a>
-                    </div>
+         <header>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn" style="display: none;">
+                    <i class="fa-solid fa-bars"></i>
                 </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="equipSearch" placeholder="Search equipment...">
+                </div>
+            </div>
 
+            <div class="header-right">
                 <div class="user-info">
-                    <strong>Admin</strong>
-                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                    <div class="user-text">
+                        <strong id="display-username"></strong>
+                    </div>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
                 </div>
             </div>
         </header>
@@ -91,59 +71,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr style="border-bottom: 1px solid #EDF2F7;">
-                            <td style="padding: 30px 20px;">
-                                <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">Alice Brown</div>
-                                <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">Mathematics Teacher</div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <div style="font-weight: 700; color: #2488A6; font-size: 1rem; margin-bottom: 10px;">Canon Camera EOS R5</div>
-                                <div style="display: flex; gap: 25px; align-items: center;">
-                                    <div style="color: #475569; font-size: 0.9rem;">
-                                        <i class="fa-regular fa-calendar-days" style="color: #94A3B8; margin-right: 8px;"></i>May 2, 2024
-                                    </div>
-                                    <div style="background: #E0F2FE; color: #0369A1; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">
-                                        <i class="fa-solid fa-stopwatch" style="margin-right: 5px;"></i>1 Day
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <span class="status-badge status-pending">Pending Review</span>
-                            </td>
-                            <td style="padding: 30px 20px; text-align: right;">
-                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                                    <button class="btn btn-primary approve-btn" style="background: #10B981; border: none;">Approve</button>
-                                    <button class="btn btn-outline reject-btn" style="color: #EF4444; border-color: #FCA5A5;">Reject</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr style="border-bottom: 1px solid #EDF2F7;">
-                            <td style="padding: 30px 20px;">
-                                <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">Mark Johnson</div>
-                                <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">Science Dept. Head</div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <div style="font-weight: 700; color: #2488A6; font-size: 1rem; margin-bottom: 10px;">Microscope Zeiss #04</div>
-                                <div style="display: flex; gap: 25px; align-items: center;">
-                                    <div style="color: #475569; font-size: 0.9rem;">
-                                        <i class="fa-regular fa-calendar-days" style="color: #94A3B8; margin-right: 8px;"></i>May 5, 2024
-                                    </div>
-                                    <div style="background: #E0F2FE; color: #0369A1; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">
-                                        <i class="fa-solid fa-stopwatch" style="margin-right: 5px;"></i>3 Days
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <span class="status-badge status-pending">Pending Review</span>
-                            </td>
-                            <td style="padding: 30px 20px; text-align: right;">
-                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                                    <button class="btn btn-primary approve-btn" style="background: #10B981; border: none;">Approve</button>
-                                    <button class="btn btn-outline reject-btn" style="color: #EF4444; border-color: #FCA5A5;">Reject</button>
-                                </div>
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
@@ -162,6 +90,6 @@
         </div>
     </div>
 
-    <script src="admin.js"></script>
+    <script src="/frontend/js/admin.js"></script>
 </body>
 </html>

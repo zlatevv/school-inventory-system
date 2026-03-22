@@ -74,10 +74,10 @@ async function handleLogin() {
         const data = await response.json();
         console.log(data);
 
-        localStorage.setItem("jwtToken", data.token);
-        localStorage.setItem("userRole", data.role);
-        localStorage.setItem("username", username);
-        localStorage.setItem("userId", data.id);
+        sessionStorage.setItem("jwtToken", data.token);
+        sessionStorage.setItem("userRole", data.role);
+        sessionStorage.setItem("username", username);
+        sessionStorage.setItem("userId", data.id);
 
         if (data.role == "ADMIN") {
             window.location.href = '/frontend/html/admin.html';
@@ -172,8 +172,8 @@ async function handleRegister(event) {
 }
 
 async function handleLogout() {
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("userRole");
+    sessionStorage.removeItem("jwtToken");
+    sessionStorage.removeItem("userRole");
 
     await fetch("http://localhost:9000/api/auth/logout", { method: 'POST' })
     window.location.href = '/frontend/html/login.html';

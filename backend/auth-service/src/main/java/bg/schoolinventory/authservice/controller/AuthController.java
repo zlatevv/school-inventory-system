@@ -1,13 +1,13 @@
 package bg.schoolinventory.authservice.controller;
 
-import bg.schoolinventory.authservice.dto.AuthResponseDTO;
-import bg.schoolinventory.authservice.dto.LoginRequestDTO;
-import bg.schoolinventory.authservice.dto.RegisterRequestDTO;
-import bg.schoolinventory.authservice.dto.UserDTO;
+import bg.schoolinventory.authservice.dto.*;
+import bg.schoolinventory.authservice.model.User;
 import bg.schoolinventory.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,5 +41,23 @@ public class AuthController {
     public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
         UserDTO response = authService.getUserByUsername(username);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> response = authService.getAllUsers();
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+        authService.deleteUser(username);
+        return ResponseEntity.ok("User deleted successfully!");
+    }
+
+    @PutMapping("/update/{username}")
+    public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDTO dto) {
+        authService.updateUser(username, dto);
+        return ResponseEntity.ok("User updated successfully!");
     }
 }

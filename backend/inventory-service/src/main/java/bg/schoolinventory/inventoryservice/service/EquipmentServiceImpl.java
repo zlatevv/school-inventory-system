@@ -49,12 +49,15 @@ public class EquipmentServiceImpl implements EquipmentService {
         Equipment existingEquipment = equipmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Error - equipment with id " + id + " not found!"));
 
-        existingEquipment.setName(updateDTO.getName());
-        existingEquipment.setType(updateDTO.getType());
-        existingEquipment.setSerialNumber(updateDTO.getSerialNumber());
-        existingEquipment.setEquipmentCondition(updateDTO.getCondition());
-        existingEquipment.setLocation(updateDTO.getLocation());
-        existingEquipment.setPhotoURL(updateDTO.getPhotoUrl());
+        if (updateDTO.getName() != null) existingEquipment.setName(updateDTO.getName());
+        if (updateDTO.getType() != null) existingEquipment.setType(updateDTO.getType());
+        if (updateDTO.getSerialNumber() != null) existingEquipment.setSerialNumber(updateDTO.getSerialNumber());
+
+        if (updateDTO.getCondition() != null) existingEquipment.setEquipmentCondition(updateDTO.getCondition());
+
+        if (updateDTO.getLocation() != null) existingEquipment.setLocation(updateDTO.getLocation());
+        if (updateDTO.getPhotoUrl() != null) existingEquipment.setPhotoURL(updateDTO.getPhotoUrl());
+        if (updateDTO.getEquipmentStatus() != null) existingEquipment.setEquipmentStatus(updateDTO.getEquipmentStatus());
 
         return equipmentRepository.save(existingEquipment);
     }

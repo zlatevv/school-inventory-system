@@ -6,7 +6,7 @@
     <title>User Management - Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="/frontend/css/admin.css">
 </head>
 <body>
 
@@ -38,42 +38,22 @@
 
     <main class="main-content">
         <header>
-            <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
-            <div class="search-bar">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search users by name or email...">
-            </div>
-            <div class="user-profile">
-                <div class="notification-container">
-                    <i class="fa-regular fa-bell" id="notificationBell"></i>
-                    <span class="bell-dot"></span> <div class="notification-dropdown" id="notificationDropdown">
-                        <div class="dropdown-header">
-                            <h3>Notifications</h3>
-                            <button id="markAllRead">Mark all as read</button>
-                        </div>
-                        <ul class="notification-list">
-                            <li class="unread">
-                                <i class="fa-solid fa-circle-info"></i>
-                                <div>
-                                    <p><strong>New Request:</strong> Alice Brown requested a Projector.</p>
-                                    <small>2 minutes ago</small>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-check-circle" style="color: #10B981;"></i>
-                                <div>
-                                    <p><strong>System Update:</strong> Inventory sync complete.</p>
-                                    <small>1 hour ago</small>
-                                </div>
-                            </li>
-                        </ul>
-                        <a href="#" class="view-all">See all notifications</a>
-                    </div>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn" style="display: none;">
+                    <i class="fa-solid fa-bars"></i>
                 </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="equipSearch" placeholder="Search equipment...">
+                </div>
+            </div>
 
+            <div class="header-right">
                 <div class="user-info">
-                    <strong>Admin</strong>
-                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                    <div class="user-text">
+                        <strong id="display-username"></strong>
+                    </div>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
                 </div>
             </div>
         </header>
@@ -89,65 +69,12 @@
                     <thead>
                         <tr style="background: #F8FAFC; text-align: left; border-bottom: 2px solid #E2E8F0;">
                             <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">User Profile</th>
-                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Role & Department</th>
-                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Account Status</th>
+                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Role & Registration</th>
                             <th style="padding: 20px; text-align: right; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid #EDF2F7;">
-                            <td style="padding: 30px 20px;">
-                                <div style="display: flex; align-items: center; gap: 15px;">
-                                    <div style="width: 45px; height: 45px; background: #E0F2FE; color: #0369A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
-                                        AB
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">Alice Brown</div>
-                                        <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">alice.b@school.edu</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <div style="font-weight: 600; color: #475569; margin-bottom: 5px;">Teacher</div>
-                                <div style="color: #94A3B8; font-size: 0.8rem;">Mathematics Department</div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <span class="status-badge status-available" style="background: #DCFCE7; color: #166534; padding: 6px 12px; font-size: 0.75rem; border: none;">Active</span>
-                            </td>
-                            <td style="padding: 30px 20px; text-align: right;">
-                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                                    <button class="btn btn-outline" style="border-color: #E2E8F0; color: #64748B;"><i class="fa-solid fa-user-pen"></i> Edit</button>
-                                    <button class="btn btn-outline delete-user-btn" style="color: #EF4444; border-color: #FCA5A5;"><i class="fa-solid fa-user-minus"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr style="border-bottom: 1px solid #EDF2F7;">
-                            <td style="padding: 30px 20px;">
-                                <div style="display: flex; align-items: center; gap: 15px;">
-                                    <div style="width: 45px; height: 45px; background: #F1F5F9; color: #475569; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
-                                        MJ
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">Mark Johnson</div>
-                                        <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">m.johnson@school.edu</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <div style="font-weight: 600; color: #475569; margin-bottom: 5px;">Staff</div>
-                                <div style="color: #94A3B8; font-size: 0.8rem;">Science Laboratory</div>
-                            </td>
-                            <td style="padding: 30px 20px;">
-                                <span class="status-badge" style="background: #F1F5F9; color: #475569; padding: 6px 12px; font-size: 0.75rem; border: none;">On Leave</span>
-                            </td>
-                            <td style="padding: 30px 20px; text-align: right;">
-                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                                    <button class="btn btn-outline" style="border-color: #E2E8F0; color: #64748B;"><i class="fa-solid fa-user-pen"></i> Edit</button>
-                                    <button class="btn btn-outline delete-user-btn" style="color: #EF4444; border-color: #FCA5A5;"><i class="fa-solid fa-user-minus"></i></button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="usersList">
+                       
                     </tbody>
                 </table>
             </div>
@@ -166,7 +93,66 @@
         </div>
     </div>
 
-    <script src="admin.js"></script>
-    
+    <div id="registerModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="text-align: left; max-width: 400px;">
+            <h2 style="margin-bottom: 20px; color: var(--text-dark);">Register New User</h2>
+            <form id="registerForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Username</label>
+                    <input type="text" id="regUsername" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Email</label>
+                    <input type="email" id="regEmail" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Password</label>
+                    <input type="password" id="regPassword" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Role</label>
+                    <select id="regRole" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="modal-btn btn-primary" style="background: #2B8EAD; color: white;">Register</button>
+                    <button type="button" class="modal-btn btn-outline" onclick="closeModal('registerModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="text-align: left; max-width: 400px;">
+            <h2 style="margin-bottom: 20px; color: var(--text-dark);">Edit User</h2>
+            <form id="editForm">
+                <input type="hidden" id="editOriginalUsername">
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Username</label>
+                    <input type="text" id="editUsername" readonly style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px; background: #F1F5F9;">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Email</label>
+                    <input type="email" id="editEmail" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label style="font-size: 0.85rem; color: var(--text-gray); font-weight: 600;">Role</label>
+                    <select id="editRole" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 6px;">
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="modal-btn btn-primary" style="background: #2B8EAD; color: white;">Save Changes</button>
+                    <button type="button" class="modal-btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/frontend/js/admin.js"></script>
+    <script src="/frontend/js/user_management.js"></script>
 </body>
 </html>

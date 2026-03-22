@@ -1,9 +1,6 @@
 package bg.schoolinventory.authservice.service;
 
-import bg.schoolinventory.authservice.dto.AuthResponseDTO;
-import bg.schoolinventory.authservice.dto.LoginRequestDTO;
-import bg.schoolinventory.authservice.dto.RegisterRequestDTO;
-import bg.schoolinventory.authservice.dto.UserDTO;
+import bg.schoolinventory.authservice.dto.*;
 import bg.schoolinventory.authservice.model.Role;
 import bg.schoolinventory.authservice.model.User;
 import bg.schoolinventory.authservice.repository.UserRepository;
@@ -12,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -75,5 +73,29 @@ public class AuthServiceImpl implements AuthService {
 
         // Връщаме само имейла му
         return new UserDTO(user.getEmail());
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Error - User not found!"));
+
+        userRepository.delete(user);
+    }
+
+    @Override
+    public void updateUser(String username, UpdateUserDTO dto) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Error - User not found!"));
+
+        user.setEmail(dto.getEmail());
+        user.setRole(Role.valueOf(dto.getRole().toUpperCase()));
+
+        userRepository.save(user);
     }
 }

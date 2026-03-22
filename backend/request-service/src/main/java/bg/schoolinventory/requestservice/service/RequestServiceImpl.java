@@ -73,8 +73,10 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.APPROVED);
-        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+
+        String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
         String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
 
         sendNotification(
                 request.getUsernameRequesting(),
@@ -93,8 +95,11 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.REJECTED);
-        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+
+        String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
         String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "AVAILABLE");
 
         sendNotification(
                 request.getUsernameRequesting(),
@@ -112,13 +117,37 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
-        if (request.getStatus() != RequestStatus.APPROVED){
-            throw new RuntimeException("Error - cannot return equipment that was not approved!");
-        }
-
         request.setStatus(RequestStatus.RETURNED);
         request.setReturnCondition(condition);
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "AVAILABLE");
 
+        return requestRepository.save(request);
+    }
+
+    @Override
+    public Request checkoutEquipment(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
+
+        if (request.getStatus() != RequestStatus.APPROVED) {
+            throw new RuntimeException("Error - You can only check out APPROVED requests. Current status: " + request.getStatus());
+        }
+
+        request.setStatus(RequestStatus.CHECKED_OUT);
+
+        String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
+        String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "CHECKED_OUT");
+
+        sendNotification(
+                request.getUsernameRequesting(),
+                "Equipment Checked Out", // Сменено от Request Rejection
+                "Great news! Your request for the " + equipmentName + " has been checked out successfully and is now in your possession.",
+                email
+        );
+
+        // 6. Запазваме промените в базата
         return requestRepository.save(request);
     }
 
@@ -146,6 +175,7 @@ public class RequestServiceImpl implements RequestService {
         dto.setRequestDate(req.getRequestDate());
         dto.setEquipmentID(req.getEquipmentID());
         dto.setEquipmentName(equipment.getName());
+        dto.setUsernameRequesting(req.getUsernameRequesting());
 
         return dto;
     }
