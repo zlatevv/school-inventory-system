@@ -9,6 +9,8 @@ import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.enums.RequestStatus;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.repository.RequestRepository;
+import feign.FeignException;
+import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +70,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request approveRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
@@ -90,6 +93,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request rejectRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
@@ -113,6 +117,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request returnEquipment(Long requestId, String condition) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
@@ -152,6 +157,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request cancelRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
@@ -167,15 +173,24 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private RequestResponseDTO mapToResponseDTO(Request req) {
-        EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
-
         RequestResponseDTO dto = new RequestResponseDTO();
+
         dto.setId(req.getId());
         dto.setStatus(req.getStatus());
         dto.setRequestDate(req.getRequestDate());
         dto.setEquipmentID(req.getEquipmentID());
-        dto.setEquipmentName(equipment.getName());
         dto.setUsernameRequesting(req.getUsernameRequesting());
+
+        try {
+            EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
+            dto.setEquipmentName(equipment.getName());
+        } catch (feign.FeignException.NotFound e) {
+            System.out.println("Предметът с ID " + req.getEquipmentID() + " липсва: " + e.getMessage());
+            dto.setEquipmentName("Изтрит предмет (ID: " + req.getEquipmentID() + ")");
+        } catch (Exception e) {
+            System.out.println("Грешка при връзката с Equipment Service: " + e.getMessage());
+            dto.setEquipmentName("Неизвестна техника");
+        }
 
         return dto;
     }

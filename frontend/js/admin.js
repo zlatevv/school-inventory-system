@@ -399,6 +399,9 @@ async function handleRequestAction(requestId, actionType) {
     if(!confirm(`Are you sure you want to ${actionType} request #${requestId}?`)) return;
     const token = sessionStorage.getItem("jwtToken");
     
+    console.log("Токенът, който пращам, е:", token);
+    if (!token || token === "null" || token === "undefined") return;
+
     try {
         const url = `http://localhost:9000/api/request/${requestId}/${actionType.toLowerCase()}`;
         const response = await fetch(url, {
