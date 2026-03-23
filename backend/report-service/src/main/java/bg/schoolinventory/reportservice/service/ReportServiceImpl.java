@@ -16,6 +16,7 @@ import com.opencsv.CSVWriter;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -52,7 +53,7 @@ public class ReportServiceImpl implements ReportService {
             dto.setApprovedRequests(row[3] != null ? ((Number) row[3]).longValue() : 0L);
             dto.setReturnedRequests(row[4] != null ? ((Number) row[4]).longValue() : 0L);
             dto.setAverageBorrowDuration(row[5] != null ? ((Number) row[5]).doubleValue() : 0.0);
-            dto.setLastUsed(row[6] != null ? (LocalDateTime) row[6] : null);
+            dto.setLastUsed(toLocalDateTime(row[6]));
             reports.add(dto);
         }
 
@@ -68,11 +69,11 @@ public class ReportServiceImpl implements ReportService {
             HistoryReportDTO dto = new HistoryReportDTO();
             dto.setUsername((String) row[0]);
             dto.setEquipmentName((String) row[1]);
-            dto.setRequestDate((LocalDateTime) row[2]);
-            dto.setBorrowStartTime((LocalDateTime) row[3]);
-            dto.setBorrowEndTime((LocalDateTime) row[4]);
+            dto.setRequestDate(toLocalDateTime(row[2]));
+            dto.setBorrowStartTime(toLocalDateTime(row[3]));
+            dto.setBorrowEndTime(toLocalDateTime(row[4]));
             dto.setStatus((String) row[5]);
-            dto.setReturnDate((LocalDateTime) row[6]);
+            dto.setReturnDate(toLocalDateTime(row[6]));
             dto.setReturnCondition((String) row[7]);
             reports.add(dto);
         }
@@ -235,5 +236,21 @@ public class ReportServiceImpl implements ReportService {
      */
     public List<RequestDTO> getAllRequestDetails() {
         return requestClient.getAllRequests();
+    }
+
+    private LocalDateTime toLocalDateTime(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof LocalDateTime localDateTime) {
+            return localDateTime;
+        }
+        if (value instanceof Timestamp timestamp) {
+            return timestamp.toLocalDateTime();
+        }
+        if (value instanceof java.util.Date date) {
+            return new Timestamp(date.getTime()).toLocalDateTime();
+        }
+        throw new IllegalArgumentException("Unsupported datetime value: " + value.getClass().getName());
     }
 }
