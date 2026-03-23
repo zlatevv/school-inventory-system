@@ -1,0 +1,128 @@
+/*MY REQUESTS */
+.requests-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.request-card {
+    background: var(--white);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    transition: 0.3s;
+}
+
+.request-card:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.req-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.req-title {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.req-title i {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: var(--sidebar-bg);
+}
+
+.req-title h3 { font-size: 18px; color: var(--text-dark); }
+.req-title span { font-size: 13px; color: var(--text-gray); }
+
+/* STATUS STEPPER */
+.status-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+
+.status-stepper::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 50px;
+    right: 50px;
+    height: 2px;
+    background: #e2e8f0;
+    z-index: 1;
+}
+
+.step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 80px;
+}
+
+.step i {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--text-gray);
+    transition: 0.3s;
+}
+
+.step p { font-size: 11px; font-weight: 600; color: var(--text-gray); text-transform: uppercase; }
+
+/* Active & Completed Steps */
+.step.completed i {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.step.active i {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(36, 136, 166, 0.1);
+}
+
+.step.active p { color: var(--primary-color); }
+
+.req-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.req-info p { font-size: 13px; color: var(--text-gray); }
+
+.btn-danger-outline {
+    background: transparent;
+    border: 1px solid #fee2e2;
+    color: #ef4444;
+}
+
+.btn-danger-outline:hover {
+    background: #fef2f2;
+}
