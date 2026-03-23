@@ -68,7 +68,6 @@ public class RequestController {
 
 
     @PutMapping("/request/{id}/return")
-    @Transactional
     public ResponseEntity<Request> returnEquipment(
             @PathVariable Long id,
             @RequestParam(defaultValue = "Върнато без забележки") String condition)

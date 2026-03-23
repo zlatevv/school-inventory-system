@@ -222,7 +222,7 @@ async function initMyRequests() {
                     <div class="step active"><i class="fa-solid fa-location-dot"></i><p>${req.equipment?.location || 'Desk'}</p></div>
                     <div class="step"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
                 `;
-                footerBtnHtml = `<button class="btn btn-primary" onclick="viewDetails(${req.id})">QR Code</button>`;
+                footerBtnHtml = `<button class="btn btn-primary" onclick="viewDetails(${req.id})">Barcode</button>`;
                 
             } else if (status === 'CHECKED_OUT') {
                 badgeHtml = `<div class="status-badge status-available" style="background-color: #d1fae5; color: #065f46;">In Possession</div>`;

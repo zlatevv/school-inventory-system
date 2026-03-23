@@ -5,15 +5,15 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'cvetanzlatev30@gmail.com',
-        pass: 'qvid xfxh jzsx dhoh'
+        user: 'pennywiseaibest@gmail.com',
+        pass: 'olvz ezop vqqz bhzw'
     }
 });
 
 async function start() {
     try {
         // 2. Свързваме се с локалния RabbitMQ
-        const connection = await amqp.connect('amqp://localhost');
+        const connection = await amqp.connect('amqp://127.0.0.1');
         const channel = await connection.createChannel();
         const queue = 'email_queue';
 
@@ -43,7 +43,7 @@ async function start() {
                     }
 
                     const mailOptions = {
-                        from: 'cvetanzlatev30@gmail.com',
+                        from: 'pennywiseaibest@gmail.com',
                         to: recipient,
                         subject: data.title || "Inventory Notification",
                         text: data.message || "No message content"

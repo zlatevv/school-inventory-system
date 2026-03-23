@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # --- API GATEWAY (The Entry Point) ---
+  api-gateway:
+    build: ./backend/api-gateway # <-- Добавено /backend
+    ports:
+      - "9000:9000"
+    depends_on:
+      - auth-service
+      - inventory-service
+      - report-service
+
+  # --- MICROSERVICES ---
+  auth-service:
+    build: ./backend/auth-service # <-- Добавено /backend
+    expose:
+      - "8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+    depends_on:
+      - db
+
+  inventory-service:
+    build: ./backend/inventory-service # <-- Добавено /backend
+    expose:
+      - "8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+    depends_on:
+      - db
+
+  notification-service:
+    build: ./backend/notifications-service # <-- Добавено /backend И буквата "s"
+    expose:
+      - "8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+    depends_on:
+      - db
+
+  report-service:
+    build: ./backend/report-service # <-- Добавено /backend
+    expose:
+      - "8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+    depends_on:
+      - db
+
+  request-service:
+    build: ./backend/request-service # <-- Добавено /backend
+    expose:
+      - "8084"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+    depends_on:
+      - db
+
+  # --- DATABASE ---
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: school_inventory
+      MYSQL_ROOT_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+
+  # --- FRONTEND ---
+  frontend:
+    build: ./frontend # Този път остава същият, защото frontend е в главната папка
+    ports:
+      - "80:80"
+    environment:
+      - API_GATEWAY_URL=http://localhost:9000
