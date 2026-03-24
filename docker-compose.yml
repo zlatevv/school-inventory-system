@@ -3,59 +3,94 @@ version: '3.8'
 services:
   # --- API GATEWAY (The Entry Point) ---
   api-gateway:
-    build: ./backend/api-gateway # <-- Добавено /backend
+    build: ./backend/api-gateway
     ports:
       - "9000:9000"
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:8080
+      - INVENTORY_SERVICE_URL=http://inventory-service:8081
+      - REQUEST_SERVICE_URL=http://request-service:8084
+      - REPORT_SERVICE_URL=http://report-service:8083
     depends_on:
       - auth-service
       - inventory-service
+      - request-service
       - report-service
 
   # --- MICROSERVICES ---
   auth-service:
-    build: ./backend/auth-service # <-- Добавено /backend
+    build: ./backend/auth-service
     expose:
       - "8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
     depends_on:
       - db
 
   inventory-service:
-    build: ./backend/inventory-service # <-- Добавено /backend
+    build: ./backend/inventory-service
     expose:
       - "8081"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
     depends_on:
       - db
 
   notification-service:
-    build: ./backend/notifications-service # <-- Добавено /backend И буквата "s"
+    build: ./backend/notifications-service
     expose:
       - "8082"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
       - db
+      - rabbitmq
 
   report-service:
-    build: ./backend/report-service # <-- Добавено /backend
+    build: ./backend/report-service
     expose:
       - "8083"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - INVENTORY_SERVICE_URL=http://inventory-service:8081
+      - REQUEST_SERVICE_URL=http://request-service:8084
     depends_on:
       - db
+      - inventory-service
+      - request-service
 
   request-service:
-    build: ./backend/request-service # <-- Добавено /backend
+    build: ./backend/request-service
     expose:
       - "8084"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - INVENTORY_SERVICE_URL=http://inventory-service:8081
+      - AUTH_SERVICE_URL=http://auth-service:8080
     depends_on:
       - db
+      - rabbitmq
+      - auth-service
+      - inventory-service
+
+  email-service:
+    build: ./backend/email-service
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - rabbitmq
 
   # --- DATABASE ---
   db:
@@ -65,11 +100,23 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
     ports:
       - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   # --- FRONTEND ---
   frontend:
-    build: ./frontend # Този път остава същият, защото frontend е в главната папка
+    build: ./frontend
     ports:
       - "80:80"
     environment:
       - API_GATEWAY_URL=http://localhost:9000
+    depends_on:
+      - api-gateway

@@ -13,7 +13,8 @@ const transporter = nodemailer.createTransport({
 async function start() {
     try {
         // 2. Свързваме се с локалния RabbitMQ
-        const connection = await amqp.connect('amqp://127.0.0.1');
+        const rabbitUrl = process.env.RABBITMQ_URL || 'amqp://127.0.0.1';
+        const connection = await amqp.connect(rabbitUrl);
         const channel = await connection.createChannel();
         const queue = 'email_queue';
 
