@@ -114,3 +114,47 @@ async function handleLogout() {
         window.location.href = 'login.html';
     }
 }
+
+// Function to open the modal
+function handleForgotPassword(event) {
+    event.preventDefault();
+    document.getElementById('forgot-password-modal').style.display = 'block';
+}
+
+// Function to close the modal
+function closeModal() {
+    document.getElementById('forgot-password-modal').style.display = 'none';
+    document.getElementById('reset-error').innerText = '';
+}
+
+// Function to send data to your Nodemailer backend
+async function sendResetEmail() {
+    const email = document.getElementById('reset-email-input').value;
+    const errorDiv = document.getElementById('reset-error');
+
+    if (!email) {
+        errorDiv.innerText = "Please enter an email.";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_CONFIG.auth}/get-by-email/${email}`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+
+        const result = await response.json();
+        console.log(result);
+        
+
+        if (response.ok) {
+            alert("Success! Check your inbox.");
+            closeModal();
+        } else {
+            errorDiv.innerText = result.message || "Email not found.";
+        }
+    } catch (err) {
+        errorDiv.innerText = "Connection error. Is the server running?";
+    }
+}

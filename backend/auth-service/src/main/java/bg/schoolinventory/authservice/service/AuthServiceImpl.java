@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -97,5 +98,10 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(Role.valueOf(dto.getRole().toUpperCase()));
 
         userRepository.save(user);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

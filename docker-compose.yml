@@ -89,8 +89,10 @@ services:
     build: ./backend/email-service
     environment:
       - RABBITMQ_URL=amqp://rabbitmq:5672
+      - EMAIL_PASSWORD=olvz ezop vqqz bhzw
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
   # --- DATABASE ---
   db:
@@ -110,6 +112,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # --- FRONTEND ---
   frontend:

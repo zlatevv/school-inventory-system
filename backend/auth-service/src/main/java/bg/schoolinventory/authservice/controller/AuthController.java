@@ -60,4 +60,9 @@ public class AuthController {
         authService.updateUser(username, dto);
         return ResponseEntity.ok("User updated successfully!");
     }
+
+    @GetMapping("/get-by-email/{email}")
+    public ResponseEntity<User> getByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(authService.getUserByEmail(email));
+    }
 }

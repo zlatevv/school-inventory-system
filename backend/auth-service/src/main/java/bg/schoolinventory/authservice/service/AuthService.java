@@ -12,4 +12,5 @@ public interface AuthService {
     List<User> getAllUsers();
     void deleteUser(String username);
     void updateUser(String username, UpdateUserDTO dto);
+    User getUserByEmail(String email);
 }

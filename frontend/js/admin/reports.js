@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const username = sessionStorage.getItem("username");
 
     if (!token) {
-        window.location.href = "/frontend/html/login.html";
+        window.location.href = "html/login.html";
         return;
     }
 
     if (role !== "ADMIN") {
-        window.location.href = "/frontend/html/user/user.html";
+        window.location.href = "html/user.html";
         return;
     }
 
@@ -59,7 +59,7 @@ function initLogout() {
             console.error("Logout request failed:", error);
         }
 
-        window.location.href = "/frontend/html/login.html";
+        window.location.href = "/html/login.html";
     });
 }
 
