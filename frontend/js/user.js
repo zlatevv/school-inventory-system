@@ -206,7 +206,7 @@ async function initMyRequests() {
             
             let badgeHtml = '', stepperHtml = '', footerBtnHtml = '';
 
-            if (status === 'PENDING') {
+           if (status === 'PENDING') {
                 badgeHtml = `<div class="status-badge status-pending">Pending Approval</div>`;
                 stepperHtml = `
                     <div class="step completed"><i class="fa-solid fa-check"></i><p>Requested</p></div>
@@ -214,6 +214,7 @@ async function initMyRequests() {
                     <div class="step"><i class="fa-solid fa-box-open"></i><p>Ready</p></div>
                 `;
                 footerBtnHtml = `<button class="btn btn-danger-outline" onclick="cancelRequest(${req.id})">Cancel</button>`;
+                
             } else if (status === 'APPROVED') {
                 badgeHtml = `<div class="status-badge status-approved">Ready for Pickup</div>`;
                 stepperHtml = `
@@ -221,7 +222,26 @@ async function initMyRequests() {
                     <div class="step active"><i class="fa-solid fa-location-dot"></i><p>${req.equipment?.location || 'Desk'}</p></div>
                     <div class="step"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
                 `;
-                footerBtnHtml = `<button class="btn btn-primary" onclick="viewDetails(${req.id})">QR Code</button>`;
+                footerBtnHtml = `<button class="btn btn-primary" onclick="viewDetails(${req.id})">Barcode</button>`;
+                
+            } else if (status === 'CHECKED_OUT') {
+                badgeHtml = `<div class="status-badge status-available" style="background-color: #d1fae5; color: #065f46;">In Possession</div>`;
+                stepperHtml = `
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Approved</p></div>
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Picked Up</p></div>
+                    <div class="step active" style="color: #10B981;"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
+                `;
+                footerBtnHtml = `<button class="btn" disabled style="opacity: 0.8; background-color: #10B981; color: white; border: none;"><i class="fa-solid fa-check"></i> Equipment Received</button>`;
+                
+            } else if (status === 'RETURNED') {
+                badgeHtml = `<div class="status-badge status-available" style="background-color: #e5e7eb; color: #374151;">Returned</div>`;
+                stepperHtml = `
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Approved</p></div>
+                    <div class="step completed"><i class="fa-solid fa-check"></i><p>Used</p></div>
+                    <div class="step completed"><i class="fa-solid fa-rotate-left"></i><p>Returned</p></div>
+                `;
+                footerBtnHtml = `<button class="btn" disabled style="opacity: 0.5;">Completed</button>`;
+                
             } else {
                 badgeHtml = `<div class="status-badge status-rejected">Rejected</div>`;
                 stepperHtml = `<div class="step" style="color: #E74C3C; border-color: #E74C3C;"><i class="fa-solid fa-xmark"></i><p>Declined</p></div>`;
@@ -267,8 +287,7 @@ async function initInbox() {
         const username = sessionStorage.getItem("username");
         const token = sessionStorage.getItem("jwtToken"); // Взимаме токена
         
-        if (!username || username === 'undefined' || username === 'null') {
-            console.error("ГРЕШКА: Няма валидно username в localStorage! Текуща стойност:", username);
+        if (!username) {
             container.innerHTML = '<p style="text-align: center; color: var(--text-gray);">Моля, излезте от профила си и влезте отново, за да заредите данните.</p>';
             return;
         }
@@ -451,15 +470,90 @@ window.requestItemAPI = async function(itemId) {
     }
 };
 
-window.cancelRequest = function(id) {
-    if (confirm(`Сигурни ли сте, че искате да отмените заявка #${id}?`)) {
-        alert(`Request #${id} has been cancelled.`);
-        // Тук може да се добави apiFetch('/request/'+id, { method: 'DELETE' })
+async function cancelRequest(equipmentId) {
+    const token = sessionStorage.getItem("jwtToken");
+
+    if (!token) {
+        alert("Нямате достъп. Моля, влезте отново.");
+        window.location.href = "/login.html";
+        return;
     }
-};
+
+    try {
+        const result = await fetch(`http://localhost:9000/api/request/${equipmentId}/cancel`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            }
+        });
+        
+        if (result.ok) {
+            window.location.reload();
+        } else {
+            console.error("Грешка при връщане:", result.status);
+        }
+    } catch (error) {
+        console.error("Мрежова грешка:", error);
+    }
+}
 
 window.viewDetails = function(id) {
-    alert(`Displaying QR Code for Request #${id}. Present this at the IT desk.`);
+    let barcodeModal = document.getElementById('barcodeModal');
+    
+    if (!barcodeModal) {
+        barcodeModal = document.createElement('div');
+        barcodeModal.id = 'barcodeModal';
+        barcodeModal.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.6); display: none;
+            justify-content: center; align-items: center; z-index: 9999;
+        `;
+
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: #fff; padding: 30px; border-radius: 12px;
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 90%; width: 350px;
+        `;
+
+        const title = document.createElement('h3');
+        title.innerText = 'Scan Barcode at IT Desk';
+        title.style.margin = '0 0 5px 0';
+        title.style.color = '#2B8EAD';
+
+        const subtitle = document.createElement('p');
+        subtitle.id = 'barcodeSubtitle';
+        subtitle.style.margin = '0 0 20px 0';
+        subtitle.style.color = '#666';
+
+        // Изображението на Баркода
+        const barcodeImg = document.createElement('img');
+        barcodeImg.id = 'barcodeImage';
+        barcodeImg.style.width = '100%'; 
+        barcodeImg.style.height = '100px'; // Баркодовете са по-широки
+        barcodeImg.style.marginBottom = '20px';
+
+        const closeBtn = document.createElement('button');
+        closeBtn.innerText = 'Close';
+        closeBtn.className = 'btn btn-primary';
+        closeBtn.style.width = '100%';
+        closeBtn.onclick = () => barcodeModal.style.display = 'none';
+
+        modalContent.append(title, subtitle, barcodeImg, closeBtn);
+        barcodeModal.appendChild(modalContent);
+        document.body.appendChild(barcodeModal);
+        
+        barcodeModal.addEventListener('click', (e) => {
+            if (e.target === barcodeModal) barcodeModal.style.display = 'none';
+        });
+    }
+
+    const barcodeUrl = `https://barcode.tec-it.com/barcode.ashx?data=REQ-${id}&code=Code128`;
+    
+    document.getElementById('barcodeImage').src = barcodeUrl;
+    document.getElementById('barcodeSubtitle').innerText = `Request #${id}`;
+    barcodeModal.style.display = 'flex';
 };
 
 
@@ -477,10 +571,8 @@ document.addEventListener('DOMContentLoaded', () => {
         initBrowseEquipment();
     } else if (path.includes('my_requests.html')) {
         initMyRequests();
-        setInterval(initMyRequests, 10000);
     } else if (path.includes('inbox.html')) {
         initInbox();
-        setInterval(initMyRequests, 10000);
     } else if (path.includes('history_user.html')) {
         initHistory();
     } else {

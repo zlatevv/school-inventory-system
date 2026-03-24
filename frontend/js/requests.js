@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // window.location.href = "/login.html"; // Закоментирано, ако тестваш локално
         return;
     }
+    console.log(token);
+    
     loadMyData(token);
 });
 
@@ -22,13 +24,15 @@ async function loadMyData(token) {
     }
 
     const data = await result.json();
-    console.log("Данни от сървъра:", data);
+
+    const badgeCountEl = document.querySelector(".badge-count")
     
     data.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
 
     const cancelContainer = document.querySelector(".cancel-request");
     if (cancelContainer) {
         const pendingRequests = data.filter(req => req.status === "PENDING");
+        badgeCountEl.innerHTML = pendingRequests.length;
 
         if (pendingRequests.length > 0) {
             const latestPending = pendingRequests[0];

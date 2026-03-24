@@ -9,6 +9,8 @@ import bg.schoolinventory.requestservice.dto.RequestResponseDTO;
 import bg.schoolinventory.requestservice.enums.RequestStatus;
 import bg.schoolinventory.requestservice.model.Request;
 import bg.schoolinventory.requestservice.repository.RequestRepository;
+import feign.FeignException;
+import jakarta.transaction.Transactional;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -68,13 +70,16 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request approveRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.APPROVED);
-        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+
+        String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
         String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
 
         sendNotification(
                 request.getUsernameRequesting(),
@@ -88,13 +93,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request rejectRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
         request.setStatus(RequestStatus.REJECTED);
-        String equipmentName = equipmentClient.getEquipmentById(requestId).getName();
+
+        String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
         String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "AVAILABLE");
 
         sendNotification(
                 request.getUsernameRequesting(),
@@ -108,21 +117,47 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    @Transactional
     public Request returnEquipment(Long requestId, String condition) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
 
-        if (request.getStatus() != RequestStatus.APPROVED){
-            throw new RuntimeException("Error - cannot return equipment that was not approved!");
-        }
-
         request.setStatus(RequestStatus.RETURNED);
         request.setReturnCondition(condition);
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "AVAILABLE");
 
         return requestRepository.save(request);
     }
 
     @Override
+    public Request checkoutEquipment(Long requestId) {
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
+
+        if (request.getStatus() != RequestStatus.APPROVED) {
+            throw new RuntimeException("Error - You can only check out APPROVED requests. Current status: " + request.getStatus());
+        }
+
+        request.setStatus(RequestStatus.CHECKED_OUT);
+
+        String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
+        String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
+
+        equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "CHECKED_OUT");
+
+        sendNotification(
+                request.getUsernameRequesting(),
+                "Equipment Checked Out", // Сменено от Request Rejection
+                "Great news! Your request for the " + equipmentName + " has been checked out successfully and is now in your possession.",
+                email
+        );
+
+        // 6. Запазваме промените в базата
+        return requestRepository.save(request);
+    }
+
+    @Override
+    @Transactional
     public Request cancelRequest(Long requestId) {
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Error - request does not exist!"));
@@ -138,14 +173,24 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private RequestResponseDTO mapToResponseDTO(Request req) {
-        EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
-
         RequestResponseDTO dto = new RequestResponseDTO();
+
         dto.setId(req.getId());
         dto.setStatus(req.getStatus());
         dto.setRequestDate(req.getRequestDate());
         dto.setEquipmentID(req.getEquipmentID());
-        dto.setEquipmentName(equipment.getName());
+        dto.setUsernameRequesting(req.getUsernameRequesting());
+
+        try {
+            EquipmentDTO equipment = equipmentClient.getEquipmentById(req.getEquipmentID());
+            dto.setEquipmentName(equipment.getName());
+        } catch (feign.FeignException.NotFound e) {
+            System.out.println("Предметът с ID " + req.getEquipmentID() + " липсва: " + e.getMessage());
+            dto.setEquipmentName("Изтрит предмет (ID: " + req.getEquipmentID() + ")");
+        } catch (Exception e) {
+            System.out.println("Грешка при връзката с Equipment Service: " + e.getMessage());
+            dto.setEquipmentName("Неизвестна техника");
+        }
 
         return dto;
     }

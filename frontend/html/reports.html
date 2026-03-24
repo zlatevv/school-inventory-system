@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - Inventory System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .chart-placeholder { height: 200px; background: #f8fafc; border-radius: 8px; display: flex; align-items: flex-end; padding: 10px; gap: 10px; }
+        .bar { background: var(--primary-color); width: 100%; border-radius: 4px 4px 0 0; }
+    </style>
+</head>
+<body>
+    <div class="content-padding">
+        <section class="section-header">
+            <h1>System Reports</h1>
+            <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-download"></i> Export PDF</button>
+        </section>
+
+        <div class="report-grid">
+            <div class="card-container">
+                <h3>Inventory Distribution</h3>
+                <div class="chart-placeholder">
+                    <div class="bar" style="height: 80%;" title="Laptops"></div>
+                    <div class="bar" style="height: 40%;" title="Cameras"></div>
+                    <div class="bar" style="height: 60%;" title="Peripherals"></div>
+                    <div class="bar" style="height: 20%;" title="Other"></div>
+                </div>
+            </div>
+            <div class="card-container">
+                <h3>Request Volume (Last 7 Days)</h3>
+                <div class="chart-placeholder">
+                    <div class="bar" style="height: 30%;"></div>
+                    <div class="bar" style="height: 50%;"></div>
+                    <div class="bar" style="height: 90%;"></div>
+                    <div class="bar" style="height: 60%;"></div>
+                    <div class="bar" style="height: 75%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" style="margin-top: 20px;">
+            <h3>Inventory Condition Summary</h3>
+            <table class="requests-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Excellent</th>
+                        <th>Good</th>
+                        <th>Needs Repair</th>
+                    </tr>
+                </thead>
+                <tbody id="conditionReportBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="/js/reports.js"></script>
+</body>
+</html>
