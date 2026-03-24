@@ -64,7 +64,7 @@ services:
       MYSQL_DATABASE: school_inventory
       MYSQL_ROOT_PASSWORD: 1234
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
   # --- FRONTEND ---
   frontend:
