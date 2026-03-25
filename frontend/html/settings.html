@@ -7,48 +7,103 @@
     <title>Settings - Admin</title>
 </head>
 <body>
-    <div class="content-padding">
-        <div class="dashboard-grid">
-            <div class="card-container">
-                <div class="section-header"><h2><i class="fa-solid fa-user-gear"></i> Admin Profile</h2></div>
-                <form id="profileForm" style="display: flex; flex-direction: column; gap: 15px;">
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" id="set-username" class="btn-outline" style="width: 100%; padding: 10px;" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="set-email" class="btn-outline" style="width: 100%; padding: 10px;">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
+            <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
+            <li><a href="requests.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests</a></li>
+            <li><a href="users.html" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="reports.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="settings.html" class="nav-item active"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+        <div class="logout-btn">
+            <a href="#" class="nav-item"><i class="fa-solid fa-power-off"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+                <span style="font-size:1rem; font-weight:600; color:var(--text-dark);">Settings</span>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <img src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                </div>
+            </div>
+        </header>
+
+        <div class="content-padding">
+            <div class="dashboard-grid">
+                <div class="card-container">
+                    <div class="section-header"><h2><i class="fa-solid fa-user-gear"></i> Admin Profile</h2></div>
+                    <form id="profileForm" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="set-username" readonly style="background:#F1F5F9;">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="set-email">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+                <div class="card-container">
+                    <div class="section-header"><h2><i class="fa-solid fa-shield-halved"></i> Security</h2></div>
+                    <p style="color: #64748B; font-size: 0.9rem;">Change your administrative password regularly to keep the inventory safe.</p>
+                    <button class="btn btn-outline" style="margin-top: 15px; color: #E74C3C; border-color: #FCA5A5;">
+                        Change Password
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-container" style="margin-top: 25px;">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-user-plus"></i> Register New Staff/Teacher</h2>
+                </div>
+                <form id="registerUserForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <input type="text" placeholder="Username" id="reg-username" required style="padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px;">
+                    <input type="email" placeholder="Email" id="reg-email" required style="padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px;">
+                    <input type="password" placeholder="Initial Password" id="reg-password" required style="padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px;">
+                    <select id="reg-role" style="padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px;">
+                        <option value="USER">Staff / Teacher</option>
+                        <option value="ADMIN">System Admin</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary" style="grid-column: span 2;">Create Account</button>
                 </form>
             </div>
-
-            <div class="card-container">
-                <div class="section-header"><h2><i class="fa-solid fa-shield-halved"></i> Security</h2></div>
-                <p style="color: #64748B; font-size: 0.9rem;">Change your administrative password regularly to keep the inventory safe.</p>
-                <button class="btn btn-outline" style="margin-top: 15px; color: #E74C3C; border-color: #FCA5A5;">
-                    Change Password
-                </button>
-            </div>
         </div>
+    </main>
 
-        <div class="card-container" style="margin-top: 25px;">
-            <div class="section-header">
-                <h2><i class="fa-solid fa-user-plus"></i> Register New Staff/Teacher</h2>
-            </div>
-            <form id="registerUserForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <input type="text" placeholder="Username" id="reg-username" required style="padding: 10px;">
-                <input type="email" placeholder="Email" id="reg-email" required style="padding: 10px;">
-                <input type="password" placeholder="Initial Password" id="reg-password" required style="padding: 10px;">
-                <select id="reg-role" style="padding: 10px;">
-                    <option value="USER">Staff / Teacher</option>
-                    <option value="ADMIN">System Admin</option>
-                </select>
-                <button type="submit" class="btn btn-primary" style="grid-column: span 2;">Create Account</button>
-            </form>
-        </div>
-    </div>
     <script src="/js/settings.js"></script>
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>
