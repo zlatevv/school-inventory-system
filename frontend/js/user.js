@@ -140,25 +140,37 @@ if (window.location.pathname.includes('browse_equipment.html')) {
     }
 
     function filterData() {
-        const searchTerm = bSearchInput.value.toLowerCase();
+        const searchTerm = bSearchInput.value.toLowerCase().trim();
         const category = categorySelect.value;
 
         const filtered = inventory.filter(item => {
-            const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+            const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
+                                 item.category.toLowerCase().includes(searchTerm) ||
+                                 item.brand.toLowerCase().includes(searchTerm);
+            
             const matchesCategory = category === 'all' || item.category === category;
+            
             return matchesSearch && matchesCategory;
         });
-        renderCards(filtered);
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-gray);">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;"></i>
+                    <p>No equipment found matching "<strong>${bSearchInput.value}</strong>"</p>
+                </div>
+            `;
+        } else {
+            renderCards(filtered);
+        }
     }
 
     if (bSearchInput) bSearchInput.addEventListener('input', filterData);
     if (categorySelect) categorySelect.addEventListener('change', filterData);
 
-    // Стартираме рендирането
     renderCards(inventory);
 }
 
-// Глобална функция за Alert (извън IF-а, за да е достъпна от HTML-а)
+// Alert 
 function handleRequest(id) {
     alert(`Request for item ID: ${id} sent to administrator!`);
 }
