@@ -13,4 +13,5 @@ public interface AuthService {
     void deleteUser(String username);
     void updateUser(String username, UpdateUserDTO dto);
     User getUserByEmail(String email);
+    void resetPassword(String email);
 }
