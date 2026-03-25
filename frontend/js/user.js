@@ -580,8 +580,10 @@ document.addEventListener('DOMContentLoaded', () => {
         initBrowseEquipment();
     } else if (path.includes('my_requests.html')) {
         initMyRequests();
+        setInterval(initMyRequests, 10000);
     } else if (path.includes('inbox.html')) {
         initInbox();
+        setInterval(initMyRequests, 10000);
     } else if (path.includes('history_user.html')) {
         initHistory();
     } else {
