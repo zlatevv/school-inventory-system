@@ -32,7 +32,7 @@ public class ReturnReminderJob {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    @Scheduled(cron = "0 30 11 * * ?")
+    @Scheduled(cron = "0 0 11 * * ?")
     public void sendRemindersForTomorrow() {
         // 1. Изчисляваме кога започва и кога свършва утрешният ден
         LocalDateTime startOfTomorrow = LocalDateTime.now().plusDays(1).withHour(0).withMinute(0).withSecond(0);

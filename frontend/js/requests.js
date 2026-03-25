@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // window.location.href = "/login.html"; // Закоментирано, ако тестваш локално
         return;
     }
+    console.log(token);
+    
     loadMyData(token);
 });
 

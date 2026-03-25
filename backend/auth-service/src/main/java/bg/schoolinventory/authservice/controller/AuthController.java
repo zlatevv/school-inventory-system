@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -59,5 +60,22 @@ public class AuthController {
     public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDTO dto) {
         authService.updateUser(username, dto);
         return ResponseEntity.ok("User updated successfully!");
+    }
+
+    @GetMapping("/get-by-email/{email}")
+    public ResponseEntity<User> getByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(authService.getUserByEmail(email));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+
+        try {
+            authService.resetPassword(email);
+            return ResponseEntity.ok(Map.of("message", "Success! Check your inbox."));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 }

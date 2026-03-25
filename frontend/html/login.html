@@ -12,8 +12,12 @@
             <h2>Sign In</h2>
             <input type="text" id="login-username" placeholder="Username">
             <div id="log-username-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
+            
             <input type="password" id="login-password" placeholder="Password">
             <div id="log-password-error" class="error-message" style="color: red; font-size: 0.8rem;"></div>
+            
+            <div class="forgot-password"><a href="#" onclick="handleForgotPassword(event)">Forgot Password?</a></div>
+
             <div id="general-log-error" class="error-message" style="color: red; font-weight: bold; margin-bottom: 10px;"></div>
             <button onclick="handleLogin()">Log In</button>
             <p>You don't have an account? <a href="#" onclick="toggleForm()">Sign up</a></p>
@@ -35,6 +39,19 @@
             <div id="general-reg-error" class="error-message" style="color: red; font-weight: bold; margin-bottom: 10px;"></div>
             <button onclick="handleRegister(event)">Create an account</button>
             <p>You already have an account? <a href="#" onclick="toggleForm()">Log in</a></p>
+        </div>
+
+        <div id="forgot-password-modal" class="modal" style="display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+            <div class="form-card" style="margin: 15% auto; width: 300px; padding: 20px; background: white; border-radius: 8px;">
+                <h3>Reset Password</h3>
+                <p style="font-size: 0.9rem; color: #666;">Enter your email to receive instructions.</p>
+                
+                <input type="email" id="reset-email-input" placeholder="Email Address" style="width: 100%; margin-bottom: 10px;">
+                <div id="reset-error" style="color: red; font-size: 0.8rem; margin-bottom: 10px;"></div>
+                
+                <button onclick="sendResetEmail()">Send Link</button>
+                <button onclick="closeModal()" style="background: #ccc; margin-left: 5px;">Cancel</button>
+            </div>
         </div>
     </div>
     <script src="/js/login.js"></script>
