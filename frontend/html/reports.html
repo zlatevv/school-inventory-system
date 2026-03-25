@@ -2,60 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/admin.css">
-    <style>
-        .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .chart-placeholder { height: 200px; background: #f8fafc; border-radius: 8px; display: flex; align-items: flex-end; padding: 10px; gap: 10px; }
-        .bar { background: var(--primary-color); width: 100%; border-radius: 4px 4px 0 0; }
-    </style>
 </head>
 <body>
-    <div class="content-padding">
-        <section class="section-header">
-            <h1>System Reports</h1>
-            <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-download"></i> Export PDF</button>
-        </section>
-
-        <div class="report-grid">
-            <div class="card-container">
-                <h3>Inventory Distribution</h3>
-                <div class="chart-placeholder">
-                    <div class="bar" style="height: 80%;" title="Laptops"></div>
-                    <div class="bar" style="height: 40%;" title="Cameras"></div>
-                    <div class="bar" style="height: 60%;" title="Peripherals"></div>
-                    <div class="bar" style="height: 20%;" title="Other"></div>
-                </div>
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-microchip"></i>
             </div>
-            <div class="card-container">
-                <h3>Request Volume (Last 7 Days)</h3>
-                <div class="chart-placeholder">
-                    <div class="bar" style="height: 30%;"></div>
-                    <div class="bar" style="height: 50%;"></div>
-                    <div class="bar" style="height: 90%;"></div>
-                    <div class="bar" style="height: 60%;"></div>
-                    <div class="bar" style="height: 75%;"></div>
-                </div>
+            <div class="logo-text">
+                School <br> Inventory Management System
             </div>
         </div>
 
-        <div class="card-container" style="margin-top: 20px;">
-            <h3>Inventory Condition Summary</h3>
-            <table class="requests-table">
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Excellent</th>
-                        <th>Good</th>
-                        <th>Needs Repair</th>
-                    </tr>
-                </thead>
-                <tbody id="conditionReportBody">
-                    </tbody>
-            </table>
+        <ul class="nav-menu">
+            <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
+            <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
+            <li><a href="requests.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests</a></li>
+            <li><a href="users.html" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="reports.html" class="nav-item active"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+
+        <div class="logout-btn">
+            <a href="#" class="nav-item" id="logoutLink" style="text-decoration: none; color: inherit;">
+                <i class="fa-solid fa-power-off"></i> Logout
+            </a>
         </div>
-    </div>
-    <script src="/js/reports.js"></script>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <h1 style="font-size: 1.75rem; margin: 0;">System Reports</h1>
+            </div>
+
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-text">
+                        <strong id="display-username"></strong>
+                    </div>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                </div>
+            </div>
+        </header>
+
+        <div class="content-padding">
+            <section class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-boxes-stacked" style="color: var(--primary-color);"></i> Total Requests</div>
+                    <div class="stat-number" id="total-requests-stat">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-circle-check" style="color: #16A34A;"></i> Approved</div>
+                    <div class="stat-number" id="approved-requests-stat">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-rotate-left" style="color: #0EA5E9;"></i> Returned</div>
+                    <div class="stat-number" id="returned-requests-stat">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header"><i class="fa-solid fa-clock" style="color: #F59E0B;"></i> Avg Borrow Hours</div>
+                    <div class="stat-number" id="avg-duration-stat">0.00</div>
+                </div>
+            </section>
+
+            <section class="card-container" style="margin-bottom: 20px;">
+                <div class="section-header">
+                    <h2>Export Reports</h2>
+                </div>
+                <div class="action-row" style="margin-top: 0;">
+                    <button class="btn btn-primary" data-export-type="usage" data-export-format="csv">Usage CSV</button>
+                    <button class="btn btn-outline" data-export-type="usage" data-export-format="pdf">Usage PDF</button>
+                    <button class="btn btn-primary" data-export-type="history" data-export-format="csv">History CSV</button>
+                    <button class="btn btn-outline" data-export-type="history" data-export-format="pdf">History PDF</button>
+                </div>
+                <p id="reportsMessage" style="margin-top: 12px; color: #64748B;"></p>
+            </section>
+
+            <section class="card-container" style="margin-bottom: 20px;">
+                <div class="section-header">
+                    <h2>Usage Report</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="requests-table">
+                        <thead>
+                        <tr>
+                            <th>Equipment</th>
+                            <th>Type</th>
+                            <th>Total</th>
+                            <th>Approved</th>
+                            <th>Returned</th>
+                            <th>Avg Hours</th>
+                            <th>Last Used</th>
+                        </tr>
+                        </thead>
+                        <tbody id="usageReportBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 20px;">Loading...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card-container">
+                <div class="section-header">
+                    <h2>Borrowing History</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="requests-table">
+                        <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Equipment</th>
+                            <th>Request Date</th>
+                            <th>Borrow Start</th>
+                            <th>Borrow End</th>
+                            <th>Status</th>
+                            <th>Return Date</th>
+                            <th>Condition</th>
+                        </tr>
+                        </thead>
+                        <tbody id="historyReportBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 20px;">Loading...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="/js/admin/reports.js"></script>
 </body>
 </html>

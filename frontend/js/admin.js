@@ -24,4 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initEditFormListener(); 
     initAddFormListener();
     fetchAndDisplayUsers();
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 70450907762805fcf17aaaf5b515bae2a33b2192

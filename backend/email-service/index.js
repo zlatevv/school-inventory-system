@@ -6,15 +6,29 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'pennywiseaibest@gmail.com',
-        pass: 'olvz ezop vqqz bhzw'
+        pass: process.env.EMAIL_PASSWORD
     }
 });
 
 async function start() {
+    const rabbitUrl = process.env.RABBITMQ_URL || 'amqp://127.0.0.1';
+    let connection;
+
+    // 1. Повтаряме опитите за свързване, докато успеем
+    while (!connection) {
+        try {
+            console.log(`[~] Опит за свързване с RabbitMQ на ${rabbitUrl}...`);
+            connection = await amqp.connect(rabbitUrl);
+            console.log("[✔] Успешна връзка с RabbitMQ!");
+        } catch (error) {
+            console.error("[!] RabbitMQ все още не е готов. Нов опит след 5 секунди...");
+            // Изчакваме 5 секунди преди следващия опит
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+    }
+
+    // 2. След като имаме връзка, продължаваме напред
     try {
-        // 2. Свързваме се с локалния RabbitMQ
-        const rabbitUrl = process.env.RABBITMQ_URL || 'amqp://127.0.0.1';
-        const connection = await amqp.connect(rabbitUrl);
         const channel = await connection.createChannel();
         const queue = 'email_queue';
 
@@ -30,6 +44,7 @@ async function start() {
 
                     let data = JSON.parse(content);
 
+                    // Презастраховане, ако данните са стрингифицирани два пъти
                     if (typeof data === 'string') {
                         data = JSON.parse(data);
                     }
@@ -55,13 +70,15 @@ async function start() {
 
                     channel.ack(msg);
                 } catch (error) {
-                    console.error(`[!] Грешка при обработка:`, error);
+                    console.error(`[!] Грешка при изпращане на имейл:`, error);
+                    // Важно: Потвърждаваме съобщението дори при грешка в имейла,
+                    // за да не блокираме опашката (освен ако не искаш да се препрати)
                     channel.ack(msg);
                 }
             }
         });
     } catch (error) {
-        console.error('Грешка със сървъра:', error);
+        console.error('Грешка при създаване на канал:', error);
     }
 }
 

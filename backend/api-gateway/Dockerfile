@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Копираме pom.xml и сваляме зависимостите
 COPY pom.xml .
-RUN mvn dependency:go-offline
 
 # Копираме самия сорс код и го компилираме
 COPY src ./src
