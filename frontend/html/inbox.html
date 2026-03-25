@@ -5,18 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inbox | Inventory System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="user.css">
-    <link rel="stylesheet" href="inbox.css">
+    <link rel="stylesheet" href="/css/user.css">
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar">
         <div class="logo-area">
-            <div class="logo-icon">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="logo-text">
-                School <br> Inventory Management System
-            </div>
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
         </div>
         <ul class="nav-menu">
             <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
@@ -32,15 +28,15 @@
 
     <main class="main-content">
         <header>
-            <div class="search-bar">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
             </div>
-
             <div class="user-profile">
                 <div class="user-info">
                 <img src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
                 <span>Loading...</span>
                 </div>
-             </div>
+            </div>
         </header>
 
         <div class="content-padding">
@@ -49,49 +45,14 @@
                 <p>Stay updated with your requests and system alerts.</p>
             </div>
 
-            <div class="inbox-search-container" style="margin-top: 25px;">
-                <div class="search-box" style="position: relative; max-width: 400px;">
-                    <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-gray);"></i>
-                    <input type="text" id="inboxSearch" placeholder="Search notifications..." style="width: 100%; padding: 12px 15px 12px 45px; border-radius: 12px; border: 1px solid var(--border-color); outline: none;">
+            <div style="margin-top: 20px; max-width: 400px;">
+                <div class="search-box" style="position:relative;">
+                    <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); color:var(--text-gray);"></i>
+                    <input type="text" id="inboxSearch" placeholder="Search notifications..." style="width:100%; padding:12px 15px 12px 45px; border-radius:12px; border:1px solid var(--border-color); outline:none;">
                 </div>
             </div>
 
-            <div class="inbox-container" id="inboxContainer" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;">
-                
-                <div class="notification-card unread">
-                    <div class="notif-icon approved"><i class="fa-solid fa-circle-check"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-header">
-                            <h3>Request Approved</h3>
-                            <span>2 mins ago</span>
-                        </div>
-                        <p>Your request for <strong>Epson Projector</strong> has been approved. You can pick it up from Room 101.</p>
-                    </div>
-                </div>
-
-                <div class="notification-card unread">
-                    <div class="notif-icon warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-header">
-                            <h3>Return Reminder</h3>
-                            <span>1 hour ago</span>
-                        </div>
-                        <p>Friendly reminder: The <strong>Lenovo Laptop</strong> is due for return tomorrow at 14:00.</p>
-                    </div>
-                </div>
-
-                <div class="notification-card">
-                    <div class="notif-icon system"><i class="fa-solid fa-info-circle"></i></div>
-                    <div class="notif-content">
-                        <div class="notif-header">
-                            <h3>System Update</h3>
-                            <span>Yesterday</span>
-                        </div>
-                        <p>The inventory system will be down for maintenance tonight between 00:00 and 02:00.</p>
-                    </div>
-                </div>
-
-            </div>
+            <div class="inbox-container" id="inboxContainer" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;"></div>
         </div>
     </main>
 
@@ -107,6 +68,27 @@
         </div>
     </div>
 
-    <script src="user.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/displayInfo.js"></script>
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>

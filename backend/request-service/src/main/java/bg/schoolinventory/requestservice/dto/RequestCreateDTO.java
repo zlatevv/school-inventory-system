@@ -18,6 +18,8 @@ public class RequestCreateDTO {
     @NotNull(message = "End time is required")
     private LocalDateTime borrowEndTime;
 
+    public RequestCreateDTO(){}
+
     public RequestCreateDTO(Long equipmentId, LocalDateTime borrowStartTime, LocalDateTime borrowEndTime) {
         this.equipmentId = equipmentId;
         this.borrowStartTime = borrowStartTime;

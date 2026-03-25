@@ -1,51 +1,27 @@
 function toggleForm() {
     const loginBox = document.getElementById('login-box');
     const regBox = document.getElementById('register-box');
-    loginBox.style.display = loginBox.style.display === 'none' ? 'block' : 'none';
-    regBox.style.display = regBox.style.display === 'none' ? 'block' : 'none';
+    const isLoginVisible = loginBox.style.display !== 'none';
+    
+    loginBox.style.display = isLoginVisible ? 'none' : 'block';
+    regBox.style.display = isLoginVisible ? 'block' : 'none';
 }
+
 function checkStrength(password) {
     let strengthScore = 0;
-
-    // 1. Проверяваме дължината (минимум 8 символа)
-    if (password.length >= 8) {
-        strengthScore += 1;
-    }
-    
-    // 2. Проверяваме за малки букви
-    if (/[a-z]/.test(password)) {
-        strengthScore += 1;
-    }
-    
-    // 3. Проверяваме за главни букви
-    if (/[A-Z]/.test(password)) {
-        strengthScore += 1;
-    }
-    
-    // 4. Проверяваме за цифри
-    if (/[0-9]/.test(password)) {
-        strengthScore += 1;
-    }
-    
-    // 5. Проверяваме за специални символи (всичко, което не е буква или цифра)
-    if (/[^a-zA-Z0-9]/.test(password)) {
-        strengthScore += 1;
-    }
+    if (password.length >= 8) strengthScore++;
+    if (/[a-z]/.test(password)) strengthScore++;
+    if (/[A-Z]/.test(password)) strengthScore++;
+    if (/[0-9]/.test(password)) strengthScore++;
+    if (/[^a-zA-Z0-9]/.test(password)) strengthScore++;
     
     let strengthMessage = '';
     let color = '';
 
-    if (password.length === 0) {
-        strengthMessage = '';
-    } else if (strengthScore <= 2) {
-        strengthMessage = 'Слаба парола';
-        color = 'red';
-    } else if (strengthScore === 3 || strengthScore === 4) {
-        strengthMessage = 'Средна парола';
-        color = 'orange';
-    } else if (strengthScore === 5) {
-        strengthMessage = 'Силна парола';
-        color = 'green';
+    if (password.length > 0) {
+        if (strengthScore <= 2) { strengthMessage = 'Слаба парола'; color = 'red'; }
+        else if (strengthScore <= 4) { strengthMessage = 'Средна парола'; color = 'orange'; }
+        else { strengthMessage = 'Силна парола'; color = 'green'; }
     }
 
     const feedbackElement = document.getElementById('passwordFeedback');
@@ -59,121 +35,137 @@ async function handleLogin() {
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
 
-    const errorMessages = document.querySelectorAll('#login-box .error-message');
-    errorMessages.forEach(el => el.innerText = '');
+    // Изчистване на стари грешки
+    document.querySelectorAll('.error-message').forEach(el => el.innerText = '');
 
-    const response = await fetch("http://localhost:9000/api/auth/login", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username: username, password: password })
-    });
+    try {
+        const response = await fetch(`${API_CONFIG.auth}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
 
-    if (response.ok) {
         const data = await response.json();
-        console.log(data);
 
-        localStorage.setItem("jwtToken", data.token);
-        localStorage.setItem("userRole", data.role);
-        localStorage.setItem("username", username);
+        if (response.ok) {
+            sessionStorage.setItem("jwtToken", data.token);
+            sessionStorage.setItem("userRole", data.role);
+            sessionStorage.setItem("username", username);
+            sessionStorage.setItem("userId", data.id);
 
-        if (data.role == "ADMIN") {
-            window.location.href = '/frontend/html/admin.html';
+            window.location.href = (data.role === "ADMIN") ? 'admin.html' : 'user.html';
         } else {
-            window.location.href = '/frontend/html/index.html';
+            handleApiErrors(data, 'log');
         }
-    } else {
-        if (response.status === 400 || response.status === 401 || response.status === 403) {
-            try {
-                const rawText = await response.text();
-                console.log("Отговор от сървъра:", rawText);
-
-                const errors = JSON.parse(rawText);
-
-                if (errors.message) {
-                    document.getElementById('general-log-error').innerText = errors.message;
-                } 
-                else if (typeof errors === 'object' && errors !== null && !errors.timestamp) {
-                    for (const field in errors) {
-                        const errorElement = document.getElementById(`log-${field}-error`);
-                        if (errorElement) {
-                            errorElement.innerText = errors[field];
-                        }
-                    }
-                } else {
-                    document.getElementById('general-log-error').innerText = "Грешни данни за вход.";
-                }
-
-            } catch (e) {
-                console.error("Грешка при парсване:", e);
-                document.getElementById('general-log-error').innerText = "Грешно потребителско име или парола.";
-            }
-        } else {
-            document.getElementById('general-log-error').innerText = "Възникна неочаквана грешка със сървъра!";
-        }
+    } catch (error) {
+        console.error("Login error:", error);
+        document.getElementById('general-log-error').innerText = "Няма връзка със сървъра.";
     }
 }
 
 async function handleRegister(event) {
-
     event.preventDefault();
-
     const username = document.getElementById("reg-username").value;
     const email = document.getElementById("reg-email").value;
-    const password = document.getElementById("reg-password").value
+    const password = document.getElementById("reg-password").value;
 
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(el => el.innerText = '');
+    document.querySelectorAll('.error-message').forEach(el => el.innerText = '');
 
-    const response = await fetch ("http://localhost:9000/api/auth/register", {
-        method: 'POST',
-        headers: {
-            'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({ username: username, email: email, password: password})
-    })
+    try {
+        const response = await fetch(`${API_CONFIG.auth}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
 
-    if (response.ok){
-        const message = await response.text();
+        if (response.ok) {
+            alert("Регистрацията е успешна!");
+            toggleForm();
+        } else {
+            const errors = await response.json();
+            handleApiErrors(errors, 'reg');
+        }
+    } catch (error) {
+        document.getElementById('general-reg-error').innerText = "Грешка при регистрация.";
+    }
+}
 
-        alert(message);
-
-        window.location.href = '/frontend/html/login.html'
-    } else {
-            if (response.status === 400) {
-                try {
-                    const rawText = await response.text();
-                    console.log("Отговор от сървъра:", rawText); 
-
-                    const errors = JSON.parse(rawText);
-                    
-                    // Проверяваме дали грешките са във формата, който очакваме (ключ-стойност)
-                    if (typeof errors === 'object' && errors !== null && !errors.timestamp) {
-                        for (const field in errors) {
-                            const errorElement = document.getElementById(`reg-${field}-error`);
-                            if (errorElement) {
-                                errorElement.innerText = errors[field];
-                            }
-                        }
-                    } else {
-                        document.getElementById('general-reg-error').innerText = errors.message || "Грешка при валидацията.";
-                    }
-
-                } catch (e) {
-                    console.error("Грешка при парсване:", e);
-                    document.getElementById('general-reg-error').innerText = "Невалидни данни за регистрация (Bad Request).";
-                }
-            } else {
-                document.getElementById('general-reg-error').innerText = "Възникна неочаквана грешка със сървъра!";
-            }
+// Помощна функция за обработка на грешки от Spring (валидации)
+function handleApiErrors(errors, prefix) {
+    const generalErrorId = `general-${prefix}-error`;
+    if (errors.message) {
+        document.getElementById(generalErrorId).innerText = errors.message;
+    } else if (typeof errors === 'object') {
+        for (const field in errors) {
+            const errorElement = document.getElementById(`${prefix}-${field}-error`);
+            if (errorElement) errorElement.innerText = errors[field];
+        }
     }
 }
 
 async function handleLogout() {
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("userRole");
+    try {
+        await fetch(`${API_CONFIG.auth}/logout`, { 
+            method: 'POST',
+            headers: API_CONFIG.getHeaders()
+        });
+    } finally {
+        sessionStorage.clear();
+        window.location.href = 'login.html';
+    }
+}
 
-    await fetch("http://localhost:9000/api/auth/logout", { method: 'POST' })
-    window.location.href = '/frontend/html/login.html';
+// Function to open the modal
+function handleForgotPassword(event) {
+    event.preventDefault();
+    document.getElementById('forgot-password-modal').style.display = 'block';
+}
+
+// Function to close the modal
+function closeModal() {
+    document.getElementById('forgot-password-modal').style.display = 'none';
+    document.getElementById('reset-error').innerText = '';
+}
+
+// Function to send data to your Nodemailer backend
+async function sendResetEmail() {
+    const emailInput = document.getElementById('reset-email-input');
+    const email = emailInput.value.trim();
+    const errorDiv = document.getElementById('reset-error');
+    
+    const sendButton = document.querySelector('#forgot-password-modal button'); 
+
+    if (!email) {
+        errorDiv.innerText = "Please enter an email.";
+        return;
+    }
+
+    sendButton.innerText = "Sending...";
+    sendButton.disabled = true;
+    errorDiv.innerText = ""; 
+
+    try {
+        const response = await fetch(`${API_CONFIG.auth}/forgot-password`, { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        });
+
+        const result = await response.json();
+        console.log(result);
+
+        if (response.ok) {
+            alert("Success! Check your inbox for the temporary password.");
+            closeModal();
+            emailInput.value = "";
+        } else {
+            errorDiv.innerText = result.message || "Email not found.";
+        }
+    } catch (err) {
+        console.error("Reset Password Error:", err);
+        errorDiv.innerText = "Connection error. Is the server running?";
+    } finally {
+        sendButton.innerText = "Send Link";
+        sendButton.disabled = false;
+    }
 }

@@ -5,21 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Requests | Inventory System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="user.css">
-    <link rel="stylesheet" href="my_requests.css">
+    <link rel="stylesheet" href="/css/user.css">
 </head>
 <body>
 
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar">
         <div class="logo-area">
-            <div class="logo-icon">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="logo-text">
-                School <br> Inventory Management System
-            </div>
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
         </div>
-        
         <ul class="nav-menu">
     <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
     <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
@@ -35,9 +30,9 @@
 
     <main class="main-content">
         <header>
-            <div class="search-bar">
-                </div>
-
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            </div>
             <div class="user-profile">
     <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
         <i class="fa-regular fa-bell"></i>
@@ -56,84 +51,43 @@
                 <h1>My Active Requests</h1>
                 <p style="color: var(--text-gray);">Track the status of your equipment reservations and pickup locations.</p>
             </div>
-
-            <div class="requests-container" id="requestsContainer">
-                
-                <div class="request-card">
-                    <div class="req-header">
-                        <div class="req-title">
-                            <i class="fa-solid fa-laptop"></i>
-                            <div>
-                                <h3>Lenovo ThinkPad X1</h3>
-                                <span>Request ID: #8821</span>
-                            </div>
-                        </div>
-                        <div class="status-badge status-pending">Pending Approval</div>
-                    </div>
-                    
-                    <div class="req-body">
-                        <div class="status-stepper">
-                            <div class="step completed"><i class="fa-solid fa-check"></i><p>Requested</p></div>
-                            <div class="step active"><i class="fa-solid fa-clock"></i><p>Admin Review</p></div>
-                            <div class="step"><i class="fa-solid fa-box-open"></i><p>Ready</p></div>
-                            <div class="step"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
-                        </div>
-                    </div>
-
-                    <div class="req-footer">
-                        <div class="req-info">
-                            <p><i class="fa-regular fa-calendar"></i> Requested on: <strong>Mar 15, 2026</strong></p>
-                        </div>
-                        <button class="btn btn-danger-outline" onclick="cancelRequest(8821)">Cancel Request</button>
-                    </div>
-                </div>
-
-                <div class="request-card">
-                    <div class="req-header">
-                        <div class="req-title">
-                            <i class="fa-solid fa-video"></i>
-                            <div>
-                                <h3>Epson EB-2250U Projector</h3>
-                                <span>Request ID: #8790</span>
-                            </div>
-                        </div>
-                        <div class="status-badge status-approved">Ready for Pickup</div>
-                    </div>
-                    
-                    <div class="req-body">
-                        <div class="status-stepper">
-                            <div class="step completed"><i class="fa-solid fa-check"></i><p>Requested</p></div>
-                            <div class="step completed"><i class="fa-solid fa-check"></i><p>Approved</p></div>
-                            <div class="step active"><i class="fa-solid fa-location-dot"></i><p>Room 101</p></div>
-                            <div class="step"><i class="fa-solid fa-handshake"></i><p>Received</p></div>
-                        </div>
-                    </div>
-
-                    <div class="req-footer">
-                        <div class="req-info">
-                            <p><i class="fa-regular fa-calendar"></i> Approved on: <strong>Mar 14, 2026</strong></p>
-                        </div>
-                        <button class="btn btn-primary" onclick="viewDetails(8790)">Get QR Code</button>
-                    </div>
-                </div>
-
-            </div> </div>
+            <div class="requests-container" id="requestsContainer"></div>
+        </div>
     </main>
 
     <div id="logoutModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-icon">
-            <i class="fa-solid fa-right-from-bracket"></i>
-        </div>
-        <h2>Sign Out</h2>
-        <p>Are you sure you want to log out of your profile?</p>
-        <div class="modal-buttons">
-            <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
-            <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to log out of your profile?</p>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
+                <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+            </div>
         </div>
     </div>
-</div>
 
-    <script src="user.js"></script>
+    <script src="/js/user.js"></script>
+    <script src="/js/displayInfo.js"></script>
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>

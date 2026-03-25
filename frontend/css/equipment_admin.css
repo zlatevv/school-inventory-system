@@ -224,6 +224,9 @@ header {
 
 /* Скриваме Logout прозореца по подразбиране */
 .modal-overlay {
+    display: none;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -236,24 +239,132 @@ header {
     z-index: 9999; /* Да е над абсолютно всичко */
 }
 
-/* Стилизиране на самия прозорец, за да не изглежда като обикновен текст */
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    color: #1e293b;
+/* --- Overlay (Тъмният фон зад модала) --- */
+.modal-overlay {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.4); /* Полупрозрачен тъмен цвят */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px); /* Леко замъгляване на фона зад модала */
 }
 
+/* --- Самият прозорец (Модалът) --- */
+.modal-content {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    font-family: 'Inter', 'Segoe UI', sans-serif; /* Използвай твоя шрифт тук */
+}
+
+/* --- Икона и Заглавие --- */
+.modal-icon {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.modal-content h2 {
+    text-align: center;
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+/* --- Подредба на формата (Label вляво, Input вдясно) --- */
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: grid;
+    grid-template-columns: 110px 1fr; /* 110px за етикета, останалото за полето */
+    align-items: center;
+    gap: 15px;
+}
+
+.form-group label {
+    text-align: right;
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+/* --- Полета за въвеждане (Inputs & Selects) --- */
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* Ефект при кликване (Focus) в полето */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* --- Бутони --- */
 .modal-buttons {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
     justify-content: center;
+    gap: 15px;
+    margin-top: 30px !important; /* Overrides inline style if present */
 }
 
+.modal-btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-btn:active {
+    transform: scale(0.97); /* Леко "хлътване" при натискане */
+}
+
+/* Тъмносин бутон (Save) */
+.btn-primary {
+    background-color: #1e293b;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #0f172a;
+}
+
+/* Светъл бутон (Cancel) */
+.btn-outline {
+    background-color: #e2e8f0;
+    color: #334155;
+}
+
+.btn-outline:hover {
+    background-color: #cbd5e1;
+}
 /* Sidebar */
 .sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--white); display: flex; flex-direction: column; flex-shrink: 0; }
 .logo-area { padding: 30px 24px; display: flex; align-items: center; gap: 14px; }

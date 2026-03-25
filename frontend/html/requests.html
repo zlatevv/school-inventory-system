@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Requests - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
+            <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
+            <li><a href="requests.html" class="nav-item active"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests <span class="badge-count">2</span></a></li>
+            <li><a href="users.html" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+        <div class="logout-btn">
+            <a href="#" class="nav-item"><i class="fa-solid fa-power-off"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="equipSearch" placeholder="Search equipment...">
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-text"><strong id="display-username"></strong></div>
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
+                </div>
+            </div>
+        </header>
+
+        <div class="content-padding">
+            <div class="section-header" style="margin-bottom: 30px;">
+                <h1>Pending Borrow Requests</h1>
+                <p style="color: var(--text-gray);">Review and manage equipment loan applications.</p>
+            </div>
+
+            <div class="card-container" style="padding: 0; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th>User Details</th>
+                                <th>Equipment & Schedule</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="logoutModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to log out of the system?</p>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="modal-btn" style="background: #EF4444; color: white;">Yes, Logout</button>
+                <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/admin-requests.js"></script>
+    <script src="/js/admin-ui.js"></script>
+    <script src="/js/api-config.js"></script>
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
+</body>
+</html>

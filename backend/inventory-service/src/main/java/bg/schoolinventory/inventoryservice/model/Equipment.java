@@ -31,7 +31,7 @@ public class Equipment {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String photoURL;
 
     public Equipment() {}

@@ -1,6 +1,5 @@
 body { 
-    font-family: 'Segoe UI', 
-    sans-serif; 
+    font-family: 'Segoe UI', sans-serif; 
     background: #2c3e50; 
     display: flex; 
     justify-content: center; 
@@ -34,35 +33,19 @@ button {
     cursor: pointer; 
     font-weight: bold; 
 }
+button:hover { background: #2980b9; }
+a { color: #3498db; text-decoration: none; font-size: 14px; }
+#strength-meter { height: 5px; background-color: #ddd; margin-top: -5px; margin-bottom: 10px; border-radius: 3px; overflow: hidden; }
+#strength-bar { height: 100%; width: 0%; transition: width 0.3s ease, background-color 0.3s ease; }
+#strength-text { font-size: 12px; text-align: left; margin-bottom: 10px; font-weight: bold; }
 
-button:hover { 
-    background: #2980b9; 
-
+@media (max-width: 480px) {
+    body { padding: 20px; }
+    .form-card { width: 100%; max-width: 360px; padding: 24px 20px; border-radius: 10px; }
+    .form-card h2 { font-size: 1.3rem; margin-bottom: 12px; }
+    input { padding: 11px; font-size: 0.95rem; }
+    button { padding: 11px; font-size: 0.95rem; }
 }
-a { 
-    color: #3498db; 
-    text-decoration: none; 
-    font-size: 14px; 
-}
-
-#strength-meter {
-    height: 5px;
-    background-color: #ddd;
-    margin-top: -5px;
-    margin-bottom: 10px;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-#strength-bar {
-    height: 100%;
-    width: 0%;
-    transition: width 0.3s ease, background-color 0.3s ease;
-}
-
-#strength-text {
-    font-size: 12px;
-    text-align: left;
-    margin-bottom: 10px;
-    font-weight: bold;
+@media (max-width: 360px) {
+    .form-card { padding: 20px 16px; }
 }

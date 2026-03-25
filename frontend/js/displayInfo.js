@@ -1,37 +1,39 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const savedUsername = localStorage.getItem("username");
+    const savedUsername = sessionStorage.getItem("username");
 
     if (savedUsername) {
-        document.getElementById("display-username").innerText = savedUsername;
+        const displayEl = document.getElementById("display-username");
+        if (displayEl) displayEl.innerText = savedUsername;
         
         updateAvatarWithInitials(savedUsername);
+        
+        // Зареждаме данните
         fetchAndDisplayEquipment();
+        
+        if (typeof loadAvailableEquipmentNumber === 'function') {
+            loadAvailableEquipmentNumber();
+        }
     } else {
         window.location.href = "/frontend/html/login.html";
     }
 });
 
+// Функции за аватара (извадени на правилното място)
 function getInitials(fullName) {
     const nameParts = fullName.trim().split(' ');
-    
     let initials = '';
-
     if (nameParts.length > 0) {
         initials += nameParts[0].charAt(0).toUpperCase();
-        
         if (nameParts.length > 1) {
             initials += nameParts[nameParts.length - 1].charAt(0).toUpperCase();
         }
     }
-
     return initials;
 }
 
 function updateAvatarWithInitials(fullName) {
     const initials = getInitials(fullName);
-    
     const avatarImg = document.getElementById('user-avatar');
-
     const newUrl = `https://placehold.co/40x40/2B8EAD/FFFFFF?text=${initials}`;
     
     if (avatarImg) {
@@ -39,9 +41,16 @@ function updateAvatarWithInitials(fullName) {
     }
 }
 
+// Зареждане на оборудването
 async function fetchAndDisplayEquipment() {
     const equipListContainer = document.getElementById('equipList');
-    
+    if (!equipListContainer) return; // Предпазител
+
+    // Елементи за статистика
+    const statNumberDivAvailable = document.getElementById("all-items-count");
+    const statNumberDivCheckedOut = document.getElementById("checked_out");
+    const statNumberDivUnderRepair = document.getElementById("under-repair-equipment");
+
     equipListContainer.innerHTML = '<p>Loading equipment...</p>';
 
     try {
@@ -52,14 +61,21 @@ async function fetchAndDisplayEquipment() {
         }
         
         const equipmentData = await response.json();
-
         console.log("Equipment: ", equipmentData);
         
+        if (statNumberDivAvailable) statNumberDivAvailable.innerText = equipmentData.filter(item => item.equipmentStatus == 'AVAILABLE').length;
+        if (statNumberDivCheckedOut) {
+            const checkedOutCount = equipmentData.filter(item => item.equipmentStatus == 'CHECKED_OUT').length;
+            const underRepairCount = equipmentData.filter(item => item.equipmentStatus == "UNDER_REPAIR").length;
+            statNumberDivCheckedOut.innerText = checkedOutCount;
+            statNumberDivUnderRepair.innerText = underRepairCount;
+        }
+
+        if (statNumberDivAvailable) statNumberDivUnderRepair.innerText = equipmentData.filter(item => item.equipmentStatus == 'UNDER_REPAIR').length;
         
         equipListContainer.innerHTML = '';
 
         equipmentData.forEach(item => {
-            
             const isAvailable = item.equipmentStatus === 'AVAILABLE';
 
             const bgStyle = isAvailable ? '' : 'style="background-color: #FFFDE7;"';
@@ -69,7 +85,7 @@ async function fetchAndDisplayEquipment() {
 
             let buttonHtml = '';
             if (isAvailable) {
-                buttonHtml = `<button class="btn btn-primary" onclick="requestItem(${item.id})">Request</button>`;
+                buttonHtml = `<button class="btn btn-primary" onclick="requestItemAPI(${item.id})">Request</button>`;
             } else {
                 buttonHtml = `<button class="btn" style="background-color: #F1C40F; border:none; border-radius:6px; padding: 8px 16px;" disabled>Checked Out</button>`;
             }
@@ -99,16 +115,17 @@ async function fetchAndDisplayEquipment() {
     }
 }
 
-async function requestItem(itemId) {
-    const jwtToken = localStorage.getItem("jwtToken"); // или "accessToken", "jwt"
+// Функция за заявка на оборудване
+async function requestItemAPI(itemId) {
+    const jwtToken = sessionStorage.getItem("jwtToken"); 
 
     if (!jwtToken) {
         alert("Трябва да влезете в профила си, за да направите заявка!");
-        window.location.href = "/frontend/html/login.html"; // Смени с твоя път
+        window.location.href = "/frontend/html/login.html"; 
         return;
     }
     const now = new Date();
-    now.setMinutes(now.getSeconds() + 10); 
+    now.setSeconds(now.getSeconds() + 30); 
     
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 5);
