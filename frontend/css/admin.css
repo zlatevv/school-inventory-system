@@ -585,3 +585,51 @@ header {
 
 .btn-save { background: #2B8EAD; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
 .btn-cancel { background: #F3F4F6; color: #4B5563; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+
+@media (max-width: 992px) {
+    .search-bar { 
+        width: 200px; 
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar { 
+        position: fixed; 
+        left: -260px; 
+        height: 100vh; 
+        z-index: 1000; 
+    }
+    .sidebar.active { 
+        left: 0; 
+        box-shadow: 10px 0 15px rgba(0,0,0,0.1); 
+    }
+    
+    #menuBtn { 
+        display: block !important; 
+        font-size: 1.3rem; 
+        cursor: pointer; 
+        color: var(--text-dark); 
+    }
+    
+    header { 
+        padding: 15px 20px; 
+    }
+    .search-bar { 
+        display: none; /* Hides search bar to save space on mobile */
+    }
+    .user-text {
+        display: none; /* Hides the "Admin" text next to the avatar */
+    }
+    
+    .content-padding { 
+        padding: 20px; 
+    }
+    .welcome-banner { 
+        flex-direction: column; 
+        text-align: center; 
+    }
+    .welcome-banner img { 
+        max-width: 100%; 
+        height: auto; 
+    }
+}
