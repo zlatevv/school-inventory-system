@@ -39,8 +39,15 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
+<<<<<<< HEAD
     public ResponseEntity<Equipment> updateEquipment(@PathVariable("id") Long id,
                                                      @RequestBody EquipmentDTO equipmentDTO){
+=======
+    public ResponseEntity<Equipment> updateEquipment(
+            @PathVariable("id") Long id,
+            @RequestBody EquipmentDTO equipmentDTO
+    ){
+>>>>>>> 1eb0258e43f2b5a314822d88c49a821d459f90f1
         Equipment equipment = equipmentService.updateEquipment(id, equipmentDTO);
 
         return ResponseEntity.ok(equipment);
@@ -56,7 +63,11 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{id}")
+<<<<<<< HEAD
     public void  deleteEquipment(@PathVariable Long id){
+=======
+    public void  deleteEquipment(@PathVariable("id") Long id){
+>>>>>>> 1eb0258e43f2b5a314822d88c49a821d459f90f1
         equipmentService.deleteEquipment(id);
     }
 }
