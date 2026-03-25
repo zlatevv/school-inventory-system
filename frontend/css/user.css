@@ -86,6 +86,121 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .status-rejected { background: #FEE2E2; color: #991B1B; }
 .status-returned { background: #F1F5F9; color: #475569; }
 .status-light-yellow { background: #FEF9C3; color: #A16207; }
+.right-column-grid { display: flex; flex-direction: column; gap: 24px; }
+.cancel-request { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 20px; }
+.cancel-info { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 14px; color: var(--text-dark); }
+.requests-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.requests-table th { text-align: left; padding-bottom: 12px; color: var(--text-gray); font-weight: 500; border-bottom: 1px solid var(--border-color); }
+.requests-table td { padding: 12px 0; border-bottom: 1px solid #F1F5F9; }
+.td-title { font-weight: 500; color: var(--text-dark); margin-bottom: 4px; }
+.td-date { font-size: 11px; color: var(--text-gray); }
+.status-pending { background: var(--status-yellow-bg); color: var(--status-yellow-txt); }
+.status-approved { background: var(--status-green-bg); color: var(--status-green-txt); }
+.status-rejected { background: var(--status-red-bg); color: var(--status-red-txt); }
+.view-all { display: block; text-align: right; margin-top: 16px; font-size: 13px; color: var(--primary-color); text-decoration: none; font-weight: 500; padding-top: 16px; border-top: 1px solid var(--border-color); }
+.simple-list { display: flex; flex-direction: column; }
+.simple-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); font-size: 14px; font-weight: 500; }
+.simple-list-item:last-child { border-bottom: none; padding-bottom: 0; }
+.item-left { display: flex; align-items: center; gap: 10px; color: var(--text-dark); }
+.item-left i { color: var(--text-gray); }
+
+
+/*LOGOUT*/
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+.modal-content {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(0);
+    animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.modal-icon {
+    width: 70px;
+    height: 70px;
+    background: #FEE2E2;
+    color: #EF4444;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+}
+.modal-content h2 {
+    font-size: 24px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+.modal-content p {
+    color: var(--text-gray);
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+.modal-buttons {
+    display: flex;
+    flex-direction: column; 
+    gap: 12px;
+}
+.modal-btn {
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    border: none;
+    width: 100%;
+}
+.logout-btn .nav-item:hover {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+    color: #F87171 !important;
+}
+.logout-btn .nav-item:hover i {
+    color: #F87171;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+/* KAMBANKATA */
+.notification-link i {
+    font-size: 20px;
+    color: var(--text-gray);
+    transition: 0.3s;
+}
+
+.notification-link:hover i {
+    color: var(--primary-color); 
+}
+
+.notification-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background-color: #EF4444;
+    border-radius: 50%;
+    border: 2px solid white; 
+}
 .status-unavailable { background: #fef2f2; color: #dc2626; border: 1px solid #fee2e2; }
 
 .dashboard-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }

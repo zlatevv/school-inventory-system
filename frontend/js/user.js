@@ -177,7 +177,16 @@ async function initBrowseEquipment() {
             const matchStatus = status === 'all' || (item.equipmentStatus || '').toLowerCase() === status;
             return matchName && matchStatus;
         });
-        renderCards(filtered);
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-gray);">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.2;"></i>
+                    <p>No equipment found matching "<strong>${bSearchInput.value}</strong>"</p>
+                </div>
+            `;
+        } else {
+            renderCards(filtered);
+        }
     }
 
     searchInput?.addEventListener('input', filterData);
