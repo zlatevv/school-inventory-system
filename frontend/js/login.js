@@ -113,6 +113,8 @@ async function handleLogout() {
         sessionStorage.clear();
         window.location.href = 'login.html';
     }
+<<<<<<< HEAD
+=======
 }
 
 // Function to open the modal
@@ -168,4 +170,5 @@ async function sendResetEmail() {
         sendButton.innerText = "Send Link";
         sendButton.disabled = false;
     }
+>>>>>>> 70450907762805fcf17aaaf5b515bae2a33b2192
 }
