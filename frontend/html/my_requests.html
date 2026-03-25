@@ -9,23 +9,19 @@
 </head>
 <body>
 
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar">
         <div class="logo-area">
-            <div class="logo-icon">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="logo-text">
-                School <br> Inventory Management System
-            </div>
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
         </div>
-        
         <ul class="nav-menu">
-            <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
-            <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
-            <li><a href="my_requests.html" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests</a></li>
-            <li><a href="history_user.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
-            <li><a href="inbox.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Inbox <span class="badge-count red-badge">3</span></a></li>
-        </ul>
+    <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
+    <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
+    <li><a href="my_requests.html" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests</a></li>
+    <li><a href="history_user.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+    <li><a href="inbox.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Inbox</a></li>
+</ul>
 
         <div class="logout-btn">
             <a href="#" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
@@ -34,9 +30,9 @@
 
     <main class="main-content">
         <header>
-            <div class="search-bar">
-                </div>
-
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            </div>
             <div class="user-profile">
     <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
         <i class="fa-regular fa-bell"></i>
@@ -44,9 +40,8 @@
     </a>
 
     <div class="user-info">
-        <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
-        <span id="display-username">Loading...</span>
-        <i class="fa-solid fa-chevron-down"></i>
+        <img src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
+        <span>Loading...</span>
     </div>
 </div>
         </header>
@@ -56,26 +51,43 @@
                 <h1>My Active Requests</h1>
                 <p style="color: var(--text-gray);">Track the status of your equipment reservations and pickup locations.</p>
             </div>
-
-            <div class="requests-container" id="requestsContainer">
-             </div>
+            <div class="requests-container" id="requestsContainer"></div>
+        </div>
     </main>
 
     <div id="logoutModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-icon">
-            <i class="fa-solid fa-right-from-bracket"></i>
-        </div>
-        <h2>Sign Out</h2>
-        <p>Are you sure you want to log out of your profile?</p>
-        <div class="modal-buttons">
-            <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
-            <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to log out of your profile?</p>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
+                <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+            </div>
         </div>
     </div>
-</div>
 
     <script src="/js/user.js"></script>
     <script src="/js/displayInfo.js"></script>
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>
