@@ -63,13 +63,15 @@ async function fetchAndDisplayEquipment() {
         const equipmentData = await response.json();
         console.log("Equipment: ", equipmentData);
         
-        if (statNumberDivAvailable) statNumberDivAvailable.innerText = equipmentData.length;
+        if (statNumberDivAvailable) statNumberDivAvailable.innerText = equipmentData.filter(item => item.equipmentStatus == 'AVAILABLE').length;
         if (statNumberDivCheckedOut) {
             const checkedOutCount = equipmentData.filter(item => item.equipmentStatus == 'CHECKED_OUT').length;
             const underRepairCount = equipmentData.filter(item => item.equipmentStatus == "UNDER_REPAIR").length;
             statNumberDivCheckedOut.innerText = checkedOutCount;
             statNumberDivUnderRepair.innerText = underRepairCount;
         }
+
+        if (statNumberDivAvailable) statNumberDivUnderRepair.innerText = equipmentData.filter(item => item.equipmentStatus == 'UNDER_REPAIR').length;
         
         equipListContainer.innerHTML = '';
 
