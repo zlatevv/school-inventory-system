@@ -22,7 +22,7 @@ async function apiFetch(endpoint, options = {}) {
         if (response.status === 401 || response.status === 403) {
             alert("Нямате права или сесията е изтекла. Влезте отново.");
             sessionStorage.clear();
-            window.location.href = "/frontend/html/login.html";
+            window.location.href = "../login.html";
         }
         throw new Error(`API Error: ${response.status}`);
     }
@@ -96,7 +96,7 @@ function initGlobalUI() {
     });
     document.getElementById('confirmLogout')?.addEventListener('click', () => {
         sessionStorage.clear();
-        window.location.href = '/frontend/html/login.html';
+        window.location.href = '../login.html';
     });
     document.getElementById('cancelLogout')?.addEventListener('click', () => {
         if (logoutModal) logoutModal.style.display = 'none';
@@ -475,7 +475,7 @@ async function cancelRequest(equipmentId) {
 
     if (!token) {
         alert("Нямате достъп. Моля, влезте отново.");
-        window.location.href = "/login.html";
+        window.location.href = "../login.html";
         return;
     }
 

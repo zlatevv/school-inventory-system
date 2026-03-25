@@ -129,16 +129,23 @@ function closeModal() {
 
 // Function to send data to your Nodemailer backend
 async function sendResetEmail() {
-    const email = document.getElementById('reset-email-input').value;
+    const emailInput = document.getElementById('reset-email-input');
+    const email = emailInput.value.trim();
     const errorDiv = document.getElementById('reset-error');
+    
+    const sendButton = document.querySelector('#forgot-password-modal button'); 
 
     if (!email) {
         errorDiv.innerText = "Please enter an email.";
         return;
     }
 
+    sendButton.innerText = "Sending...";
+    sendButton.disabled = true;
+    errorDiv.innerText = ""; 
+
     try {
-        const response = await fetch(`${API_CONFIG.auth}/get-by-email/${email}`, { 
+        const response = await fetch(`${API_CONFIG.auth}/forgot-password`, { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email })
@@ -146,15 +153,19 @@ async function sendResetEmail() {
 
         const result = await response.json();
         console.log(result);
-        
 
         if (response.ok) {
-            alert("Success! Check your inbox.");
+            alert("Success! Check your inbox for the temporary password.");
             closeModal();
+            emailInput.value = "";
         } else {
             errorDiv.innerText = result.message || "Email not found.";
         }
     } catch (err) {
+        console.error("Reset Password Error:", err);
         errorDiv.innerText = "Connection error. Is the server running?";
+    } finally {
+        sendButton.innerText = "Send Link";
+        sendButton.disabled = false;
     }
 }
