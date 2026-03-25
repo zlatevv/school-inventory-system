@@ -9,20 +9,17 @@
 </head>
 <body>
 
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar">
         <div class="logo-area">
-            <div class="logo-icon">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="logo-text">
-                School <br> Inventory Management System
-            </div>
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
         </div>
         <ul class="nav-menu">
             <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
             <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
             <li><a href="my_requests.html" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests <span class="badge-count">2</span></a></li>
-            <li><a href="history_user.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
+            <li><a href="history_user.html" class="nav-item active"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
             <li><a href="inbox.html" class="nav-item"><i class="fa-solid fa-envelope"></i> Inbox <span class="badge-count red-badge">3</span></a></li>
         </ul>
         <div class="logout-btn">
@@ -32,21 +29,20 @@
 
     <main class="main-content">
         <header>
-            <div class="search-bar">
-                </div>
-
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            </div>
             <div class="user-profile">
-    <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
-        <i class="fa-regular fa-bell"></i>
-        <span class="notification-dot"></span>
-    </a>
-
-    <div class="user-info">
-        <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
-        <span id="display-username">Loading...</span>
-        <i class="fa-solid fa-chevron-down"></i>
-    </div>
-</div>
+                <a href="inbox.html" class="notification-link" style="margin-right: 15px;">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </a>
+                <div class="user-info">
+                    <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
+                    <span id="display-username">Loading...</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
         </header>
 
         <div class="content-padding">
@@ -55,38 +51,29 @@
                 <p>Track your past activity and equipment contributions.</p>
             </div>
 
-            <div class="stats-row" style="margin-top: 25px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
-                <div class="stat-card" style="border-top: 4px solid var(--sidebar-bg); background: white; padding: 20px; border-radius: 15px;">
-                    <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;"><i class="fa-solid fa-layer-group"></i> Total Items</div>
-                    <div style="font-size: 24px; font-weight: 700;">12 <span style="font-size: 12px; font-weight: 400; color: var(--text-gray);">borrowed</span></div>
+            <div class="stats-row" style="margin-top: 25px;">
+                <div class="stat-card" style="border-top: 4px solid var(--sidebar-bg);">
+                    <div class="stat-header"><i class="fa-solid fa-layer-group"></i> Total Items</div>
+                    <div class="stat-number">12 <span>borrowed</span></div>
                 </div>
-                <div class="stat-card" style="border-top: 4px solid #10B981; background: white; padding: 20px; border-radius: 15px;">
-                    <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;"><i class="fa-solid fa-calendar-check"></i> On Time</div>
-                    <div style="font-size: 24px; font-weight: 700;">95% <span style="font-size: 12px; font-weight: 400; color: var(--text-gray);">return rate</span></div>
+                <div class="stat-card" style="border-top: 4px solid #10B981;">
+                    <div class="stat-header"><i class="fa-solid fa-calendar-check"></i> On Time</div>
+                    <div class="stat-number">95% <span>return rate</span></div>
                 </div>
-                <div class="stat-card" style="border-top: 4px solid var(--primary-color); background: white; padding: 20px; border-radius: 15px;">
-                    <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 10px;"><i class="fa-solid fa-award"></i> Reliability</div>
-                    <div style="font-size: 24px; font-weight: 700;">Elite <span style="font-size: 12px; font-weight: 400; color: var(--text-gray);">Level</span></div>
+                <div class="stat-card" style="border-top: 4px solid var(--primary-color);">
+                    <div class="stat-header"><i class="fa-solid fa-award"></i> Reliability</div>
+                    <div class="stat-number">Elite <span>Level</span></div>
                 </div>
             </div>
 
-            <div class="card-container" style="margin-top: 30px; background: white; border-radius: 20px; overflow: hidden; border: 1px solid var(--border-color);">
-                <div style="padding: 20px; border-bottom: 1px solid var(--border-color);">
-                    <div class="search-box">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="historySearch" placeholder="Search history..." style="width: 300px; padding: 10px 40px; border-radius: 10px; border: 1px solid #ddd;">
+            <div class="card-container" style="margin-top: 25px; overflow: hidden;">
+                <div style="padding-bottom: 16px; border-bottom: 1px solid var(--border-color); margin-bottom: 0;">
+                    <div class="search-box" style="position:relative; max-width:300px;">
+                        <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-gray);"></i>
+                        <input type="text" id="historySearch" placeholder="Search history..." style="width:100%; padding:10px 10px 10px 40px; border-radius:10px; border:1px solid var(--border-color); outline:none;">
                     </div>
                 </div>
-
-                <table class="history-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #F8FAFC; text-align: left; color: var(--text-gray); font-size: 12px;">
-                            <th style="padding: 15px;">ITEM</th>
-                            <th style="padding: 15px;">PERIOD</th>
-                            <th style="padding: 15px;">CONDITION</th>
-                            <th style="padding: 15px;">STATUS</th>
-                        </tr>
-                    </thead>
+                <div class="table-responsive">
                     <table class="history-table">
                         <thead>
                             <tr>
@@ -130,7 +117,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </table>
+                </div>
             </div>
         </div>
     </main>
@@ -148,5 +135,25 @@
     </div>
 
     <script src="/js/user.js"></script>
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>
