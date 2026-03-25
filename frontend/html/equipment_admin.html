@@ -141,5 +141,26 @@
     <script src="/frontend/js/displayInfo.js"></script>
     <script src="/frontend/js/requests.js"></script>
     <script src="/frontend/js/admin.js"></script>
+
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>

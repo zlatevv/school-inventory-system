@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
-
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
     <aside class="sidebar" id="sidebar">
         <div class="logo-area">
             <div class="logo-icon">
@@ -24,8 +25,8 @@
             <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
             <li><a href="requests.html" class="nav-item active"><i class="fa-solid fa-clock-rotate-left"></i> Pending Requests <span class="badge-count" style="display: none;">2</span></a></li>
             <li><a href="users.html" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
-            <li><a href="#" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
-            <li><a href="#" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            <li><a href="reports.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+            <li><a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings</a></li>
         </ul>
         <div class="logout-btn">
             <a href="#" class="nav-item"><i class="fa-solid fa-power-off"></i> Logout</a>
@@ -93,5 +94,26 @@
     <script src="/js/admin-requests.js"></script>
     <script src="/js/admin-ui.js"></script>
     <script src="/js/api-config.js"></script>
+
+    <script>
+    (function(){
+      var menuBtn = document.getElementById('menuBtn');
+      var sidebar = document.querySelector('.sidebar');
+      var overlay = document.getElementById('sidebarOverlay');
+      if(menuBtn && sidebar){
+        menuBtn.addEventListener('click', function(e){
+          e.stopPropagation();
+          sidebar.classList.toggle('active');
+          if(overlay) overlay.classList.toggle('active');
+        });
+      }
+      if(overlay){
+        overlay.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    })();
+    </script>
 </body>
 </html>
