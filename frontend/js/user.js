@@ -168,8 +168,9 @@ async function initBrowseEquipment() {
         data.forEach((item, index) => {
             const isAvailable = item.equipmentStatus === 'AVAILABLE';  // Проверяваме дали е налично
             // Определяме иконата според типа оборудване
-            const iconClass = item.type?.toLowerCase().includes('computer') ? "fa-laptop" :
-                              item.type?.toLowerCase().includes('camera') ? "fa-camera" : "fa-box";
+            const safeItemType = (item.type || '').toLowerCase();
+            const iconClass = safeItemType.includes('computer') || safeItemType.includes('laptop') ? "fa-laptop" :
+                  safeItemType.includes('camera') ? "fa-camera" : "fa-box";
 
             // Определяме статус класа и бутона според наличността
             let statusClass = 'status-rejected', statusText = 'Unavailable', btnHtml = `<button class="btn" disabled style="opacity: 0.5; cursor: not-allowed;">Unavailable</button>`;
@@ -208,14 +209,22 @@ async function initBrowseEquipment() {
 
     // Функция за филтриране на данните по търсене и статус
     function filterData() {
-        const term = searchInput?.value.toLowerCase() || '';  // Търсене по име
-        const status = categorySelect?.value.toLowerCase() || 'all';  // Филтър по статус
+        const term = searchInput?.value.toLowerCase() || '';  
+        const status = categorySelect?.value.toLowerCase() || 'all';  
+
         const filtered = inventory.filter(item => {
-            const matchName = item.name.toLowerCase().includes(term);  // Съвпадение по име
-            const matchStatus = status === 'all' || (item.equipmentStatus || '').toLowerCase() === status;  // Съвпадение по статус
-            return matchName && matchStatus;  // И двете условия трябва да са верни
+            const safeName = (item.name || '').toLowerCase();
+            const safeType = (item.type || '').toLowerCase();
+            const safeSerial = (item.serialNumber || '').toLowerCase();
+
+            const matchSearch = safeName.includes(term) || safeType.includes(term) || safeSerial.includes(term);  
+            
+            const matchStatus = status === 'all' || (item.equipmentStatus || '').toLowerCase() === status;  
+            
+            return matchSearch && matchStatus;  
         });
-        renderCards(filtered);  // Рендерираме филтрираните резултати
+
+        renderCards(filtered);  
     }
 
     // Добавяме event listeners за търсене и филтриране
