@@ -124,6 +124,10 @@ services:
     build: ./frontend
     ports:
       - "80:80"
+    volumes:
+      - ./frontend/html:/usr/share/nginx/html
+      - ./frontend/css:/usr/share/nginx/html/css
+      - ./frontend/js:/usr/share/nginx/html/js
     environment:
       - API_GATEWAY_URL=http://localhost:9000
     depends_on:

@@ -7,6 +7,9 @@ public class RequestResponseDTO {
     private Long id;
     private RequestStatus status;
     private LocalDateTime requestDate;
+    private LocalDateTime borrowStartTime;
+    private LocalDateTime borrowEndTime;
+    private String returnCondition;
     private String equipmentName;
     private Long equipmentID;
     private String usernameRequesting;
@@ -27,6 +30,12 @@ public class RequestResponseDTO {
     public void setStatus(RequestStatus status) { this.status = status; }
     public LocalDateTime getRequestDate() { return requestDate; }
     public void setRequestDate(LocalDateTime requestDate) { this.requestDate = requestDate; }
+    public LocalDateTime getBorrowStartTime() { return borrowStartTime; }
+    public void setBorrowStartTime(LocalDateTime borrowStartTime) { this.borrowStartTime = borrowStartTime; }
+    public LocalDateTime getBorrowEndTime() { return borrowEndTime; }
+    public void setBorrowEndTime(LocalDateTime borrowEndTime) { this.borrowEndTime = borrowEndTime; }
+    public String getReturnCondition() { return returnCondition; }
+    public void setReturnCondition(String returnCondition) { this.returnCondition = returnCondition; }
     public String getEquipmentName() { return equipmentName; }
     public void setEquipmentName(String equipmentName) { this.equipmentName = equipmentName; }
 
