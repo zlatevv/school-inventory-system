@@ -10,6 +10,7 @@
 <body>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
@@ -29,26 +30,28 @@
 
     <main class="main-content">
         <header>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
             </div>
             <div class="user-profile">
-                <a href="inbox.html" class="notification-link" style="margin-right: 15px;">
-                    <i class="fa-regular fa-bell"></i>
+                <a href="inbox.html" class="notification-link" style="margin-right: 12px;">
+                    <i class="fa-regular fa-bell" style="font-size:1.1rem; color:var(--text-gray);"></i>
                     <span class="notification-dot"></span>
                 </a>
                 <div class="user-info">
                     <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
                     <span id="display-username">Loading...</span>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <i class="fa-solid fa-chevron-down" style="font-size:0.75rem;"></i>
                 </div>
             </div>
         </header>
 
         <div class="content-padding">
-            <div class="page-header" style="margin-bottom: 30px;">
+            <div class="page-header" style="margin-bottom: 20px;">
                 <h1>My Active Requests</h1>
-                <p style="color: var(--text-gray);">Track the status of your equipment reservations and pickup locations.</p>
+                <p>Track the status of your equipment reservations and pickup locations.</p>
             </div>
             <div class="requests-container" id="requestsContainer"></div>
         </div>
@@ -70,22 +73,22 @@
     <script src="/js/displayInfo.js"></script>
     <script>
     (function(){
-      var menuBtn = document.getElementById('menuBtn');
-      var sidebar = document.querySelector('.sidebar');
-      var overlay = document.getElementById('sidebarOverlay');
-      if(menuBtn && sidebar){
-        menuBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          sidebar.classList.toggle('active');
-          if(overlay) overlay.classList.toggle('active');
-        });
-      }
-      if(overlay){
-        overlay.addEventListener('click', function(){
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        });
-      }
+        var menuBtn = document.getElementById('menuBtn');
+        var sidebar = document.querySelector('.sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+        if(menuBtn && sidebar){
+            menuBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                if(overlay) overlay.classList.toggle('active');
+            });
+        }
+        if(overlay){
+            overlay.addEventListener('click', function(){
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
     })();
     </script>
 </body>

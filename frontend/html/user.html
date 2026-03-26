@@ -11,13 +11,14 @@
 <body>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
             <div class="logo-text">School <br> Inventory Management System</div>
         </div>
         <ul class="nav-menu">
-            <li><a href="user.html" class="nav-item"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
+            <li><a href="user.html" class="nav-item active"><i class="fa-solid fa-square-plus"></i> Dashboard</a></li>
             <li><a href="browse_equipment.html" class="nav-item"><i class="fa-solid fa-magnifying-glass"></i> Browse Equipment</a></li>
             <li><a href="my_requests.html" class="nav-item"><i class="fa-regular fa-folder"></i> My Requests</a></li>
             <li><a href="history_user.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> History</a></li>
@@ -30,22 +31,24 @@
 
     <main class="main-content">
         <header>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
                 <div class="search-bar">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" placeholder="Search...">
                 </div>
             </div>
             <div class="user-profile">
-                <a href="inbox.html" class="notification-link" style="margin-right: 15px;">
-                    <i class="fa-regular fa-bell"></i>
+                <a href="inbox.html" class="notification-link" style="margin-right: 12px;">
+                    <i class="fa-regular fa-bell" style="font-size:1.1rem; color:var(--text-gray);"></i>
                     <span class="notification-dot"></span>
                 </a>
                 <div class="user-info">
                     <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
                     <span id="display-username">Loading...</span>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <i class="fa-solid fa-chevron-down" style="font-size:0.75rem;"></i>
                 </div>
             </div>
         </header>
@@ -54,7 +57,7 @@
             <section class="welcome-banner">
                 <div class="welcome-text">
                     <h1>Welcome to School Inventory System</h1>
-                    <p>A digital platform for requesting and tracking school equipment usage. You can browse available equipment, make requests, and view your history.</p>
+                    <p>Browse available equipment, make requests, and view your history all in one place.</p>
                 </div>
                 <img src="https://placehold.co/240x120/E2E8F0/94A3B8?text=Illustration" alt="Illustration" class="welcome-img">
             </section>
@@ -75,8 +78,12 @@
             </section>
 
             <div class="actions-row">
-                <button class="btn btn-primary" onclick="window.location.href='browse_equipment.html'">Browse Equipment</button>
-                <button class="btn btn-primary" onclick="window.location.href='my_requests.html'">My Requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i></button>
+                <button class="btn btn-primary" onclick="window.location.href='browse_equipment.html'">
+                    <i class="fa-solid fa-magnifying-glass"></i> Browse Equipment
+                </button>
+                <button class="btn btn-primary" onclick="window.location.href='my_requests.html'">
+                    My Requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em;"></i>
+                </button>
             </div>
 
             <div class="dashboard-grid">
@@ -99,14 +106,20 @@
                     <div class="card-container">
                         <div class="section-header">
                             <h2>My Recent Requests</h2>
-                            <a href="#" class="link-more"><i class="fa-solid fa-angles-right"></i></a>
+                            <a href="my_requests.html" class="link-more"><i class="fa-solid fa-angles-right"></i></a>
                         </div>
                         <div class="cancel-request">
-                            <div class="cancel-info"><i class="fa-solid fa-usb" style="color: var(--text-gray);"></i> USB Drive</div>
-                            <button class="btn btn-outline"><i class="fa-solid fa-folder-minus"></i> Cancel</button>
+                            <div class="cancel-info">
+                                <i class="fa-solid fa-usb" style="color: var(--text-gray);"></i> USB Drive
+                            </div>
+                            <button class="btn btn-outline">
+                                <i class="fa-solid fa-folder-minus"></i> Cancel
+                            </button>
                         </div>
                         <div class="simple-list"></div>
-                        <a href="my_requests.html" class="view-all">View all requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; margin-left:4px;"></i></a>
+                        <a href="my_requests.html" class="view-all">
+                            View all requests <i class="fa-solid fa-chevron-right" style="font-size: 0.8em; margin-left:4px;"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -130,22 +143,22 @@
     <script src="/js/requests.js"></script>
     <script>
     (function(){
-      var menuBtn = document.getElementById('menuBtn');
-      var sidebar = document.querySelector('.sidebar');
-      var overlay = document.getElementById('sidebarOverlay');
-      if(menuBtn && sidebar){
-        menuBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          sidebar.classList.toggle('active');
-          if(overlay) overlay.classList.toggle('active');
-        });
-      }
-      if(overlay){
-        overlay.addEventListener('click', function(){
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        });
-      }
+        var menuBtn = document.getElementById('menuBtn');
+        var sidebar = document.querySelector('.sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+        if(menuBtn && sidebar){
+            menuBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                if(overlay) overlay.classList.toggle('active');
+            });
+        }
+        if(overlay){
+            overlay.addEventListener('click', function(){
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
     })();
     </script>
 </body>

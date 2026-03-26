@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="/css/user.css">
 </head>
 <body>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
@@ -28,14 +30,16 @@
 
     <main class="main-content">
         <header>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div class="mobile-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></div>
+            <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
             </div>
             <div class="user-profile">
                 <div class="user-info">
                     <img src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
-                    <span>Loading...</span>
-                    <i class="fa-solid fa-chevron-down"></i>
+                    <span id="display-username">Loading...</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size:0.75rem;"></i>
                 </div>
             </div>
         </header>
@@ -46,14 +50,15 @@
                 <p>Stay updated with your requests and system alerts.</p>
             </div>
 
-            <div style="margin-top: 20px; max-width: 400px;">
-                <div class="search-box" style="position:relative;">
+            <div style="margin-top: 16px; max-width: 420px;">
+                <div class="search-box" style="position: relative;">
                     <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); color:var(--text-gray);"></i>
-                    <input type="text" id="inboxSearch" placeholder="Search notifications..." style="width:100%; padding:12px 15px 12px 45px; border-radius:12px; border:1px solid var(--border-color); outline:none;">
+                    <input type="text" id="inboxSearch" placeholder="Search notifications..."
+                        style="width:100%; padding:12px 15px 12px 45px; border-radius:12px; border:1px solid var(--border-color); outline:none; font-size:0.9rem;">
                 </div>
             </div>
 
-            <div class="inbox-container" id="inboxContainer" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px;"></div>
+            <div class="inbox-container" id="inboxContainer"></div>
         </div>
     </main>
 
@@ -73,22 +78,22 @@
     <script src="/js/displayInfo.js"></script>
     <script>
     (function(){
-      var menuBtn = document.getElementById('menuBtn');
-      var sidebar = document.querySelector('.sidebar');
-      var overlay = document.getElementById('sidebarOverlay');
-      if(menuBtn && sidebar){
-        menuBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          sidebar.classList.toggle('active');
-          if(overlay) overlay.classList.toggle('active');
-        });
-      }
-      if(overlay){
-        overlay.addEventListener('click', function(){
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        });
-      }
+        var menuBtn = document.getElementById('menuBtn');
+        var sidebar = document.querySelector('.sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+        if(menuBtn && sidebar){
+            menuBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                if(overlay) overlay.classList.toggle('active');
+            });
+        }
+        if(overlay){
+            overlay.addEventListener('click', function(){
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
     })();
     </script>
 </body>

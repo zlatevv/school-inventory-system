@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="/frontend/css/admin/admin.css">
 </head>
 <body>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
@@ -129,22 +131,22 @@
     <script src="/frontend/js/admin/reports.js"></script>
     <script>
     (function(){
-      var menuBtn = document.getElementById('menuBtn');
-      var sidebar = document.querySelector('.sidebar');
-      var overlay = document.getElementById('sidebarOverlay');
-      if(menuBtn && sidebar){
-        menuBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          sidebar.classList.toggle('active');
-          if(overlay) overlay.classList.toggle('active');
-        });
-      }
-      if(overlay){
-        overlay.addEventListener('click', function(){
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        });
-      }
+        var menuBtn = document.getElementById('menuBtn');
+        var sidebar = document.querySelector('.sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+        if(menuBtn && sidebar){
+            menuBtn.addEventListener('click', function(e){
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                if(overlay) overlay.classList.toggle('active');
+            });
+        }
+        if(overlay){
+            overlay.addEventListener('click', function(){
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
     })();
     </script>
 </body>
