@@ -353,7 +353,132 @@ header { display: flex; justify-content: space-between; align-items: center; pad
     .modal-btn {
         width: 100%;
     }
+
+    /* Уелкъм банер - текстът да се центрира */
+    .welcome-banner {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .welcome-text h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Статистическите карти - една под друга */
+    .stats-row {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+
+    /* Редът с бутоните под статистиката */
+    .actions-row {
+        flex-direction: column;
+        display: flex;
+        gap: 10px;
+    }
+
+    .actions-row .btn {
+        width: 100%; /* Бутоните стават широки колкото екрана */
+        margin: 0;
+    }
+
+    /* Основната мрежа (Dashboard Grid) */
+    .dashboard-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important; /* От 2 колони става 1 */
+        gap: 20px;
+    }
+
+    /* "My Recent Requests" (дясната колона) отива най-отгоре */
+    .right-column-grid {
+        order: 1 !important; 
+        margin-bottom: 20px; /* Разстояние до долния блок */
+    }
+
+    /* "Browse Equipment" (лявата колона) отива под него */
+    .card-container:not(.right-column-grid) {
+        order: 2 !important;
+    }
+
+    /* Специфично за My Recent Requests (Cancel Request секцията) */
+    .cancel-request {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .cancel-info {
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+
+    .cancel-request .btn {
+        width: 100%;
+    }
+
+    /* Оптимизация на списъците с оборудване */
+    .equipment-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Header промени за по-добро подравняване */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-right {
+        gap: 10px;
+    }
+
+    /* Основният контейнер да не е залепен за краищата */
+    .content-padding {
+        padding: 10px 15px !important; /* Дава 15px въздух отляво и отдясно */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Оправяме широчината на картите */
+    .card-container, 
+    .stat-card, 
+    .welcome-banner {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box; /* Включва padding-а в широчината */
+    }
+
+    /* Оправяме специфичната подредба вътре в картите на оборудването */
+    .equipment-list .item-card, /* или какъвто клас ползваш за тези жълти карти */
+    div[style*="background: #FFFDE7"] { /* Ако стилът е вграден, това ще го хване */
+        margin-right: 0 !important;
+        width: 100% !important;
+        display: flex;
+        flex-direction: column; /* На много малки екрани е по-добре иконата и текста да са един под друг */
+        padding: 15px !important;
+    }
+
+    /* Вътрешността на картата за оборудване */
+    .equipment-list > div { 
+        display: flex !important;
+        flex-direction: column !important; /* Всичко едно под друго за малки телефони */
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Бутонът "Checked Out" да не излиза вдясно */
+    .equipment-list button, 
+    .equipment-list .status-label {
+        width: 100%;
+        margin-top: 10px;
+    }
 }
+
 
 /* Няма мърдане наляво-надясно*/
 html, body {
