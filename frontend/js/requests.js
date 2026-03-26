@@ -1,9 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const token = sessionStorage.getItem("jwtToken");
-    if (!token) {
-        // window.location.href = "/login.html"; // Закоментирано, ако тестваш локално
+
+    if (!token || userRole !== 'ADMIN') {
+        console.warn("Unauthorized access attempt! Redirecting to login...");
+        alert("Нямате достъп до тази страница. Моля, влезте като администратор.");
+        window.location.replace("login.html"); 
         return;
     }
+    
     console.log(token);
     
     loadMyData(token);

@@ -5,6 +5,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const addForm = document.getElementById('addForm');
     const editForm = document.getElementById('editForm');
 
+    const token = sessionStorage.getItem("jwtToken");
+
+    if (!token || userRole !== 'ADMIN') {
+        console.warn("Unauthorized access attempt! Redirecting to login...");
+        alert("Нямате достъп до тази страница. Моля, влезте като администратор.");
+        window.location.replace("login.html"); 
+        return;
+    }
+
     if (addForm) {
         console.log("Add form detected - initializing listener");
         initAddFormListener();

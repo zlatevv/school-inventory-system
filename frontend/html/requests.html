@@ -36,7 +36,7 @@
     <main class="main-content">
          <header>
             <div class="header-left">
-                <div class="mobile-menu-btn" id="menuBtn" style="display: none;">
+                <div class="mobile-menu-btn" id="menuBtn">
                     <i class="fa-solid fa-bars"></i>
                 </div>
                 <div class="search-bar" style="display: none;">
@@ -93,6 +93,7 @@
 
     <script src="/js/admin-requests.js"></script>
     <script src="/js/admin-ui.js"></script>
+    <script src="/js/admin-auth-check.js"></script>
     <script src="/js/api-config.js"></script>
 
     <script>
@@ -100,6 +101,8 @@
       var menuBtn = document.getElementById('menuBtn');
       var sidebar = document.querySelector('.sidebar');
       var overlay = document.getElementById('sidebarOverlay');
+      var navLinks = document.querySelectorAll('.nav-item');
+      
       if(menuBtn && sidebar){
         menuBtn.addEventListener('click', function(e){
           e.stopPropagation();
@@ -113,6 +116,13 @@
           overlay.classList.remove('active');
         });
       }
+      // Close sidebar when clicking nav links
+      navLinks.forEach(function(link){
+        link.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          if(overlay) overlay.classList.remove('active');
+        });
+      });
     })();
     </script>
 </body>

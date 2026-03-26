@@ -3,6 +3,15 @@ const API_BASE_URL = 'http://localhost:9000/api/auth';
 
 // === ИНИЦИАЛИЗАЦИЯ ПРИ ЗАРЕЖДАНЕ НА СТРАНИЦАТА ===
 document.addEventListener("DOMContentLoaded", () => {
+    const token = sessionStorage.getItem("jwtToken");
+
+    if (!token || userRole !== 'ADMIN') {
+        console.warn("Unauthorized access attempt! Redirecting to login...");
+        alert("Нямате достъп до тази страница. Моля, влезте като администратор.");
+        window.location.replace("login.html"); 
+        return;
+    }
+    
     fetchAndDisplayUsers();
     setupEventListeners();
 });

@@ -6,6 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const token = sessionStorage.getItem("jwtToken");
+
+    if (!token || userRole !== 'ADMIN') {
+        console.warn("Unauthorized access attempt! Redirecting to login...");
+        alert("Нямате достъп до тази страница. Моля, влезте като администратор.");
+        window.location.replace("login.html"); 
+        return;
+    }
+
     document.getElementById("display-username").innerText = savedUsername;
     updateAvatarWithInitials(savedUsername);
 

@@ -38,6 +38,9 @@
     <main class="main-content">
         <header>
             <div class="header-left">
+                <div class="mobile-menu-btn" id="menuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
                 <h1 style="font-size: 1.75rem; margin: 0;">System Reports</h1>
             </div>
 
@@ -139,6 +142,9 @@
         </div>
     </main>
 
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <script src="/js/admin-auth-check.js"></script>
     <script src="/js/admin/reports.js"></script>
 
     <script>
@@ -146,6 +152,8 @@
       var menuBtn = document.getElementById('menuBtn');
       var sidebar = document.querySelector('.sidebar');
       var overlay = document.getElementById('sidebarOverlay');
+      var navLinks = document.querySelectorAll('.nav-item');
+      
       if(menuBtn && sidebar){
         menuBtn.addEventListener('click', function(e){
           e.stopPropagation();
@@ -159,6 +167,13 @@
           overlay.classList.remove('active');
         });
       }
+      // Close sidebar when clicking nav links
+      navLinks.forEach(function(link){
+        link.addEventListener('click', function(){
+          sidebar.classList.remove('active');
+          if(overlay) overlay.classList.remove('active');
+        });
+      });
     })();
     </script>
 </body>

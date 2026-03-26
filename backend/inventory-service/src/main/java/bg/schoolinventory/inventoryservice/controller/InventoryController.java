@@ -5,6 +5,7 @@ import bg.schoolinventory.inventoryservice.enums.EquipmentStatus;
 import bg.schoolinventory.inventoryservice.model.Equipment;
 import bg.schoolinventory.inventoryservice.service.EquipmentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class InventoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Equipment> createEquipment(@RequestBody EquipmentDTO equipmentDTO){
         Equipment equipment = equipmentService.createEquipment(equipmentDTO);
 
@@ -39,6 +41,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Equipment> updateEquipment(
             @PathVariable("id") Long id,
             @RequestBody EquipmentDTO equipmentDTO
@@ -58,6 +61,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void  deleteEquipment(@PathVariable("id") Long id){
         equipmentService.deleteEquipment(id);
     }

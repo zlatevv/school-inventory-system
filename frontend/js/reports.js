@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     const token = sessionStorage.getItem("jwtToken");
-    if (!token) window.location.href = "/frontend/html/login.html";
+    if (!token) window.location.href = "../login.html";
 
     try {
         const response = await fetch('http://localhost:9000/api/equipment', {

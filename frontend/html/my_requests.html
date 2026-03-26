@@ -9,6 +9,8 @@
 </head>
 <body>
 
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-icon">
@@ -34,20 +36,22 @@
 
     <main class="main-content">
         <header>
+            <i class="fa-solid fa-bars mobile-menu-btn" id="menuBtn"></i>
             <div class="search-bar">
                 </div>
 
             <div class="user-profile">
-    <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
-        <i class="fa-regular fa-bell"></i>
-        <span class="notification-dot"></span>
-    </a>
+                <a href="inbox.html" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </a>
 
-    <div class="user-info">
-        <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
-        <span id="display-username">Loading...</span>
-    </div>
-</div>
+                <div class="user-info">
+                    <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=2488A6&color=fff" alt="User">
+                    <span id="display-username">Loading...</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
         </header>
 
         <div class="content-padding">
@@ -79,22 +83,34 @@
 
     <script>
     (function(){
-      var menuBtn = document.getElementById('menuBtn');
-      var sidebar = document.querySelector('.sidebar');
-      var overlay = document.getElementById('sidebarOverlay');
-      if(menuBtn && sidebar){
-        menuBtn.addEventListener('click', function(e){
-          e.stopPropagation();
-          sidebar.classList.toggle('active');
-          if(overlay) overlay.classList.toggle('active');
+        var menuBtn = document.getElementById('menuBtn');
+        var sidebar = document.querySelector('.sidebar');
+        var overlay = document.getElementById('sidebarOverlay');
+        var navLinks = document.querySelectorAll('.nav-item'); 
+        
+        if(menuBtn && sidebar){
+            menuBtn.addEventListener('click', function(e){
+                e.preventDefault();
+                e.stopImmediatePropagation(); /* ADD THIS: Stops user.js from double-toggling! */
+                
+                sidebar.classList.toggle('active');
+                if(overlay) overlay.classList.toggle('active');
+            });
+        }
+
+        if(overlay){
+            overlay.addEventListener('click', function(){
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        navLinks.forEach(function(link){
+            link.addEventListener('click', function(){
+                sidebar.classList.remove('active');
+                if(overlay) overlay.classList.remove('active');
+            });
         });
-      }
-      if(overlay){
-        overlay.addEventListener('click', function(){
-          sidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        });
-      }
     })();
     </script>
 </body>
