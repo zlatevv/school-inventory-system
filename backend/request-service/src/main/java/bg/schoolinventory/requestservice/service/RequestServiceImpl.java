@@ -55,9 +55,7 @@ public class RequestServiceImpl implements RequestService {
         request.setBorrowStartTime(borrowStartTime);
         request.setBorrowEndTime(borrowEndTime);
         request.setStatus(RequestStatus.PENDING);
-
         equipmentClient.updateEquipmentStatus(equipmentId, "CHECKED_OUT");
-
         return requestRepository.save(request);
     }
 
@@ -81,20 +79,17 @@ public class RequestServiceImpl implements RequestService {
         String equipmentName = equipmentClient.getEquipmentById(request.getEquipmentID()).getName();
         String email = authClient.getUserByUsername(request.getUsernameRequesting()).getEmail();
 
-        String barcode = "REQ-" + request.getId();
-
         String longMessage = String.format(
                 "Your request for '%s' has been APPROVED! ✅\n\n" +
                         "What to do next:\n" +
                         "1. Please visit the equipment desk during working hours.\n" +
-                        "2. Present your barcode: **%s** for scanning.\n" +
+                        "2. Present your barcode or ID for scanning.\n" +
                         "3. Once the staff scans the item, it will be officially assigned to you.\n\n" +
                         "Note: This approval is valid for 24 hours. If not picked up, the item will become available again.",
-                equipmentName,
-                barcode
+                equipmentName
         );
 
-        sendNotification(request.getUsernameRequesting(), "Request Approval - " + equipmentName, longMessage, email);
+        sendNotification(request.getUsernameRequesting(), "Request Approval " + equipmentName, longMessage, email);
         return requestRepository.save(request);
     }
 
@@ -122,7 +117,7 @@ public class RequestServiceImpl implements RequestService {
 
         sendNotification(
                 request.getUsernameRequesting(),
-                "Request Declined: " + equipmentName,
+                "Request Declined: " + equipmentName, // Смени "Approval Notice" с това
                 longMessage,
                 email
         );
@@ -158,13 +153,10 @@ public class RequestServiceImpl implements RequestService {
 
         equipmentClient.updateEquipmentStatus(request.getEquipmentID(), "CHECKED_OUT");
 
-        String barcode = "REQ-" + request.getId();
-
         sendNotification(
                 request.getUsernameRequesting(),
-                "Equipment Checked Out",
-                "Great news! Your request for the " + equipmentName +
-                        " has been checked out successfully. Your scanned barcode was " + barcode + ". The equipment is now in your possession.",
+                "Equipment Checked Out", // Сменено от Request Rejection
+                "Great news! Your request for the " + equipmentName + " has been checked out successfully and is now in your possession.",
                 email
         );
 
