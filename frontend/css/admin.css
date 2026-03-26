@@ -585,6 +585,44 @@ header {
 
 .btn-save { background: #2B8EAD; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
 .btn-cancel { background: #F3F4F6; color: #4B5563; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+ 
+.form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color, #E2E8F0);
+            border-radius: 12px;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background-color: var(--white, #FFFFFF);
+            color: var(--text-color, #1E293B);
+        }
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary-color, #2488A6);
+            box-shadow: 0 0 0 4px rgba(36, 136, 166, 0.1);
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-gray, #64748B);
+        }
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
 
 /* ========== TABLET ========== */
 @media (max-width: 900px) {

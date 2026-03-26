@@ -70,7 +70,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .search-bar { position: relative; width: 320px; }
 .search-bar input { width: 100%; padding: 10px 16px 10px 40px; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background-color: var(--white); font-size: 14px; }
 .search-bar i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; }
-.user-profile { display: flex; align-items: center; gap: 24px; }
+.user-profile { display: flex; align-items: center; gap: 24px; margin-left: auto;}
 .user-profile > i { font-size: 20px; color: var(--text-gray); cursor: pointer; }
 .user-info { display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 14px; cursor: pointer; }
 .user-info img { width: 36px; height: 36px; border-radius: 50%; }
@@ -729,4 +729,16 @@ html, body {
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-gray);
+}
+
+.eq-card-image {
+    position: relative; /* Важно, за да може тагът за статус да стои отгоре */
+    overflow: hidden; /* Скрива излишните краища на снимката */
+}
+
+.eq-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Кара снимката да запълни контейнера перфектно */
+    display: block;
 }
