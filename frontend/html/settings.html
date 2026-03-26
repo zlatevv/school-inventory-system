@@ -3,55 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Admin | School Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/admin.css">
-    <title>Settings - Admin</title>
 </head>
 <body>
-    <div class="content-padding">
-        <div class="dashboard-grid">
-            <div class="card-container">
-                <div class="section-header"><h2><i class="fa-solid fa-user-gear"></i> Admin Profile</h2></div>
-                <form id="profileForm" style="display: flex; flex-direction: column; gap: 15px;">
+
+    <aside class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fa-solid fa-microchip"></i>
+            </div>
+            <div class="logo-text">
+                School <br> Inventory Management System
+                <span style="display: block; font-size: 11px; font-weight: 700; color: #FDE047; margin-top: 4px;">ADMIN PANEL</span>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-boxes-stacked"></i> Inventory</a></li>
+            <li><a href="requests.html" class="nav-item"><i class="fa-solid fa-clipboard-list"></i> Requests</a></li>
+            <li><a href="users.html" class="nav-item"><i class="fa-solid fa-users"></i> Users</a></li>
+            <li><a href="settings.html" class="nav-item active"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+
+        <div class="logout-btn">
+            <a href="#" class="nav-item" id="logoutBtnTrigger"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="search-bar" style="display: none;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="user-profile" style="margin-left: auto;">
+                <a href="#" class="notification-link" style="position: relative; color: inherit; text-decoration: none; margin-right: 15px;">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-dot"></span>
+                </a>
+
+                <div class="user-info">
+                    <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin Avatar">
+                    <span id="display-username">Loading...</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-padding">
+            <div class="browse-header" style="margin-bottom: 25px;">
+                <div class="title-section">
+                    <h1>System Settings</h1>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card-container">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-user-gear" style="color: var(--primary-color);"></i> Admin Profile</h2>
+                    </div>
+                    <form id="profileForm" style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="set-username" class="form-input" readonly style="background-color: #F8FAFC; cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="set-email" class="form-input" placeholder="admin@school.com">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: fit-content;">Update Profile</button>
+                    </form>
+                </div>
+
+                <div class="card-container">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-shield-halved" style="color: #F57F17;"></i> Security</h2>
+                    </div>
+                    <p style="color: var(--text-gray); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                        Change your administrative password regularly to keep the inventory system safe. We recommend using a strong password.
+                    </p>
+                    <button class="btn btn-outline" style="color: #EF4444; border-color: #FECDD3; background-color: #FFF1F2;">
+                        <i class="fa-solid fa-key"></i> Change Password
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-container" style="margin-top: 24px;">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-user-plus" style="color: #10B981;"></i> Register New Staff/Teacher</h2>
+                </div>
+                <form id="registerUserForm" class="settings-grid">
                     <div class="form-group">
                         <label>Username</label>
-                        <input type="text" id="set-username" class="btn-outline" style="width: 100%; padding: 10px;" readonly>
+                        <input type="text" class="form-input" placeholder="e.g. jdoe" id="reg-username" required>
                     </div>
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" id="set-email" class="btn-outline" style="width: 100%; padding: 10px;">
+                        <input type="email" class="form-input" placeholder="jdoe@school.edu" id="reg-email" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <div class="form-group">
+                        <label>Initial Password</label>
+                        <input type="password" class="form-input" placeholder="••••••••" id="reg-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="reg-role" class="form-select">
+                            <option value="USER">Staff / Teacher</option>
+                            <option value="ADMIN">System Admin</option>
+                        </select>
+                    </div>
+                    <div style="grid-column: span 2; margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create Account</button>
+                    </div>
                 </form>
             </div>
-
-            <div class="card-container">
-                <div class="section-header"><h2><i class="fa-solid fa-shield-halved"></i> Security</h2></div>
-                <p style="color: #64748B; font-size: 0.9rem;">Change your administrative password regularly to keep the inventory safe.</p>
-                <button class="btn btn-outline" style="margin-top: 15px; color: #E74C3C; border-color: #FCA5A5;">
-                    Change Password
-                </button>
-            </div>
         </div>
+    </main>
 
-        <div class="card-container" style="margin-top: 25px;">
-            <div class="section-header">
-                <h2><i class="fa-solid fa-user-plus"></i> Register New Staff/Teacher</h2>
+    <div id="logoutModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
             </div>
-            <form id="registerUserForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <input type="text" placeholder="Username" id="reg-username" required style="padding: 10px;">
-                <input type="email" placeholder="Email" id="reg-email" required style="padding: 10px;">
-                <input type="password" placeholder="Initial Password" id="reg-password" required style="padding: 10px;">
-                <select id="reg-role" style="padding: 10px;">
-                    <option value="USER">Staff / Teacher</option>
-                    <option value="ADMIN">System Admin</option>
-                </select>
-                <button type="submit" class="btn btn-primary" style="grid-column: span 2;">Create Account</button>
-            </form>
+            <h2>Sign Out</h2>
+            <p>Are you sure you want to log out of the admin panel?</p>
+            <div class="modal-buttons">
+                <button id="confirmLogout" class="modal-btn btn-danger">Yes, Logout</button>
+                <button id="cancelLogout" class="modal-btn btn-outline">No, stay here</button>
+            </div>
         </div>
     </div>
-    <script src="/js/settings.js"></script>
 
-    <script>
+    <script src="/js/settings.js"></script>
+    <script src="/js/displayInfo.js"></script> <script>
     (function(){
       var menuBtn = document.getElementById('menuBtn');
       var sidebar = document.querySelector('.sidebar');

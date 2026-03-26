@@ -136,6 +136,7 @@ async function initBrowseEquipment() {
         
         data.forEach((item, index) => {
             const isAvailable = item.equipmentStatus === 'AVAILABLE';
+            // Запазваме иконките в случай, че даден запис няма снимка
             const iconClass = item.type?.toLowerCase().includes('computer') ? "fa-laptop" :
                               item.type?.toLowerCase().includes('camera') ? "fa-camera" : "fa-box";
 
@@ -150,11 +151,15 @@ async function initBrowseEquipment() {
                 statusClass = 'status-pending'; statusText = 'Under Repair';
             }
 
+            const visualContent = item.photoURL 
+                ? `<img src="${item.photoURL}" alt="${item.name}" class="eq-photo" />`
+                : `<i class="fa-solid ${iconClass}"></i>`;
+
             grid.innerHTML += `
                 <div class="eq-card" style="animation-delay: ${index * 0.1}s">
                     <div class="eq-card-image">
                         <span class="eq-status-tag ${statusClass}">${statusText}</span>
-                        <i class="fa-solid ${iconClass}"></i>
+                        ${visualContent}
                     </div>
                     <div class="eq-card-content">
                         <span class="eq-category">${item.type || 'General'}</span>
