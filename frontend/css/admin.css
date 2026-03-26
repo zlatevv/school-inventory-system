@@ -697,39 +697,130 @@ header {
 }
 
 /* ========== MOBILE ========== */
-@media (max-width: 600px) {
-    header { padding: 11px 14px; gap: 10px; }
-    .search-bar { display: none; }
-    .user-text { display: none; }
-    .content-padding { padding: 14px; gap: 14px; }
-    .welcome-banner { padding: 16px; flex-direction: column; text-align: center; }
-    .welcome-banner img { display: none; }
-    .welcome-text h1 { font-size: 1.15rem; }
-    .welcome-text p { font-size: 0.85rem; }
-    .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .stat-card { padding: 14px; }
-    .stat-number { font-size: 1.5rem; }
-    .action-row { flex-direction: column; }
-    .action-row .btn { width: 100%; justify-content: center; }
-    .scanner-section { width: 100%; justify-content: center; }
-    .section-header { flex-direction: column; align-items: flex-start; }
-    .card-container { padding: 14px; }
-    .inventory-table th:nth-child(2), .inventory-table td:nth-child(2) { display: none; }
-    .users-table th:nth-child(2), .users-table td:nth-child(2) { display: none; }
-    .modal-content { padding: 22px 16px; border-radius: 16px; }
-    .modal-overlay { padding: 12px; }
-    .report-grid { grid-template-columns: 1fr; }
-}
-
-/* ========== SMALL MOBILE ========== */
-@media (max-width: 400px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .stat-number { font-size: 1.3rem; }
-    header { padding: 10px 12px; }
-    .card-container {
-        overflow-x: auto;
+@media (max-width: 600px) {header { 
+        padding: 10px 14px; 
+        gap: 10px; 
     }
-    .inventory-table, .users-table {
-        min-width: 600px; 
+    
+    .search-bar, .user-text { 
+        display: none; 
+    }
+    
+    .content-padding { 
+        padding: 14px; 
+        gap: 14px; 
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .welcome-banner { 
+        padding: 16px; 
+        flex-direction: column; 
+        text-align: center; 
+    }
+    
+    .welcome-banner img { 
+        display: none; 
+    }
+    
+    .welcome-text h1 { 
+        font-size: 1.15rem; 
+    }
+    
+    .welcome-text p { 
+        font-size: 0.85rem; 
+    }
+    
+    /* Статистика - винаги 2 колони, за да не се режат */
+    .stats-row { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 10px; 
+    }
+    
+    .stat-card { 
+        padding: 12px; 
+    }
+    
+    .stat-number { 
+        font-size: 1.3rem; 
+    }
+
+    .action-row { 
+        flex-direction: column; 
+        gap: 10px;
+    }
+    
+    .action-row .btn { 
+        width: 100%; 
+        justify-content: center; 
+        margin: 0;
+    }
+
+    .scanner-section { 
+        width: 100%; 
+        margin-top: 5px;
+    }
+
+    /* ОПРАВЯНЕ НА ТАБЛИЦАТА - ПРЕМАХВАМЕ МИН. ШИРИНА */
+    .card-container { 
+        padding: 14px; 
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden; /* Спираме скрола, защото ще я пренаредим */
+    }
+
+    /* Превръщаме таблицата в списък (Stacked), за да не се реже */
+    .requests-table thead {
+        display: none; /* Скриваме заглавията */
+    }
+
+    .requests-table, 
+    .requests-table tbody, 
+    .requests-table tr, 
+    .requests-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .requests-table tr {
+        border-bottom: 2px solid #f0f0f0;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+
+    .requests-table td {
+        text-align: right !important;
+        padding: 10px 5px !important;
+        position: relative;
+        padding-left: 45% !important;
+        border: none;
+    }
+
+    /* Динамични етикети (изисква data-label в JS) */
+    .requests-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 10px;
+        color: var(--text-gray);
+    }
+
+    .requests-table td:last-child {
+        text-align: center !important;
+        padding-left: 0 !important;
+        border-bottom: none;
+    }
+
+    /* Скриване на по-малко важна информация в други таблици */
+    .inventory-table th:nth-child(2), .inventory-table td:nth-child(2),
+    .users-table th:nth-child(2), .users-table td:nth-child(2) { 
+        display: none; 
+    }
+
+    .modal-content { 
+        padding: 20px 15px; 
+        width: 90%; 
     }
 }

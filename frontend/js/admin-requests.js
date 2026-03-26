@@ -10,6 +10,8 @@ async function loadAdminRequests() {
         if (!response.ok) return;
 
         const data = await response.json();
+        
+        // Актуализиране на броячите за чакащи заявки
         const pendingRequestsItem = document.getElementById("pending-requests");
         const pendingCount = data.filter(req => req.status === "PENDING").length;
         if (pendingRequestsItem) pendingRequestsItem.innerText = pendingCount;
@@ -17,22 +19,18 @@ async function loadAdminRequests() {
         const sidebarBadge = document.getElementById("sidebar-pending-badge");
         if (sidebarBadge) {
             sidebarBadge.innerText = pendingCount;
-            
-            if (pendingCount > 0) {
-                sidebarBadge.style.display = "inline-block"; 
-            } else {
-                sidebarBadge.style.display = "none";
-            }
+            sidebarBadge.style.display = pendingCount > 0 ? "inline-block" : "none";
         }
         
-        data.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+        // Сортиране по дата (най-новите отгоре)
+        data.sort((a, b) => new Date(b.requestDate || b.createdAt) - new Date(a.requestDate || a.createdAt));
 
         const tbodyElement = document.querySelector(".requests-table tbody");
         if (tbodyElement) {
             tbodyElement.innerHTML = ""; 
 
             if (data.length === 0) {
-                tbodyElement.innerHTML = `<tr><td colspan="4" style="text-align:center; color:gray;">No requests found.</td></tr>`;
+                tbodyElement.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px; color:gray;">No requests found.</td></tr>`;
                 return;
             }
 
@@ -41,11 +39,13 @@ async function loadAdminRequests() {
                 const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 const status = req.status ? req.status.toUpperCase() : "PENDING";
                 
+                // Избор на клас за значката
                 let tableBadgeClass = "status-pending"; 
                 if (status === "APPROVED" || status === "RETURNED") tableBadgeClass = "status-available"; 
                 else if (status === "REJECTED") tableBadgeClass = "status-rejected"; 
                 else if (status === "CHECKED_OUT") tableBadgeClass = "status-light-yellow";
 
+                // Логика за бутоните за действие
                 let actionHtml = "";
                 if (status === "PENDING") {
                     actionHtml = `
@@ -59,11 +59,24 @@ async function loadAdminRequests() {
                 }
 
                 const tr = document.createElement("tr");
+                
+                // ТУК СА КЛЮЧОВИТЕ ПРОМЕНИ: добавени data-label и структура за мобилни
                 tr.innerHTML = `
-                    <td><strong>${req.usernameRequesting}</strong><br><small>${formattedDate}</small></td>
-                    <td><strong>${req.equipmentName}</strong></td>
-                    <td><span class="status-badge ${tableBadgeClass}">${status}</span></td>
-                    <td style="text-align: right;">${actionHtml}</td>
+                    <td data-label="USER">
+                        <strong>${req.usernameRequesting || 'User'}</strong><br>
+                        <small style="color: var(--text-gray);">${formattedDate}</small>
+                    </td>
+                    <td data-label="EQUIPMENT">
+                        <strong>${req.equipmentName}</strong>
+                    </td>
+                    <td data-label="STATUS">
+                        <span class="status-badge ${tableBadgeClass}">${status.replace('_', ' ')}</span>
+                    </td>
+                    <td data-label="ACTIONS" style="text-align: right;">
+                        <div class="actions-wrapper">
+                            ${actionHtml}
+                        </div>
+                    </td>
                 `;
                 tbodyElement.appendChild(tr);
             });
