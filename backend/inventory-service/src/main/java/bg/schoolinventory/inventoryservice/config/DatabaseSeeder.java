@@ -20,7 +20,7 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         // Проверяваме дали базата е празна
         if (equipmentRepository.count() == 0) {
             System.out.println("🌱 Database is empty. Seeding a large batch of equipment with real photos...");
@@ -34,7 +34,6 @@ public class DatabaseSeeder implements CommandLineRunner {
                     new Equipment(null, "Asus ZenBook 14", "Laptop", "SN-LAP-005", Condition.NEW, EquipmentStatus.AVAILABLE, "Library", "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=800&q=80"),
 
                     // Проектори и Екрани
-                    new Equipment(null, "Epson EB-X51", "Projector", "SN-PROJ-001", Condition.GOOD, EquipmentStatus.AVAILABLE, "Room 101", "https://www.google.com/imgres?q=Epson%20EB-X51&imgurl=https%3A%2F%2Fi8.amplience.net%2Fi%2Fepsonemear%2F29751-productpicture-lores-en-eb-x51_main_rnc%3F%24product-xlarge%24%26fmt%3Dauto&imgrefurl=https%3A%2F%2Fwww.epson.bg%2Fbg_BG%2F%25D0%259F%25D1%2580%25D0%25BE%25D0%25B4%25D1%2583%25D0%25BA%25D1%2582%25D0%25B8%2Fprojector%2F%25D0%259F%25D1%2580%25D0%25B5%25D0%25BD%25D0%25BE%25D1%2581%25D0%25B8%25D0%25BC%2Fepson-eb-x51%2Fp%2F29751&docid=voQpd6znbWpXfM&tbnid=vKbHofqX6AVolM&vet=12ahUKEwjLkdL70L2TAxXVRfEDHWc6Ef4QnPAOegQIGhAB..i&w=527&h=388&hcb=2&itg=1&ved=2ahUKEwjLkdL70L2TAxXVRfEDHWc6Ef4QnPAOegQIGhAB"),
                     new Equipment(null, "BenQ MW560", "Projector", "SN-PROJ-002", Condition.GOOD, EquipmentStatus.AVAILABLE, "Room 305", "https://images.unsplash.com/photo-1540655037529-dec987208707?w=800&q=80"),
                     new Equipment(null, "Smart Board 6000S", "Interactive Display", "SN-DISP-001", Condition.NEW, EquipmentStatus.AVAILABLE, "Room 202", "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80"),
 
