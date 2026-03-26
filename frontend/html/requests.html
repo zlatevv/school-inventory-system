@@ -9,16 +9,12 @@
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
+
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
     <aside class="sidebar" id="sidebar">
         <div class="logo-area">
-            <div class="logo-icon">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="logo-text">
-                School <br> Inventory Management System
-            </div>
+            <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="logo-text">School <br> Inventory Management System</div>
         </div>
         <ul class="nav-menu">
             <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
@@ -34,9 +30,9 @@
     </aside>
 
     <main class="main-content">
-         <header>
+        <header>
             <div class="header-left">
-                <div class="mobile-menu-btn" id="menuBtn" style="display: none;">
+                <div class="mobile-menu-btn" id="menuBtn">
                     <i class="fa-solid fa-bars"></i>
                 </div>
                 <div class="search-bar" style="display: none;">
@@ -44,12 +40,9 @@
                     <input type="text" id="equipSearch" placeholder="Search equipment...">
                 </div>
             </div>
-
             <div class="header-right">
                 <div class="user-info">
-                    <div class="user-text">
-                        <strong id="display-username"></strong>
-                    </div>
+                    <div class="user-text"><strong id="display-username"></strong></div>
                     <img id="user-avatar" src="https://placehold.co/40x40/2B8EAD/FFFFFF?text=AD" alt="Admin">
                 </div>
             </div>
@@ -61,20 +54,20 @@
                 <p style="color: var(--text-gray);">Review and manage equipment loan applications.</p>
             </div>
 
-            <div class="card-container" style="padding: 0; overflow: hidden; background: white; border-radius: 12px; border: 1px solid var(--border-color);">
-                <table class="requests-table" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #F8FAFC; text-align: left; border-bottom: 2px solid #E2E8F0;">
-                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">User Details</th>
-                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Equipment & Schedule</th>
-                            <th style="padding: 20px; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Status</th>
-                            <th style="padding: 20px; text-align: right; color: var(--text-gray); font-weight: 600; font-size: 0.85rem; text-transform: uppercase;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                    </tbody>
-                </table>
+            <div class="card-container" style="padding: 0; overflow: hidden;">
+                <div class="table-responsive">
+                    <table class="requests-table">
+                        <thead>
+                            <tr>
+                                <th>User Details</th>
+                                <th>Equipment & Schedule</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
@@ -94,7 +87,6 @@
     <script src="/js/admin-requests.js"></script>
     <script src="/js/admin-ui.js"></script>
     <script src="/js/api-config.js"></script>
-
     <script>
     (function(){
       var menuBtn = document.getElementById('menuBtn');

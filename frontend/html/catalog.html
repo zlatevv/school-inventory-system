@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-icon">
@@ -18,7 +19,6 @@
                 School <br> Inventory Management System
             </div>
         </div>
-    
         <ul class="nav-menu">
             <li><a href="admin.html" class="nav-item"><i class="fa-solid fa-table-cells-large"></i> Dashboard</a></li>
             <li><a href="catalog.html" class="nav-item"><i class="fa-solid fa-folder"></i> Equipment Catalog</a></li>
@@ -27,7 +27,6 @@
             <li><a href="reports.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
             <li><a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i> Settings <i class="fa-solid fa-chevron-down" style="margin-left:auto; font-size:0.8rem;"></i></a></li>
         </ul>
-
         <div class="logout-btn">
             <a href="#" class="nav-item" style="text-decoration: none; color: inherit;">
                 <i class="fa-solid fa-power-off"></i> Logout
@@ -38,11 +37,10 @@
     <main class="main-content">
         <header>
             <div class="header-left">
-                <div class="mobile-menu-btn" id="menuBtn" style="display: none;">
+                <div class="mobile-menu-btn" id="menuBtn">
                     <i class="fa-solid fa-bars"></i>
                 </div>
             </div>
-
             <div class="header-right">
                 <div class="user-info">
                     <div class="user-text">
@@ -52,27 +50,27 @@
                 </div>
             </div>
         </header>
-        
+
         <div class="content-padding">
             <div class="section-header">
                 <h2>Equipment Catalog</h2>
-                <button class="btn btn-primary" onclick="openAddModal()" style="margin-top: 2em;">Add New Item</button>
+                <button class="btn btn-primary" onclick="openAddModal()">Add New Item</button>
             </div>
 
             <div class="catalog-card">
-                <table class="inventory-table">
-                    <thead>
-                        <tr>
-                            <th>Equipment Details</th>
-                            <th>Location & ID</th>
-                            <th>Current Status</th>
-                            <th class="text-right">Management</th>
-                        </tr>
-                    </thead>
-                    <tbody id="equipList">
-                        
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Equipment Details</th>
+                                <th>Location & ID</th>
+                                <th>Current Status</th>
+                                <th class="text-right">Management</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipList"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
@@ -88,11 +86,10 @@
             </div>
         </div>
     </div>
+
     <div id="editModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Edit Equipment</h3>
-            </div>
+        <div class="modal-content" style="text-align:left;">
+            <div class="modal-header"><h3>Edit Equipment</h3></div>
             <form id="editForm">
                 <input type="hidden" id="edit-id">
                 <div class="form-group">
@@ -126,18 +123,16 @@
                     </select>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" onclick="closeEditModal()" class="btn btn-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-save">Save Changes</button>
+                    <button type="button" onclick="closeEditModal()" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div id="addModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Equipment</h3>
-            </div>
+        <div class="modal-content" style="text-align:left;">
+            <div class="modal-header"><h3>Add New Equipment</h3></div>
             <form id="addForm">
                 <div class="form-group">
                     <label>Equipment Name</label>
@@ -169,16 +164,16 @@
                     <input type="text" id="add-photo">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" onclick="closeAddModal()" class="btn btn-cancel">Cancel</button>
-                    <button type="submit" class="btn btn-save">Create Item</button>
+                    <button type="button" onclick="closeAddModal()" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-save">Create Item</button>
                 </div>
             </form>
         </div>
     </div>
+
     <script src="/js/admin-equipment.js"></script>
     <script src="/js/admin-ui.js"></script>
     <script src="/js/api-config.js"></script>
-
     <script>
     (function(){
       var menuBtn = document.getElementById('menuBtn');
