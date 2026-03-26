@@ -21,7 +21,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/equipment/**").permitAll()
-                                .requestMatchers(HttpMethod.PUT, "/api/equipment/*/status").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/equipment/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/api/equipment/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/api/equipment/**").permitAll()
                                 .anyRequest().authenticated()
                 );
         return httpSecurity.build();
