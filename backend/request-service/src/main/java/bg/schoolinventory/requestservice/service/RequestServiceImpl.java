@@ -194,6 +194,9 @@ public class RequestServiceImpl implements RequestService {
         dto.setId(req.getId());
         dto.setStatus(req.getStatus());
         dto.setRequestDate(req.getRequestDate());
+        dto.setBorrowStartTime(req.getBorrowStartTime());
+        dto.setBorrowEndTime(req.getBorrowEndTime());
+        dto.setReturnCondition(req.getReturnCondition());
         dto.setEquipmentID(req.getEquipmentID());
         dto.setUsernameRequesting(req.getUsernameRequesting());
 

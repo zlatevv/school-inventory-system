@@ -90,16 +90,20 @@ async function fetchAndDisplayEquipment() {
                 buttonHtml = `<button class="btn" style="background-color: #F1C40F; border:none; border-radius:6px; padding: 8px 16px;" disabled>Checked Out</button>`;
             }
 
-            const firstWordOfName = item.name.split(' ')[0];
-            const imageUrl = item.imageUrl ? item.imageUrl : `https://placehold.co/100x80?text=${firstWordOfName}`;
+            const nameParts = item.name.trim().split(' ');
+            const initials = nameParts.length > 1 
+                ? (nameParts[0][0] + nameParts[1][0]).toUpperCase() 
+                : nameParts[0][0].toUpperCase();
+                
+            const imageUrl = item.photoURL ? item.photoURL : `https://placehold.co/100x100/2B8EAD/FFFFFF?text=${initials}`;
 
             const itemHtml = `
                 <div class="equipment-item" ${bgStyle}>
-                    <img src="${imageUrl}" alt="${item.name}">
+                    <img src="${imageUrl}" alt="${item.name}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; flex-shrink: 0;">
                     <div class="equipment-details">
                         <h4>${item.name}</h4>
                         <p>${item.location || 'Storage'}</p>
-                        <p>Condition: ${item.condition || 'Good'}</p>
+                        <p>Condition: ${item.equipmentCondition || 'Good'}</p> 
                         <span class="status-badge ${badgeClass}">${badgeIcon} ${badgeText}</span>
                     </div>
                     ${buttonHtml}

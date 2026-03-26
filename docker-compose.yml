@@ -28,7 +28,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   inventory-service:
     build: ./backend/inventory-service
@@ -39,7 +40,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   notification-service:
     build: ./backend/notifications-service
@@ -51,8 +53,10 @@ services:
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
-      - db
-      - rabbitmq
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   report-service:
     build: ./backend/report-service
@@ -65,9 +69,12 @@ services:
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - REQUEST_SERVICE_URL=http://request-service:8084
     depends_on:
-      - db
-      - inventory-service
-      - request-service
+      db:
+        condition: service_healthy
+      inventory-service:
+        condition: service_started
+      request-service:
+        condition: service_started
 
   request-service:
     build: ./backend/request-service
@@ -81,10 +88,14 @@ services:
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - AUTH_SERVICE_URL=http://auth-service:8080
     depends_on:
-      - db
-      - rabbitmq
-      - auth-service
-      - inventory-service
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      inventory-service:
+        condition: service_started
 
   email-service:
     build: ./backend/email-service
@@ -104,7 +115,8 @@ services:
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p1234"]
+      interval: 10s
       timeout: 20s
       retries: 10
 
@@ -124,6 +136,10 @@ services:
     build: ./frontend
     ports:
       - "80:80"
+    volumes:
+      - ./frontend/html:/usr/share/nginx/html
+      - ./frontend/css:/usr/share/nginx/html/css
+      - ./frontend/js:/usr/share/nginx/html/js
     environment:
       - API_GATEWAY_URL=http://localhost:9000
     depends_on:
