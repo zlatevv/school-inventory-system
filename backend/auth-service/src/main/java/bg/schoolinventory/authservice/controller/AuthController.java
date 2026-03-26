@@ -5,7 +5,6 @@ import bg.schoolinventory.authservice.model.User;
 import bg.schoolinventory.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,21 +45,18 @@ public class AuthController {
     }
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> response = authService.getAllUsers();
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete/{username}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
         authService.deleteUser(username);
         return ResponseEntity.ok("User deleted successfully!");
     }
 
     @PutMapping("/update/{username}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> updateUser(@PathVariable String username, @RequestBody UpdateUserDTO dto) {
         authService.updateUser(username, dto);
         return ResponseEntity.ok("User updated successfully!");

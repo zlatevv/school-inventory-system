@@ -19,9 +19,10 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/equipment/**").permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/equipment/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/api/equipment/*/status").permitAll()
+                                .anyRequest().authenticated()
                 );
         return httpSecurity.build();
     }
