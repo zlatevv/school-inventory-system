@@ -586,29 +586,41 @@ async function initHistory() {
 
     // Функция за рендериране на редовете в таблицата
     const renderRows = items => {
-        if (!items.length) {
-            tbody.innerHTML = '<tr><td colspan="5" style="padding: 24px; text-align: center; color: var(--text-gray);">No history records match your search.</td></tr>';
-            return;
-        }
+    const tbody = document.getElementById('historyBody'); // Увери се, че имаш дефиниран tbody
+    
+    if (!items || !items.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="padding: 24px; text-align: center; color: var(--text-gray);">No history records match your search.</td></tr>';
+        return;
+    }
 
-        tbody.innerHTML = items.map(item => `
-            <tr>
-                <td style="padding: 15px;">
-                    <div class="td-item">
-                        <div class="item-icon-small"><i class="fa-solid ${getIconClass(item.equipmentName)}"></i></div>
-                        <div>
-                            <p class="item-name">${escapeHtml(item.equipmentName || 'Equipment')}</p>
-                            <p class="item-sub">Request #${item.id}</p>
-                        </div>
+    tbody.innerHTML = items.map(item => `
+        <tr>
+            <td data-label="ITEM" style="padding: 15px;">
+                <div class="td-item">
+                    <div class="item-icon-small"><i class="fa-solid ${getIconClass(item.equipmentName)}"></i></div>
+                    <div>
+                        <p class="item-name" style="margin: 0; font-weight: 600;">${escapeHtml(item.equipmentName || 'Equipment')}</p>
+                        <p class="item-sub" style="margin: 0; font-size: 11px; color: var(--text-gray);">Request #${item.id}</p>
                     </div>
-                </td>
-                <td style="padding: 15px;">${escapeHtml(formatPeriod(item))}</td>
-                <td style="padding: 15px;"><span class="condition-tag">${escapeHtml(getConditionLabel(item))}</span></td>
-                <td style="padding: 15px;">${getStatusBadge(item.status)}</td>
-                <td style="padding: 15px;"><button class="btn-icon" onclick="downloadHistoryEntry(${item.id})" title="Download history"><i class="fa-solid fa-download"></i></button></td>
-            </tr>
-        `).join('');
-    };
+                </div>
+            </td>
+            <td data-label="PERIOD" style="padding: 15px;">
+                ${escapeHtml(formatPeriod(item))}
+            </td>
+            <td data-label="CONDITION" style="padding: 15px;">
+                <span class="condition-tag">${escapeHtml(getConditionLabel(item))}</span>
+            </td>
+            <td data-label="STATUS" style="padding: 15px;">
+                ${getStatusBadge(item.status)}
+            </td>
+            <td data-label="ACTIONS" style="padding: 15px;">
+                <button class="btn-icon" onclick="downloadHistoryEntry(${item.id})" title="Download history">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+};
 
     // Функция за прилагане на филтъра
     const applyFilter = () => {

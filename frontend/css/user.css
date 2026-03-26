@@ -157,25 +157,35 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 }
 
 /* RESPONSIVE DESIGN */
-/* За Таблети и по-малки лаптопи (под 1024px) */
+/* --- За Таблети и по-малки лаптопи (под 1024px) --- */
 @media (max-width: 1024px) {
     .sidebar {
         width: 80px; 
         padding: 20px 10px;
     }
-    .logo-text, .nav-item span, .user-details, .logout-btn span {
-        display: none; 
+    
+    .logo-text, 
+    .nav-item span, 
+    .user-details, 
+    .logout-btn span,
+    .badge-count {
+        display: none; /* Скриваме текста, оставяме само иконите */
     }
+
     .main-content {
         margin-left: 80px;
         width: calc(100% - 80px);
     }
+
     .stats-row {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
     }
 }
-/* За Телефони (под 768px) */
+
+/* --- За Телефони (под 768px) --- */
 @media (max-width: 768px) {
+    /* 1. Sidebar & Layout */
     .sidebar {
         position: fixed;
         left: -260px;
@@ -186,52 +196,162 @@ header { display: flex; justify-content: space-between; align-items: center; pad
         display: flex;
         flex-direction: column;
         width: 260px;
-        background-color: var(--sidebar-bg); /* ADDED: Ensures solid background on mobile */
+        background-color: var(--sidebar-bg, #2488A6); 
     }
+
     .sidebar.active {
         left: 0 !important;
         box-shadow: 10px 0 15px rgba(0,0,0,0.1);
     }
-    
-    .mobile-menu-btn {
-        display: block;
-        font-size: 1.3rem;
-        cursor: pointer;
-        color: var(--text-dark);
+
+    .sidebar .logo-text, 
+    .sidebar .nav-item span, 
+    .sidebar .logout-btn span {
+        display: inline-block; /* Връщаме текста, когато менюто е отворено на телефон */
     }
+
+    .mobile-menu-btn {
+        display: block !important;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-right: 15px;
+    }
+
     .main-content {
-        margin-left: 0;
-        width: 100%;
+        margin-left: 0 !important;
+        width: 100% !important;
         padding: 10px;
     }
+
     header {
-        padding: 15px;
+        padding: 10px 15px;
+        justify-content: space-between;
     }
+
+    /* 2. Stats Row - Подреждане един под друг */
+    .stats-row {
+        grid-template-columns: 1fr !important; /* Една колона */
+        display: grid !important; 
+        gap: 12px !important;
+    }
+
     .page-header h1 {
-        font-size: 22px;
+        font-size: 20px;
     }
-    .stats-row, .inbox-container, .requests-container {
-        grid-template-columns: 1fr !important;
+
+    /* 3. Search Bar Optimization */
+.search-box {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center;
+    position: relative;
+}
+
+#historySearch {
+    width: 100% !important; /* Заема целия контейнер */
+    box-sizing: border-box; /* ВАЖНО: включва padding-а в широчината */
+    padding: 12px 15px 12px 45px !important; /* Повече място отляво за иконата */
+    border-radius: 12px !important;
+    font-size: 16px !important; /* Предотвратява автоматичното приближаване на iPhone */
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    color: var(--text-gray);
+    z-index: 5;
+}
+
+    /* 4. ТАБЛИЦА -> КАРТИ (Stacking) */
+    /* Премахваме хоризонталния скрол и подреждаме данните вертикално */
+    .table-responsive {
+        overflow-x: visible; /* Вече не ни трябва скрол */
+    }
+
+    .history-table, 
+    .history-table thead, 
+    .history-table tbody, 
+    .history-table th, 
+    .history-table td, 
+    .history-table tr { 
+        display: block; 
+    }
+
+    /* Скриваме заглавната лента на таблицата */
+    .history-table thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .history-table tr { 
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        background: #fff;
+        padding: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .history-table td { 
+        border: none;
+        border-bottom: 1px solid #f9f9f9; 
+        position: relative;
+        padding-left: 45% !important; 
+        text-align: right !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+    }
+
+    .history-table td:last-child {
+        border-bottom: none;
+        text-align: center !important;
+        padding-left: 10px !important;
+        margin-top: 5px;
+    }
+
+    /* Добавяне на етикети преди всяка стойност */
+    /* ВАЖНО: Трябва да добавиш data-label="Име" в HTML клетките */
+    .history-table td:before { 
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 40%; 
+        font-weight: 700;
+        text-align: left;
+        color: #64748b;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    /* 5. Инбокс и други контейнери */
+    .inbox-container, .requests-container {
         display: flex;
         flex-direction: column;
+        gap: 15px;
     }
+
     .notification-card {
         flex-direction: column; 
         align-items: flex-start;
         gap: 10px;
+        padding: 15px;
     }
-    .table-responsive {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .history-table {
-        min-width: 600px;
-    }
+
+    /* 6. Модални прозорци */
     .modal-content {
-        width: 95%;
-        padding: 25px;
+        width: 92% !important;
+        padding: 20px;
+        margin: 0 15px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-btn {
+        width: 100%;
     }
 }
 
