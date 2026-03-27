@@ -4,9 +4,8 @@ services:
   # --- API GATEWAY (The Entry Point) ---
   api-gateway:
     build: ./backend/api-gateway
-    ports:
-      - "9000:9000"
     environment:
+      - PORT=9000
       - AUTH_SERVICE_URL=http://auth-service:8080
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - REQUEST_SERVICE_URL=http://request-service:8084
@@ -20,67 +19,55 @@ services:
   # --- MICROSERVICES ---
   auth-service:
     build: ./backend/auth-service
-    expose:
-      - "8080"
     environment:
+      - PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   inventory-service:
     build: ./backend/inventory-service
-    expose:
-      - "8081"
     environment:
+      - PORT=8081
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   notification-service:
     build: ./backend/notifications-service
-    expose:
-      - "8082"
     environment:
+      - PORT=8082
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_RABBITMQ_HOST=rabbitmq
     depends_on:
-      db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+      - db
+      - rabbitmq
 
   report-service:
     build: ./backend/report-service
-    expose:
-      - "8083"
     environment:
+      - PORT=8083
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - REQUEST_SERVICE_URL=http://request-service:8084
     depends_on:
-      db:
-        condition: service_healthy
-      inventory-service:
-        condition: service_started
-      request-service:
-        condition: service_started
+      - db
+      - inventory-service
+      - request-service
 
   request-service:
     build: ./backend/request-service
-    expose:
-      - "8084"
     environment:
+      - PORT=8084
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=1234
@@ -88,14 +75,10 @@ services:
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - AUTH_SERVICE_URL=http://auth-service:8080
     depends_on:
-      db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      auth-service:
-        condition: service_started
-      inventory-service:
-        condition: service_started
+      - db
+      - rabbitmq
+      - auth-service
+      - inventory-service
 
   email-service:
     build: ./backend/email-service
@@ -103,8 +86,7 @@ services:
       - RABBITMQ_URL=amqp://rabbitmq:5672
       - EMAIL_PASSWORD=olvz ezop vqqz bhzw
     depends_on:
-      rabbitmq:
-        condition: service_healthy
+      - rabbitmq
 
   # --- DATABASE ---
   db:
@@ -112,35 +94,18 @@ services:
     environment:
       MYSQL_DATABASE: school_inventory
       MYSQL_ROOT_PASSWORD: 1234
-    ports:
-      - "3307:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p1234"]
-      interval: 10s
-      timeout: 20s
-      retries: 10
+    # Премахнати healthchecks за по-бърз старт в облака
 
   rabbitmq:
     image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # Портовете тук не са нужни за външния свят, само вътрешно за услугите
 
   # --- FRONTEND ---
   frontend:
     build: ./frontend
-    ports:
-      - "80:80"
-    volumes:
-      - ./frontend/html:/usr/share/nginx/html
-      - ./frontend/css:/usr/share/nginx/html/css
-      - ./frontend/js:/usr/share/nginx/html/js
     environment:
-      - API_GATEWAY_URL=http://localhost:9000
+      - PORT=80
+      # ВАЖНО: Тук по-късно ще сложиш публичния URL на api-gateway от Railway
+      - API_GATEWAY_URL=http://api-gateway:9000
     depends_on:
       - api-gateway
