@@ -70,42 +70,69 @@ function renderCards(data) {
     if (!grid) return;
     grid.innerHTML = '';
 
+    if (!data || data.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: gray;">
+                <i class="fa-solid fa-box-open" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                <p>Няма намерено оборудване.</p>
+            </div>`;
+        return;
+    }
+
     data.forEach((item, index) => {
-        // Определяне на цвят спрямо статуса
+        // 1. Определяне на цвят спрямо статуса
         let statusClass = 'status-available';
-        if (item.equipmentStatus === 'CHECKED_OUT') statusClass = 'status-light-yellow';
-        if (item.equipmentStatus === 'RETIRED' || item.equipmentStatus === 'UNDER_REPAIR') statusClass = 'status-rejected';
+        const status = (item.equipmentStatus || 'AVAILABLE').toUpperCase();
+        
+        if (status === 'CHECKED_OUT') statusClass = 'status-light-yellow';
+        else if (status === 'RETIRED' || status === 'UNDER_REPAIR' || status === 'DAMAGED') statusClass = 'status-rejected';
+
+        // 2. Форматиране на дати (ако съществуват)
+        const dateRange = (item.dateFrom && item.dateTo) 
+            ? `${item.dateFrom} - ${item.dateTo}` 
+            : 'No active loan';
 
         const card = document.createElement('div');
         card.className = 'eq-card';
+        // Добавяме плавна поява
         card.style.animationDelay = `${index * 0.05}s`;
 
         card.innerHTML = `
             <div class="eq-card-image">
-                <span class="eq-status-tag ${statusClass}">${item.equipmentStatus || 'AVAILABLE'}</span>
-                <i class="fa-solid ${item.icon || 'fa-box'}"></i>
+                <span class="eq-status-tag ${statusClass}">${status.replace('_', ' ')}</span>
+                <i class="fa-solid ${item.icon || 'fa-laptop'}"></i>
             </div>
             <div class="eq-card-content">
-                <span class="eq-category">${item.category || item.type || ''}</span>
-                <h3>${item.name || item.type || 'Неизвестен предмет'}</h3>
-                <div class="eq-location"><i class="fa-solid fa-location-dot"></i> ${item.location || 'Склад'}</div>
+                <span class="eq-category">${item.category || item.type || 'General'}</span>
+                <h3>${item.name || 'Unnamed Item'}</h3>
+                
+                <div class="eq-info-row">
+                    <div class="eq-location">
+                        <i class="fa-solid fa-location-dot"></i> 
+                        <span>${item.location || 'N/A'}</span>
+                    </div>
+                    <div class="eq-serial" style="font-size: 0.8rem; color: #94a3b8;">
+                        <i class="fa-solid fa-barcode"></i> 
+                        <span>${item.serialNumber || 'No ID'}</span>
+                    </div>
+                </div>
                 
                 <div class="assignment-info">
-                    <div class="user-assigned">
+                    <div class="user-assigned" title="Assigned User">
                         <i class="fa-solid fa-user-tag"></i>
                         <span>${item.assignedTo || 'Available'}</span>
                     </div>
-                    <div class="assignment-dates">
+                    <div class="assignment-dates" title="Loan Period">
                         <i class="fa-solid fa-calendar-days"></i>
-                        <span>${item.dateFrom || '-'} to ${item.dateTo || '-'}</span>
+                        <span>${dateRange}</span>
                     </div>
                 </div>
 
                 <div class="admin-actions">
-                    <button class="btn-edit" onclick="editItem(${item.id})">
+                    <button class="btn-edit" onclick="editItem(${item.id})" aria-label="Edit Item">
                         <i class="fa-solid fa-pen"></i> Edit
                     </button>
-                    <button class="btn-delete" onclick="deleteItem(${item.id})">
+                    <button class="btn-delete" onclick="deleteItem(${item.id})" aria-label="Delete Item">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>

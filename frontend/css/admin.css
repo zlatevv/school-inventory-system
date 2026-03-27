@@ -702,13 +702,18 @@ header {
         gap: 10px; 
     }
     
-    .search-bar, .user-text { 
-        display: none; 
+    /* 1. Общи корекции на интерфейса */
+    header { 
+        padding: 10px 14px; 
+        gap: 10px; 
+    }
+    
+    .search-bar, .user-text, .welcome-banner img { 
+        display: none !important; 
     }
     
     .content-padding { 
         padding: 14px; 
-        gap: 14px; 
         width: 100%;
         box-sizing: border-box;
     }
@@ -718,109 +723,115 @@ header {
         flex-direction: column; 
         text-align: center; 
     }
-    
-    .welcome-banner img { 
-        display: none; 
-    }
-    
-    .welcome-text h1 { 
-        font-size: 1.15rem; 
-    }
-    
-    .welcome-text p { 
-        font-size: 0.85rem; 
-    }
-    
-    /* Статистика - винаги 2 колони, за да не се режат */
+
+    /* 2. Статистика и Бутони */
     .stats-row { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 10px; 
     }
     
-    .stat-card { 
-        padding: 12px; 
-    }
-    
-    .stat-number { 
-        font-size: 1.3rem; 
-    }
-
     .action-row { 
         flex-direction: column; 
         gap: 10px;
     }
     
-    .action-row .btn { 
+    .action-row .btn, .scanner-section { 
         width: 100%; 
         justify-content: center; 
-        margin: 0;
     }
 
-    .scanner-section { 
+    /* 3. УНИВЕРСАЛНА ТАБЛИЦА -> КАРТА */
+    /* Важи за .requests-table, .inventory-table, .users-table и всяка друга */
+    table, thead, tbody, th, td, tr { 
+        display: block; 
         width: 100%; 
-        margin-top: 5px;
     }
 
-    /* ОПРАВЯНЕ НА ТАБЛИЦАТА - ПРЕМАХВАМЕ МИН. ШИРИНА */
-    .card-container { 
-        padding: 14px; 
-        width: 100%;
-        box-sizing: border-box;
-        overflow: hidden; /* Спираме скрола, защото ще я пренаредим */
+    thead { 
+        display: none; /* Скриваме заглавната лента на всички таблици */
     }
 
-    /* Превръщаме таблицата в списък (Stacked), за да не се реже */
-    .requests-table thead {
-        display: none; /* Скриваме заглавията */
-    }
-
-    .requests-table, 
-    .requests-table tbody, 
-    .requests-table tr, 
-    .requests-table td {
-        display: block;
-        width: 100%;
-    }
-
-    .requests-table tr {
-        border-bottom: 2px solid #f0f0f0;
+    tr {
+        background: #fff;
+        border: 1px solid #edf2f7;
+        border-radius: 12px;
         margin-bottom: 15px;
-        padding-bottom: 10px;
+        padding: 12px 16px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+        box-sizing: border-box;
     }
 
-    .requests-table td {
+    td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center;
+        padding: 12px 0 !important;
+        border: none !important;
+        border-bottom: 1px solid #f7fafc !important;
         text-align: right !important;
-        padding: 10px 5px !important;
-        position: relative;
-        padding-left: 45% !important;
-        border: none;
+        min-height: 40px;
     }
 
-    /* Динамични етикети (изисква data-label в JS) */
-    .requests-table td::before {
+    td:last-child {
+        border-bottom: none !important;
+        justify-content: flex-end !important; /* Бутоните винаги вдясно */
+        padding-top: 12px !important;
+    }
+
+    /* Динамични етикети отляво */
+    td::before {
         content: attr(data-label);
-        position: absolute;
-        left: 0;
         font-weight: 700;
+        font-size: 0.75rem;
+        color: #718096;
         text-transform: uppercase;
-        font-size: 10px;
-        color: var(--text-gray);
+        text-align: left;
+        flex: 1;
     }
 
-    .requests-table td:last-child {
-        text-align: center !important;
-        padding-left: 0 !important;
-        border-bottom: none;
+    /* Съдържанието отдясно */
+td > * {
+    flex: 0 1 auto; /* Prevents the value from stretching unnecessarily */
+    text-align: right;
+    word-break: break-word; /* Prevents long text from breaking the layout */
+}
+
+    /* 4. Корекция за Бутони и Действия */
+    .actions-wrapper, .admin-actions, .modal-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
     }
 
-    /* Скриване на по-малко важна информация в други таблици */
-    .inventory-table th:nth-child(2), .inventory-table td:nth-child(2),
-    .users-table th:nth-child(2), .users-table td:nth-child(2) { 
-        display: none; 
+    .btn-icon, .action-icon-btn, .btn-edit, .btn-delete {
+        padding: 8px 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
     }
 
-    .modal-content { 
-        padding: 20px 15px; 
-        width: 90%; 
+    /* 5. Модални прозорци */
+    .modal-content {
+        width: 92% !important;
+        padding: 20px;
     }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .eq-card-content h3 { font-size: 1rem; }
+    .assignment-info { font-size: 0.8rem; }
+    .admin-actions {
+        display: grid;
+        grid-template-columns: 1fr auto; /* Edit бутонът заема повече място */
+        gap: 8px;
+    }
+    .btn-delete { padding: 8px 12px; } /* Правим кофата по-лесна за натискане */
 }

@@ -78,19 +78,33 @@ function updateEquipmentStats(data) {
 
 function renderEquipmentTable(data) {
     const container = document.getElementById('equipList');
+    if (!container) return;
+
     container.innerHTML = data.map(item => `
         <tr>
-            <td>
+            <td data-label="Оборудване">
                 <div class="equip-info">
-                    <div class="equip-name">${item.name}</div>
-                    <div class="equip-serial">SN: ${item.serialNumber || 'N/A'}</div>
+                    <div class="equip-name" style="font-weight: 600;">${item.name}</div>
+                    <div class="equip-serial" style="font-size: 0.8rem; color: #64748b;">
+                        SN: ${item.serialNumber || 'N/A'}
+                    </div>
                 </div>
             </td>
-            <td>#EQ-${item.id}</td>
-            <td><span class="status-badge status-${item.equipmentStatus.toLowerCase()}">${item.equipmentStatus}</span></td>
-            <td>
-                <button onclick="editItem(${item.id})" class="btn-icon-only edit"><i class="fa-solid fa-pen"></i></button>
-                <button onclick="deleteItem(${item.id})" class="btn-icon-only delete"><i class="fa-solid fa-trash"></i></button>
+            <td data-label="Инвентарен №">#EQ-${item.id}</td>
+            <td data-label="Статус">
+                <span class="status-badge status-${(item.equipmentStatus || 'available').toLowerCase()}">
+                    ${item.equipmentStatus || 'AVAILABLE'}
+                </span>
+            </td>
+            <td data-label="Управление">
+                <div class="actions-wrapper">
+                    <button onclick="editItem(${item.id})" class="btn-icon-only edit" title="Редактирай">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button onclick="deleteItem(${item.id})" class="btn-icon-only delete" title="Изтрий">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     `).join('');

@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 async function fetchAndDisplayUsers() {
     const usersListContainer = document.getElementById('usersList');
-    usersListContainer.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Зареждане на потребители...</td></tr>';
+    // Добавяме data-label и тук за консистенция, дори при зареждане
+    usersListContainer.innerHTML = '<tr><td colspan="3" data-label="Статус" style="text-align:center; padding:20px;">Зареждане...</td></tr>';
 
     try {
         const token = sessionStorage.getItem("jwtToken"); 
@@ -39,39 +40,42 @@ async function fetchAndDisplayUsers() {
         usersListContainer.innerHTML = ''; 
 
         if(users.length === 0) {
-            usersListContainer.innerHTML = '<tr><td colspan="3" style="text-align:center;">Няма намерени потребители в базата.</td></tr>';
+            usersListContainer.innerHTML = '<tr><td colspan="3" data-label="Инфо" style="text-align:center;">Няма намерени потребители.</td></tr>';
             return;
         }
 
         users.forEach(user => {
-            const initials = user.username.substring(0, 2).toUpperCase();
+            const initials = user.username ? user.username.substring(0, 2).toUpperCase() : '??';
             const regDate = user.registeredOn ? user.registeredOn : 'N/A';
 
             const row = document.createElement('tr');
-            row.style.borderBottom = '1px solid #EDF2F7';
+            
+            // ПРЕМАХВАМЕ row.style.borderBottom от тук, защото универсалният CSS вече се грижи за това
             
             row.innerHTML = `
-                <td style="padding: 30px 20px;">
+                <td data-label="Потребител">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 45px; height: 45px; background: #E0F2FE; color: #0369A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;">
+                        <div style="width: 40px; height: 40px; background: #E0F2FE; color: #0369A1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0;">
                             ${initials}
                         </div>
-                        <div>
-                            <div style="font-weight: 700; color: #1E293B; font-size: 1.05rem;">${user.username}</div>
-                            <div style="color: #64748B; font-size: 0.85rem; margin-top: 4px;">${user.email}</div>
+                        <div style="overflow: hidden;">
+                            <div style="font-weight: 700; color: #1E293B; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.username}</div>
+                            <div style="color: #64748B; font-size: 0.8rem;">${user.email}</div>
                         </div>
                     </div>
                 </td>
-                <td style="padding: 30px 20px;">
-                    <div style="font-weight: 600; color: #475569; margin-bottom: 5px;">${user.role}</div>
-                    <div style="color: #94A3B8; font-size: 0.8rem;">Registered: ${regDate}</div>
+                <td data-label="Роля & Дата">
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; color: #475569;">${user.role}</div>
+                        <div style="color: #94A3B8; font-size: 0.75rem;">${regDate}</div>
+                    </div>
                 </td>
-                <td style="padding: 30px 20px; text-align: right;">
-                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                        <button class="btn btn-outline" onclick="openEditModal('${user.username}', '${user.email}', '${user.role}')" style="border-color: #E2E8F0; color: #64748B;">
-                            <i class="fa-solid fa-user-pen"></i> Edit
+                <td data-label="Действия">
+                    <div class="actions-wrapper">
+                        <button class="btn-icon-only edit" onclick="openEditModal('${user.username}', '${user.email}', '${user.role}')">
+                            <i class="fa-solid fa-user-pen"></i>
                         </button>
-                        <button class="btn btn-outline delete-user-btn" onclick="deleteUser('${user.username}')" style="color: #EF4444; border-color: #FCA5A5;">
+                        <button class="btn-icon-only delete" onclick="deleteUser('${user.username}')">
                             <i class="fa-solid fa-user-minus"></i>
                         </button>
                     </div>
@@ -82,7 +86,7 @@ async function fetchAndDisplayUsers() {
 
     } catch (error) {
         console.error('Грешка:', error);
-        usersListContainer.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Грешка при връзка със сървъра.</td></tr>';
+        usersListContainer.innerHTML = '<tr><td colspan="3" data-label="Грешка" style="text-align:center; color:red;">Грешка при връзка със сървъра.</td></tr>';
     }
 }
 
