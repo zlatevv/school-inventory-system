@@ -4,6 +4,8 @@ FROM nginx:alpine
 # Изтриваме стандартните файлове на Nginx, за да не ни пречат
 RUN rm -rf /usr/share/nginx/html/*
 
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Копираме HTML файловете ДИРЕКТНО в главната директория
 COPY html/ /usr/share/nginx/html/
 
