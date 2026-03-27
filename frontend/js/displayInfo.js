@@ -54,7 +54,7 @@ async function fetchAndDisplayEquipment() {
     equipListContainer.innerHTML = '<p>Loading equipment...</p>';
 
     try {
-        const response = await fetch('http://localhost:9000/api/equipment'); 
+        const response = await fetch('https://api-gateway-production-d21a.up.railway.app/api/equipment'); 
         
         if (!response.ok) {
             throw new Error('Failed to fetch equipment');
@@ -149,7 +149,7 @@ async function requestItemAPI(itemId) {
     };
 
     try {
-        const response = await fetch('http://localhost:9000/api/request', {
+        const response = await fetch('https://api-gateway-production-d21a.up.railway.app/api/request', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

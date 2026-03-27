@@ -94,7 +94,7 @@ async function handleRequestAction(requestId, actionType) {
     if (!token || token === "null" || token === "undefined") return;
 
     try {
-        const url = `http://localhost:9000/api/request/${requestId}/${actionType.toLowerCase()}`;
+        const url = `https://api-gateway-production-d21a.up.railway.app/api/request/${requestId}/${actionType.toLowerCase()}`;
         const response = await fetch(url, {
             method: "PUT",
             headers: { 'Authorization': `Bearer ${token}` }
@@ -115,7 +115,7 @@ async function handleReturnAction(requestId) {
 
     const token = sessionStorage.getItem("jwtToken");
     try {
-        const response = await fetch(`http://localhost:9000/api/request/${requestId}/return?condition=${encodeURIComponent(condition)}`, {
+        const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/request/${requestId}/return?condition=${encodeURIComponent(condition)}`, {
             method: "PUT",
             headers: { 'Authorization': `Bearer ${token}` }
         });

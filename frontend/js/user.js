@@ -6,7 +6,7 @@
  * които се използват в цялото приложение за потребителския интерфейс.
  */
 const CONFIG = {
-    API_BASE: 'http://localhost:9000/api',  // Основен URL адрес за API заявките към бекенда
+    API_BASE: 'https://api-gateway-production-d21a.up.railway.app/api',  // Основен URL адрес за API заявките към бекенда
     AVATAR_BASE: 'https://placehold.co/40x40/2B8EAD/FFFFFF'  // URL за генериране на аватари с инициали
 };
 
@@ -353,7 +353,7 @@ async function initInbox() {
 
         // 2. Правим директен fetch към бекенда през Gateway-я (порт 9000)
         // Използваме директен fetch вместо apiFetch за по-голяма контрол
-        const response = await fetch(`http://localhost:9000/api/notifications/user/${username}`, {
+        const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/notifications/user/${username}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -451,7 +451,7 @@ async function initInbox() {
 
                     try {
                         // Маркираме нотификацията като прочетена в бекенда
-                        await fetch(`http://localhost:9000/api/notifications/${notifId}/read`, {
+                        await fetch(`https://api-gateway-production-d21a.up.railway.app/api/notifications/${notifId}/read`, {
                             method: 'PUT',
                             headers: {
                                 'Authorization': `Bearer ${token}`
@@ -724,7 +724,7 @@ async function cancelRequest(equipmentId) {
     }
 
     try {
-        const result = await fetch(`http://localhost:9000/api/request/${equipmentId}/cancel`, {
+        const result = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/request/${equipmentId}/cancel`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

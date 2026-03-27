@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         // Зареждаме данните (Equipment)
-        const response = await fetch('http://localhost:9000/api/equipment', {
+        const response = await fetch('https://api-gateway-production-d21a.up.railway.app/api/equipment', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) throw new Error("Грешка при зареждане на оборудването");
@@ -80,7 +80,7 @@ document.querySelectorAll('[data-export-type]').forEach(btn => {
 
         try {
             // Adjust this URL to match your Backend Export Controller
-            const exportUrl = `http://localhost:9000/api/reports/export?type=${type}&format=${format}`;
+            const exportUrl = `https://api-gateway-production-d21a.up.railway.app/api/reports/export?type=${type}&format=${format}`;
             
             const response = await fetch(exportUrl, {
                 headers: { 'Authorization': `Bearer ${sessionStorage.getItem("jwtToken")}` }

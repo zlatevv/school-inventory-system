@@ -26,7 +26,7 @@ async function loadEquipmentCatalog() {
 
     try {
         // Взимаме инвентара
-        const eqRes = await fetch("http://localhost:9000/api/equipment");
+        const eqRes = await fetch("https://api-gateway-production-d21a.up.railway.app/api/equipment");
         const equipment = await eqRes.json();
         
         // Взимаме заявките (за да намерим кой е взел предмета и кога)
@@ -35,7 +35,7 @@ async function loadEquipmentCatalog() {
 
         let requests = [];
         if (token) {
-            const reqRes = await fetch("http://localhost:9000/api/manager/requests", {
+            const reqRes = await fetch("https://api-gateway-production-d21a.up.railway.app/api/manager/requests", {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (reqRes.ok) requests = await reqRes.json();
@@ -205,7 +205,7 @@ function initEditModal() {
         if (token === "null" || token === "undefined") token = null;
 
         try {
-            const response = await fetch(`http://localhost:9000/api/equipment/${id}`, {
+            const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/equipment/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ async function deleteItem(id) {
         if (token === "null" || token === "undefined") token = null;
 
         try {
-            const response = await fetch(`http://localhost:9000/api/equipment/${id}`, {
+            const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/equipment/${id}`, {
                 method: "DELETE",
                 headers: {
                     ...(token ? { 'Authorization': `Bearer ${token}` } : {})

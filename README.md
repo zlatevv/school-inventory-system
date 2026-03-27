@@ -94,7 +94,7 @@ A static HTML/CSS/JS frontend is available in `frontend/` with separate views fo
 
 ## API Endpoints
 
-> All routes are exposed through the API gateway (`http://localhost:9000`) and forwarded to internal services.
+> All routes are exposed through the API gateway (`https://api-gateway-production-d21a.up.railway.app`) and forwarded to internal services.
 
 ### Authentication
 - `POST /api/auth/register`
@@ -164,4 +164,4 @@ Repeat for each backend service directory.
 Open:
 - `frontend/html/login.html`
 
-The frontend is already configured to call the API gateway at `http://localhost:9000`.
+The frontend is already configured to call the API gateway at `https://api-gateway-production-d21a.up.railway.app`.

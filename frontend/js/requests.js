@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadMyData(token) {
-    const result = await fetch("http://localhost:9000/api/requests", {
+    const result = await fetch("https://api-gateway-production-d21a.up.railway.app/api/requests", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ async function cancelEquipment(equipmentId) {
     }
 
     try {
-        const result = await fetch(`http://localhost:9000/api/request/${equipmentId}/cancel`, {
+        const result = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/request/${equipmentId}/cancel`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

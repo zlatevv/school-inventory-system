@@ -128,7 +128,7 @@ async function editItem(id) {
     const token = sessionStorage.getItem("jwtToken");
     
     try {
-        const response = await fetch(`http://localhost:9000/api/equipment/${id}`, {
+        const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/equipment/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -178,7 +178,7 @@ function initEditFormListener() {
         };
 
         try {
-            const response = await fetch(`http://localhost:9000/api/equipment/${id}`, {
+            const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/equipment/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -232,7 +232,7 @@ function initAddFormListener() {
         };
 
         try {
-            const response = await fetch(`http://localhost:9000/api/equipment`, {
+            const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/equipment`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

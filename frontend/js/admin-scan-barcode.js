@@ -31,7 +31,7 @@ function initScanner() {
 async function processBarcodeCheckout(requestId) {
     const token = sessionStorage.getItem("jwtToken");
     try {
-        const response = await fetch(`http://localhost:9000/api/request/${requestId}/checkout`, {
+        const response = await fetch(`https://api-gateway-production-d21a.up.railway.app/api/request/${requestId}/checkout`, {
             method: "PUT",
             headers: { 'Authorization': `Bearer ${token}` }
         });

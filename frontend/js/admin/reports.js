@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:9000";
+const API_BASE_URL = "https://api-gateway-production-d21a.up.railway.app";
 
 document.addEventListener("DOMContentLoaded", () => {
     const token = sessionStorage.getItem("jwtToken");

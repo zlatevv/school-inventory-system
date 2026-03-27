@@ -1,5 +1,5 @@
 // === ГЛОБАЛНИ НАСТРОЙКИ ===
-const API_BASE_URL = 'http://localhost:9000/api/auth';
+const API_BASE_URL = 'https://api-gateway-production-d21a.up.railway.app/api/auth';
 
 // === ИНИЦИАЛИЗАЦИЯ ПРИ ЗАРЕЖДАНЕ НА СТРАНИЦАТА ===
 document.addEventListener("DOMContentLoaded", () => {
