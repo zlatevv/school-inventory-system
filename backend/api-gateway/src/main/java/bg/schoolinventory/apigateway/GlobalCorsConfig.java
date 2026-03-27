@@ -15,7 +15,7 @@ public class GlobalCorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        corsConfig.setAllowedOrigins(List.of("http://localhost", "http://127.0.0.1"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost", "http://127.0.0.1", "https://frontend-production-ed3b.up.railway.app"));
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(List.of("*"));
         corsConfig.setAllowCredentials(true);
