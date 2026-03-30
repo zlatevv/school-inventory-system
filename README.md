@@ -1,3 +1,7 @@
+# 🏆 AIBEST TechAcademy Pravets 2026 Third place Award winning project 🥉
+
+Built with passion by a team of innovative students dedicated to digitizing school resource management.
+
 # 🏫 School Inventory System
 
 A school inventory management platform for tracking classroom equipment, processing borrowing requests, and generating administrative reports.
