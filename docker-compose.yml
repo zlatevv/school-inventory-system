@@ -4,6 +4,8 @@ services:
   # --- API GATEWAY (The Entry Point) ---
   api-gateway:
     build: ./backend/api-gateway
+    ports:
+      - "9000:9000"
     environment:
       - PORT=9000
       - AUTH_SERVICE_URL=http://auth-service:8080
@@ -103,6 +105,8 @@ services:
   # --- FRONTEND ---
   frontend:
     build: ./frontend
+    ports:
+      - "80:80"
     environment:
       - PORT=80
       # ВАЖНО: Тук по-късно ще сложиш публичния URL на api-gateway от Railway
