@@ -67,7 +67,7 @@ The fastest way to get the entire microservice ecosystem running.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/school-inventory.git
+git clone https://github.com/zlatevv/school-inventory.git
 cd school-inventory
 
 # Start all services, databases, and message brokers
