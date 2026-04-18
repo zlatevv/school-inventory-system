@@ -1,167 +1,154 @@
-# School Inventory System
+# 🎓 School Inventory System
 
-A school inventory management platform for tracking classroom equipment, processing borrowing requests, and generating administrative reports.
+![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
+![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-## Project Overview
-School staff and students depend on shared resources such as projectors, monitors, USB drives, and stationery. This system digitizes the full flow of inventory operations so both users and administrators can work faster and with better visibility.
+A comprehensive, microservice-based school inventory management platform designed to track classroom equipment, process borrowing requests, and generate administrative reports.
 
-### Core Goals
-- Keep an up-to-date catalog of equipment and supplies.
-- Let users request items and track request status.
-- Let administrators approve/reject requests, monitor item condition, and export reports.
+## 📖 Project Overview
+School staff and students depend on shared resources such as projectors, monitors, USB drives, and stationery. This system digitizes the full flow of inventory operations, enabling faster workflows, clear visibility, and strict accountability.
 
-## User Roles
+### Core Objectives
+* **Centralized Catalog:** Maintain an up-to-date registry of all school equipment and supplies.
+* **Frictionless Borrowing:** Allow users to request items and track their request status in real-time.
+* **Administrative Control:** Empower admins to approve/reject requests, monitor item conditions, and export detailed usage reports.
 
-### User
-**What users can do**
-- View available equipment.
-- Submit item requests.
-- View personal request and borrowing history.
+---
 
-**What users cannot do**
-- Create, update, or delete inventory items.
-- Approve or reject requests.
-- Access administrative settings and reports.
+## 👥 User Roles & Permissions
 
-### Administrator
-**What admins can do**
-- Manage users and permissions.
-- Create, update, delete equipment records.
-- Approve or reject equipment requests.
-- Log returns and update condition notes.
-- Export reports (CSV/PDF).
+| Feature | 👤 User | 🛡️ Administrator |
+| :--- | :---: | :---: |
+| **View Equipment** | ✅ | ✅ |
+| **Submit Requests** | ✅ | ✅ |
+| **View Own History** | ✅ | ✅ |
+| **Manage Users & Roles** | ❌ | ✅ |
+| **Add/Edit/Delete Items**| ❌ | ✅ |
+| **Approve/Reject Requests**| ❌ | ✅ |
+| **Log Returns & Conditions**| ❌ | ✅ |
+| **Export Reports (CSV/PDF)**| ❌ | ✅ |
 
-**Restriction**
-- Administrative responsibility is separated from physical handling duties unless an admin is also explicitly assigned operational tasks.
+> **Note:** Administrative responsibility is separated from physical handling duties unless an admin is explicitly assigned operational tasks.
 
-## Feature Set
+---
 
-### Mandatory Features
-1. **Authentication & Role-Based Access**
-   - User/Admin role separation.
-2. **Inventory Catalog**
-   - Search and filtering.
-   - Item fields: name, type, serial number, condition, status, location, photo.
-3. **Equipment Request Workflow**
-   - Request items by date/time.
-   - Approval flow for sensitive/limited stock items.
-4. **Condition & Status Tracking**
-   - Status states: `Available`, `Checked Out`, `Under Repair`, `Retired`.
-   - Return-time condition logging.
-5. **Return & History Logs**
-   - Request lifecycle and return tracking.
-   - History by user and by item.
+## 🏗️ Architecture & Tech Stack
 
-### Optional/Extended Features
-- QR or barcode tagging.
-- Email reminders.
-- Low stock alerts.
-- Usage analytics dashboards.
-- CSV/Excel exports and/or document previews.
+This project utilizes a **Microservices Architecture**, securely routed through an API Gateway.
 
-## Architecture
+### Backend Services
+* 🔐 **auth-service:** Registration, login, user management, and JWT issuance.
+* 📦 **inventory-service:** Equipment CRUD operations and status updates.
+* 🔄 **request-service:** Workflow engine for requests, approvals, and returns.
+* 📊 **report-service:** Usage/history reporting and document export.
+* 🔔 **notifications-service:** Asynchronous messaging and email alerts via RabbitMQ.
+* 🚪 **api-gateway:** Centralized routing (`http://localhost:9000`) for all frontend clients.
 
-## Backend (Implemented)
-This repository uses a microservice-style backend:
+### Infrastructure & Frontend
+* **Database:** MySQL
+* **Message Broker:** RabbitMQ
+* **Frontend:** Static HTML, CSS, Vanilla JavaScript (Role-based navigation)
+* **External Tools:** Nodemailer (Email Delivery), CSV/PDF generation tools.
 
-- **auth-service**: registration, login, user management, JWT issuance.
-- **inventory-service**: equipment CRUD and status updates.
-- **request-service**: request/approval/return workflow.
-- **report-service**: usage/history reports and export.
-- **notifications-service**: messaging + notification persistence.
-- **api-gateway**: centralized routing for frontend/API clients.
+---
 
-## Frontend (Implemented as static client)
-A static HTML/CSS/JS frontend is available in `frontend/` with separate views for user/admin flows and role-based navigation.
+## 🚀 Getting Started
 
-## Tech Stack
+### Prerequisites
+* Java 17+ & Maven 3.9+
+* Node.js (for `email-service`)
+* Docker & Docker Compose (Recommended)
 
-### Backend
-- Java 17+
-- Spring Boot
-- Spring Security (JWT-protected endpoints)
-- Spring Cloud Gateway
-- Spring Data JPA
-- MySQL
-- RabbitMQ
+### Option A: Running with Docker (Recommended)
+The fastest way to get the entire microservice ecosystem running.
 
-### Frontend
-- HTML, CSS, JavaScript (vanilla)
-
-### Supporting Tools
-- Nodemailer / email service
-- CSV/PDF export in report service
-
-## API Endpoints
-
-> All routes are exposed through the API gateway (`http://localhost:9000`) and forwarded to internal services.
-
-### Authentication
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `GET /api/auth/users/{username}`
-- `GET /api/auth/get-all`
-- `PUT /api/auth/update/{username}`
-- `DELETE /api/auth/delete/{username}`
-
-### Equipment Management
-- `GET /api/equipment`
-- `GET /api/equipment/{id}`
-- `POST /api/equipment`
-- `PUT /api/equipment/{id}`
-- `PUT /api/equipment/{id}/status?newStatus=...`
-- `DELETE /api/equipment/{id}`
-
-### Requests
-- `POST /api/request`
-- `GET /api/requests`
-- `GET /api/manager/requests`
-- `PUT /api/request/{id}/approve`
-- `PUT /api/request/{id}/reject`
-- `PUT /api/request/{id}/checkout`
-- `PUT /api/request/{id}/return`
-- `PUT /api/request/{id}/cancel`
-
-### Reports
-- `GET /api/reports/usage`
-- `GET /api/reports/history`
-- `GET /api/reports/export?type=usage|history&format=csv|pdf`
-
-## Local Development Setup
-
-## Prerequisites
-- Java 17+
-- Maven 3.9+
-- MySQL running locally (default DB: `school_inventory`)
-- RabbitMQ running locally (default guest credentials)
-- Node.js (only for `backend/email-service`)
-
-## Default Service Ports
-- API Gateway: `9000`
-- Auth Service: `8080`
-- Inventory Service: `8081`
-- Notifications Service: `8082`
-- Report Service: `8083`
-- Request Service: `8084`
-
-## Run Order (Recommended)
-1. Start MySQL
-2. Start RabbitMQ
-3. Start backend services (`auth`, `inventory`, `request`, `report`, `notifications`)
-4. Start API gateway
-5. Open frontend pages from `frontend/html/` (for example via Live Server)
-
-## Example (per Java service)
 ```bash
-cd backend/auth-service
-./mvnw spring-boot:run
+# Clone the repository
+git clone https://github.com/yourusername/school-inventory.git
+cd school-inventory
+
+# Start all services, databases, and message brokers
+docker-compose up --build -d
 ```
 
-Repeat for each backend service directory.
+### Option B: Manual Local Setup
+If you prefer running services individually via your IDE or terminal:
+1. Start local **MySQL** (Database: `school_inventory`) and **RabbitMQ**.
+2. Start the microservices in the following order:
+   ```bash
+   cd backend/auth-service
+   ./mvnw spring-boot:run
+   ```
+   *(Repeat for `inventory`, `request`, `report`, and `notifications` services).*
+3. Start the **API Gateway** (`cd backend/api-gateway && ./mvnw spring-boot:run`).
+4. Open `frontend/html/login.html` using a Live Server.
 
-## Frontend Entry Point
-Open:
-- `frontend/html/login.html`
+---
 
-The frontend is already configured to call the API gateway at `http://localhost:9000`.
+## 🔌 Default Service Ports
+
+| Service | Port | Description |
+| :--- | :--- | :--- |
+| **API Gateway** | `9000` | Main entry point for all API calls |
+| **Auth Service** | `8080` | Handles `/api/auth/**` |
+| **Inventory Service** | `8081` | Handles `/api/equipment/**` |
+| **Notifications** | `8082` | Internal event processing |
+| **Report Service** | `8083` | Handles `/api/reports/**` |
+| **Request Service** | `8084` | Handles `/api/request/**` |
+
+---
+
+## 📡 API Reference
+
+All routes are exposed through the API gateway (`http://localhost:9000`) and require a valid JWT token (except Login/Register).
+
+<details>
+<summary><b>🔐 Authentication Endpoints</b></summary>
+
+* `POST /api/auth/register` - Register a new user
+* `POST /api/auth/login` - Authenticate and receive JWT
+* `POST /api/auth/logout` - Invalidate session
+* `GET /api/auth/users/{username}` - Get specific user details
+* `GET /api/auth/get-all` - List all users (Admin)
+* `PUT /api/auth/update/{username}` - Update user details
+* `DELETE /api/auth/delete/{username}` - Remove user (Admin)
+
+</details>
+
+<details>
+<summary><b>📦 Equipment Management</b></summary>
+
+* `GET /api/equipment` - List all equipment
+* `GET /api/equipment/{id}` - Get equipment details
+* `POST /api/equipment` - Add new equipment (Admin)
+* `PUT /api/equipment/{id}` - Update equipment details (Admin)
+* `PUT /api/equipment/{id}/status?newStatus=...` - Change item status
+* `DELETE /api/equipment/{id}` - Remove equipment (Admin)
+
+</details>
+
+<details>
+<summary><b>🔄 Request Workflow</b></summary>
+
+* `POST /api/request` - Create a new borrow request
+* `GET /api/requests` - View current user's requests
+* `GET /api/manager/requests` - View all pending requests (Admin)
+* `PUT /api/request/{id}/approve` - Approve request (Admin)
+* `PUT /api/request/{id}/reject` - Reject request (Admin)
+* `PUT /api/request/{id}/checkout` - Mark item as physically taken
+* `PUT /api/request/{id}/return` - Return item & log condition
+* `PUT /api/request/{id}/cancel` - Cancel a pending request
+
+</details>
+
+<details>
+<summary><b>📊 Reports</b></summary>
+
+* `GET /api/reports/usage` - Get system usage statistics
+* `GET /api/reports/history` - Get complete borrowing history
+* `GET /api/reports/export?type={type}&format={format}` - Export data as CSV/PDF (Admin)
+
+</details>
