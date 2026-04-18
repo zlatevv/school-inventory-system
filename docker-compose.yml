@@ -12,6 +12,7 @@ services:
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - REQUEST_SERVICE_URL=http://request-service:8084
       - REPORT_SERVICE_URL=http://report-service:8083
+      - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - auth-service
       - inventory-service
@@ -24,19 +25,23 @@ services:
     environment:
       - PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
     depends_on:
       - db
+      - rabbitmq
 
   inventory-service:
     build: ./backend/inventory-service
     environment:
       - PORT=8081
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - db
 
@@ -45,9 +50,11 @@ services:
     environment:
       - PORT=8082
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
     depends_on:
       - db
       - rabbitmq
@@ -57,10 +64,11 @@ services:
     environment:
       - PORT=8083
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - REQUEST_SERVICE_URL=http://request-service:8084
+      - JWT_SECRET=${JWT_SECRET}
     depends_on:
       - db
       - inventory-service
@@ -71,11 +79,15 @@ services:
     environment:
       - PORT=8084
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/school_inventory
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
       - INVENTORY_SERVICE_URL=http://inventory-service:8081
       - AUTH_SERVICE_URL=http://auth-service:8080
+      - JWT_SECRET=${JWT_SECRET}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
     depends_on:
       - db
       - rabbitmq
@@ -85,8 +97,8 @@ services:
   email-service:
     build: ./backend/email-service
     environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-      - EMAIL_PASSWORD=olvz ezop vqqz bhzw
+      - RABBITMQ_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@rabbitmq:5672
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
     depends_on:
       - rabbitmq
 
@@ -95,12 +107,19 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_DATABASE: school_inventory
-      MYSQL_ROOT_PASSWORD: 1234
-    # Премахнати healthchecks за по-бърз старт в облака
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306" # Опционално: позволява ти да гледаш базата отвън
 
+  # --- MESSAGE BROKER ---
   rabbitmq:
     image: rabbitmq:3-management
-    # Портовете тук не са нужни за външния свят, само вътрешно за услугите
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    ports:
+      - "15672:15672"
+      - "5672:5672"
 
   # --- FRONTEND ---
   frontend:
@@ -109,7 +128,6 @@ services:
       - "80:80"
     environment:
       - PORT=80
-      # ВАЖНО: Тук по-късно ще сложиш публичния URL на api-gateway от Railway
       - API_GATEWAY_URL=http://api-gateway:9000
     depends_on:
       - api-gateway
