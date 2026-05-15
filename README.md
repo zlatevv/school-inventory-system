@@ -1,22 +1,22 @@
-# 🏆 AIBEST TechAcademy Pravets 2026 Third place Award winning project 🥉
+# School Inventory System
 
-Built with passion by a team of innovative students dedicated to digitizing school resource management.
+![Java](https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
+![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-# 🏫 School Inventory System
+A comprehensive, microservice-based school inventory management platform designed to track classroom equipment, process borrowing requests, and generate administrative reports.
 
-A school inventory management platform for tracking classroom equipment, processing borrowing requests, and generating administrative reports.
-
-> Last updated: **March 29, 2026** ✅
-
-## ✨ Project Overview
+## Project Overview
 School staff and students depend on shared resources such as projectors, monitors, USB drives, and stationery. This system digitizes the full flow of inventory operations so both users and administrators can work faster and with better visibility.
 
-### 🎯 Core Goals
+### Core Goals
 - Keep an up-to-date catalog of equipment and supplies.
 - Let users request items and track request status.
 - Let administrators approve/reject requests, monitor item condition, and export reports.
 
-## 👥 User Roles
+## User Roles
 
 ### User
 **What users can do**
@@ -40,7 +40,7 @@ School staff and students depend on shared resources such as projectors, monitor
 **Restriction**
 - Administrative responsibility is separated from physical handling duties unless an admin is also explicitly assigned operational tasks.
 
-## 🧩 Feature Set
+## Feature Set
 
 ### Mandatory Features
 1. **Authentication & Role-Based Access**
@@ -65,9 +65,9 @@ School staff and students depend on shared resources such as projectors, monitor
 - Usage analytics dashboards.
 - CSV/Excel exports and/or document previews.
 
-## 🏗️ Architecture
+## Architecture
 
-### Backend (Implemented)
+## Backend (Implemented)
 This repository uses a microservice-style backend:
 
 - **auth-service**: registration, login, user management, JWT issuance.
@@ -75,13 +75,12 @@ This repository uses a microservice-style backend:
 - **request-service**: request/approval/return workflow.
 - **report-service**: usage/history reports and export.
 - **notifications-service**: messaging + notification persistence.
-- **email-service**: consumes notification events and sends emails.
 - **api-gateway**: centralized routing for frontend/API clients.
 
-### Frontend (Implemented as static client)
+## Frontend (Implemented as static client)
 A static HTML/CSS/JS frontend is available in `frontend/` with separate views for user/admin flows and role-based navigation.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 - Java 17+
@@ -98,22 +97,19 @@ A static HTML/CSS/JS frontend is available in `frontend/` with separate views fo
 ### Supporting Tools
 - Nodemailer / email service
 - CSV/PDF export in report service
-- Docker + Docker Compose
 
-## 🌐 API Endpoints
+## API Endpoints
 
-> All routes are exposed through the API gateway and forwarded to internal services.
+> All routes are exposed through the API gateway (`http://localhost:9000`) and forwarded to internal services.
 
-### Authentication (`/api/auth`)
-- `POST /register`
-- `POST /login`
-- `POST /logout`
-- `GET /users/{username}`
-- `GET /get-all`
-- `PUT /update/{username}`
-- `DELETE /delete/{username}`
-- `GET /get-by-email/{email}`
-- `POST /forgot-password`
+### Authentication
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/auth/users/{username}`
+- `GET /api/auth/get-all`
+- `PUT /api/auth/update/{username}`
+- `DELETE /api/auth/delete/{username}`
 
 ### Equipment Management
 - `GET /api/equipment`
@@ -138,36 +134,31 @@ A static HTML/CSS/JS frontend is available in `frontend/` with separate views fo
 - `GET /api/reports/history`
 - `GET /api/reports/export?type=usage|history&format=csv|pdf`
 
-### Notifications
-- `GET /api/notifications/**`
+## Local Development Setup
 
-## 🚀 Local Development Setup
-
-### Prerequisites
+## Prerequisites
 - Java 17+
 - Maven 3.9+
 - MySQL running locally (default DB: `school_inventory`)
 - RabbitMQ running locally (default guest credentials)
 - Node.js (only for `backend/email-service`)
-- Docker (optional, for containerized setup)
 
-### Default Service Ports
+## Default Service Ports
 - API Gateway: `9000`
 - Auth Service: `8080`
 - Inventory Service: `8081`
 - Notifications Service: `8082`
 - Report Service: `8083`
 - Request Service: `8084`
-- Frontend (containerized): `80`
 
-### Run Order (Recommended)
+## Run Order (Recommended)
 1. Start MySQL
 2. Start RabbitMQ
 3. Start backend services (`auth`, `inventory`, `request`, `report`, `notifications`)
 4. Start API gateway
 5. Open frontend pages from `frontend/html/` (for example via Live Server)
 
-### Example (per Java service)
+## Example (per Java service)
 ```bash
 cd backend/auth-service
 ./mvnw spring-boot:run
@@ -175,16 +166,8 @@ cd backend/auth-service
 
 Repeat for each backend service directory.
 
-### Docker Compose (optional)
-```bash
-docker compose up --build
-```
-
-## 🖥️ Frontend Entry Point
+## Frontend Entry Point
 Open:
 - `frontend/html/login.html`
 
-If running locally with Docker Compose, configure the frontend API URL to your gateway host as needed.
-
----
-Made with care for schools, admins, and students 📚
+The frontend is already configured to call the API gateway at `http://localhost:9000`.
